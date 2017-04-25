@@ -1,0 +1,13 @@
+﻿
+<div class="row">
+    <ul class="nav nav-tabs">
+        <li class="@(ViewBag.PageID == 1 ? "active" : "")">@Html.ActionLink("Рестораны", "Index", "Restaurants")</li>
+        <!--<li class="(ViewBag.PageID == 2 ? "active" : "")">Html.ActionLink("Персонал", "Index", "Personal")</li>-->
+        <li class="@(ViewBag.PageID == 3 ? "active" : "")">@Html.ActionLink("Аккаунты", "Index", "Accounts")</li>
+        <li class="@(ViewBag.PageID == 4 ? "active" : "")">@Html.ActionLink("Заказы", "Index", "Orders")</li>        
+        <li class="@(ViewBag.PageID == 5 ? "active" : "")">@Html.ActionLink("Платежи", "Index", "Payment")</li>
+        <li class="@(ViewBag.PageID == 8 ? "active" : "")">@Html.ActionLink("Чаевые", "Index", "Tip")</li>
+        <li class="@(ViewBag.PageID == 6 ? "active" : "")">@Html.ActionLink("Сообщения", "Index", "Messages")</li>
+        <li class="@(ViewBag.PageID == 7 ? "active" : "")">@Html.ActionLink("Отчеты", "Index", "Reports")</li>
+    </ul>
+</div>
