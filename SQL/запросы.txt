@@ -1,0 +1,15 @@
+select cdate, * from Log order by id desc
+
+select cdate, * from Orders order by id desc
+
+select reg_date, * from Payments order by id desc
+
+select cdate, * from Messages order by id desc
+
+http://localhost:49635/Admin/Index
+
+
+select * from Account where phone_number='9854198507'
+
+телефоны:
+select ('+ ' + phone_code + ' ' + phone_number) as phone from Account order by id desc
