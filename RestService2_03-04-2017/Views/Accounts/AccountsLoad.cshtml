@@ -1,0 +1,62 @@
+﻿@model List<RestService.Models.Account>
+
+@{
+    int n = 0;
+    if (Model != null && Model.Count() > 0)
+    {
+        <table class="table table-striped" border="1" cellpadding="3" cellspacing="0" style="padding-left:-20px!important;">
+            <thead style="background-color:#1a4471; color:#ffffff;">
+            <!--<th align="center" valign="middle" width="20px"></th>-->
+            <th align="center" valign="middle" width="20px">Сброс пароля</th>
+            <th align="center" valign="middle" width="20px">Изменение статуса аккаунта</th>
+            <!--<th align="center" valign="middle" width="200px">ФИО</th>-->
+            <th align="center" valign="middle">Логин</th>
+            <th align="center" valign="middle">Модель телефона</th>
+            <!--<th align="center" valign="middle">UID</th>-->
+            <th align="center" valign="middle">ОС</th>
+            <th align="center" valign="middle">Статус</th>
+            <th align="center" valign="middle">Привязанные карты</th>
+            <th align="center" valign="middle">Причина блокировки</th>
+            <th align="center" valign="middle">Коммент.</th>
+            <th align="center" valign="middle" width="100px">Дата создания аккаунта</th>
+            <th align="center" valign="middle" width="100px">Дата изменения аккаунта</th>
+            <th align="center" valign="middle" width="100px">Дата последнего использования</th>
+            </thead>   
+            @{
+                foreach (var item in Model)
+                {
+                    <text>         
+                    <tr>      
+                    <!--<td align="center" valign="top" style="cursor: pointer;"><span id ="item.ID"><img src="/images/delete.png" onclick="modaldisable(item.ID);" width="16" alt="Деактивировать аккаунт" /></span></td>-->
+                    <td align="center" valign="top" style="cursor: pointer;"><span id ="@item.ID"><img src="/images/redo.png" onclick="modalredo(@item.ID,@item.PhoneNumber);" width="16" alt="Сбросить пароль" /></span></td>
+                    <td align="center" valign="top" style="cursor: pointer;"><img src="/images/edit.png" onclick="edit(@item.ID,'@item.AccountStatus.Name');" alt="Изменить статус" width="16" /></td>     
+                    <!--<td align="center" valign="top">item.FirstName item.LastName</td>-->  
+                    <td align="center" valign="top">@item.PhoneNumber</td>     
+                    <td align="center" valign="top">@item.PhoneModel</td>  
+                    <!--<td align="center" valign="top">item.PhoneUID</td>  -->
+                    <td align="center" valign="top">@item.PhoneOS.Name</td>  
+                    <td align="center" valign="top">@item.AccountStatus.Name</td>  
+                    <td align="center" valign="top">@item.Cards</td>  
+                    <td align="center" valign="top">@item.AccountBlock.Name</td>   
+                    <td align="center" valign="top">@item.Comment</td>   
+                    <td align="center" valign="top">@(item.CreateDate.Year > 1970 ? item.CreateDate.ToShortDateString() : "")</td>   
+                    <td align="center" valign="top">@(item.UpdateDate.Year > 1970 ? item.UpdateDate.ToShortDateString() : "")</td>   
+                    <td align="center" valign="top">@(item.LastDate.Year > 1970 ? item.LastDate.ToShortDateString() : "")</td> 
+
+
+                       
+                    </tr> 
+                    </text>
+                }
+            }
+            </table>
+    }
+    else
+    {
+        <center><h5 style="color:red;">Ничего не найдено</h5></center>
+    }
+            
+    }
+
+
+    

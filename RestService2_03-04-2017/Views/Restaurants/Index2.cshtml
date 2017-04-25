@@ -1,0 +1,38 @@
+﻿@model List<RestService.Models.RestNetwork>
+
+@{
+    int n = 0;
+    if (Model != null && Model.Count() > 0)
+    {
+        foreach (var item in Model)
+        {
+            <table class="table table-striped" border="1" cellpadding="3" cellspacing="0" style="padding-left:-20px!important;">
+                <tr>
+                    <td align="left" width="300">ID сети ресторанов</td>
+                    <td align="left">item.ID</td>
+                </tr>
+                <tr>
+                    <td align="left" width="300">Наименование сети ресторанов</td>
+                    <td align="left">item.Name</td>
+                </tr>
+                <tr>
+                    <td align="left" width="300">Логотип</td>
+                    <td align="left">item.Logo</td>
+                </tr>
+                <tr>
+                    <td align="left" width="300">WWW</td>
+                    <td align="left">item.WWW</td>
+                </tr>
+                <tr>
+                    <td align="left" width="300">Описание</td>
+                    <td align="left">item.Notes</td>
+                </tr>
+                <tr>
+                    <td align="left" width="300">Фото</td>
+                    <td align="left">item.Image</td>
+                </tr>
+
+            </table>
+        }
+    }
+}

@@ -1,0 +1,75 @@
+﻿@model List<RestService.Models.Payments>
+
+@{
+    int n = 0;
+    if (Model != null && Model.Count() > 0)
+    {
+       <table class="table table-striped" border="1" cellpadding="3" cellspacing="0" style="padding-left:-20px!important;">
+            <thead style="background-color:#1a4471; color:#ffffff;">
+            <th align="center" valign="middle" width="150px">Дата платежа</th>
+            <th align="center" valign="middle">Ресторан</th>
+            <th align="center" valign="middle">ФИО клиента</th>
+            <th align="center" valign="middle">Телефон клиента</th>
+            <th align="center" valign="middle">Номер заказа в ИМ</th>
+            <th align="center" valign="middle">Номер заказа в сервисе</th>
+            <th align="center" valign="middle">Номер заказа в банке</th>
+            <th align="center" valign="middle" width="150px">Дата регистр. в банке</th>
+            <th align="center" valign="middle">Сумма платежа, руб.</th>
+            <th align="center" valign="middle">Результат платежа</th>
+            <th align="center" valign="middle" colspan="3">Карта</th>
+            <th align="center" valign="middle">ID связки</th>
+            </thead>
+            @{
+                foreach (var item in Model)
+                {
+                <text>
+                <tr id="@item.ID" client="@item.ClientID">
+                    <td align="center" valign="top">@((item.PaymentDate.Year > 1970) ? (item.PaymentDate.ToShortDateString() + " " + item.PaymentDate.ToShortTimeString()) : "")</td>  
+                    <td align="center" valign="top">@item.RestaurantName</td> 
+                    <td align="center" valign="top">@item.FIO</td>      
+                    <td align="center" valign="top">@item.PhoneNumber</td>      
+                    <td align="center" valign="top">@item.OrderNumberModule</td>     
+                    <td align="center" valign="top">@item.OrderNumber</td>  
+                    <td align="center" valign="top">@item.OrderNumberBank</td> 
+                    <td align="center" valign="top">@((item.RegDate.Year > 1970) ? (item.RegDate.ToShortDateString() + " " + item.RegDate.ToShortTimeString()) : "")</td> 
+                    <td align="center" valign="top">@((Convert.ToDecimal(item.OrderSumBank)/100).ToString("0.00"))</td> 
+                    <td align="center" valign="top">@item.ErrorMessage</td> 
+                    <td align="center" valign="top">@item.Pan</td> 
+                    <td align="center" valign="top">@item.Expiration</td> 
+                    <td align="center" valign="top">@item.CardHolderName</td> 
+                    <td align="center" valign="top">@item.BindingID</td>  
+                </tr>
+                </text>
+                }
+            }
+        </table>
+    }
+    else
+    {
+        <center><h5 style="color:red;">Ничего не найдено</h5></center>
+    }
+    
+    
+    <script type="text/javascript">
+        
+        function search() {
+            var filters = {
+                FilterBeginDate: $('#beginDate').val(),
+                FilterEndDate: $('#endDate').val()
+            };
+            $('#LoadingImage').show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("PaymentsLoad", "Payment")',
+                data: filters,
+                success: function (msg) {
+                    $('#LoadingImage').hide();
+                    $('#placedata').empty().html(msg);
+                }
+            });
+        }
+    </script>
+}
+
+
+    

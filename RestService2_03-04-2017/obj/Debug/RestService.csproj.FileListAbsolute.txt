@@ -1,0 +1,17 @@
+D:\Projects\RestaurantService\RestService_v2\RestService_v2\obj\Debug\RestService.csprojResolveAssemblyReference.cache
+D:\Projects\RestaurantService\RestService_v2\RestService_v2\obj\Debug\RestService_v2.dll
+D:\Projects\RestaurantService\RestService_v2\RestService_v2\obj\Debug\RestService_v2.pdb
+D:\Projects\RestaurantService\RestService_v2\RestService_v2\bin\RestService_v2.dll
+D:\Projects\RestaurantService\RestService_v2\RestService_v2\bin\RestService_v2.pdb
+C:\inetpub\wwwroot\RestService\obj\Debug\RestService.csprojResolveAssemblyReference.cache
+C:\inetpub\wwwroot\RestService\bin\RestService.dll
+C:\inetpub\wwwroot\RestService\bin\RestService.pdb
+C:\inetpub\wwwroot\RestService\obj\Debug\RestService.dll
+C:\inetpub\wwwroot\RestService\obj\Debug\RestService.pdb
+C:\inetpub\wwwroot\RestService\bin\System.Net.Http.Formatting.dll
+C:\inetpub\wwwroot\RestService\bin\System.Web.Http.dll
+C:\inetpub\wwwroot\RestService\bin\System.Web.Http.WebHost.dll
+C:\inetpub\wwwroot\RestService\bin\System.Net.Http.Formatting.xml
+C:\inetpub\wwwroot\RestService\bin\System.Web.Http.xml
+C:\inetpub\wwwroot\RestService\bin\System.Web.Http.WebHost.xml
+C:\inetpub\wwwroot\RestService\bin\Calabonga.Xml.Exports.dll

@@ -1,0 +1,82 @@
+﻿@model List<RestService.Models.ReportAccountNew>
+
+@{
+    if (Model != null && Model.Count() > 0)
+    {
+       <table class="table" border="1" cellpadding="3" cellspacing="0" style="padding-left:-20px!important;">
+            <thead style="background-color:#1a4471; color:#ffffff;">
+            <th align="center" valign="middle" width="150px">Дата создания</th>
+            <th align="center" valign="middle" width="150px">Телефон клиента</th>
+            <th align="center" valign="middle" width="300px">ФИО клиента</th>
+            <th align="center" valign="middle" width="150px">Дата заказа</th>
+            <th align="center" valign="middle" width="100px">Ресторан</th>
+            <th align="center" valign="middle">№ стола</th>
+            <th align="center" valign="middle">Официант</th>
+            <th align="center" valign="middle">Номер заказа в системе</th>
+            <th align="center" valign="middle">Номер заказа в банке</th>
+            </thead>
+            @{
+                foreach (var item in Model)
+                {
+                    <text>
+                    <tr class="account_header">
+                        <td align="center" valign="top">@((item.AccountReport.CreateDate.Year > 1970) ? (item.AccountReport.CreateDate.ToShortDateString() + " " + item.AccountReport.CreateDate.ToShortTimeString()) : "")</td>        
+                        <td align="center" valign="top">@item.AccountReport.PhoneNumber</td> 
+                        <td align="center" valign="top">@(item.AccountReport.FirstName + " " + item.AccountReport.LastName)</td>  
+                        <td align="center" valign="top" colspan="6"></td>    
+                    </tr>  
+                    </text>
+
+                        if(item.AccountOrders.Count != 0 && item.AccountOrders != null)
+                        {
+                            foreach (var order in item.AccountOrders)
+                            {
+                            <text>
+                            <tr>
+                                <td align="center" valign="top"></td>        
+                                <td align="center" valign="top"></td> 
+                                <td align="center" valign="top"></td>        
+                                <td align="center" valign="top">@((order.OrderDate.Year > 1970) ? (order.OrderDate.ToShortDateString() + " " + order.OrderDate.ToShortTimeString()) : "")</td> 
+                                <td align="center" valign="top">@order.RestaurantName</td>          
+                                <td align="center" valign="top">@order.TableID</td> 
+                                <td align="center" valign="top">@order.Waiter.Name</td>        
+                                <td align="center" valign="top">@order.OrderNumberService</td> 
+                                <td align="center" valign="top">@order.OrderNumberBank</td> 
+                            </tr>  
+                            </text>
+                            }
+                        }
+                }
+            }
+        </table>
+    }
+    else
+    {
+        <center><h5 style="color:red;">Ничего не найдено</h5></center>
+    }
+            
+    
+    <script type="text/javascript">
+        
+        function search() {
+            var filters = {
+                FilterBeginDate: $('#beginDate').val(),
+                FilterEndDate: $('#endDate').val()
+            };
+            $('#LoadingImage').show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AccountNewLoad", "Reports")',
+                data: filters,
+                success: function (msg) {
+                    $('#LoadingImage').hide();
+                    $('#placedata').empty().html(msg);
+                }
+            });
+        }
+
+    </script>
+}
+
+
+    
