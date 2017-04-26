@@ -254,7 +254,7 @@ namespace RestService
         #region DiscountCard
 
         //Загрузка привязанных карт в Приложение
-        public List<Models.DiscountCard> FindDiscountCard(string phoneNumber, string user_key, string phoneCode = "7", int language = 0)
+        public List<DiscountCard> FindDiscountCard(string phoneNumber, string user_key, string phoneCode = "7", int language = 0)
         {
             if (!String.IsNullOrWhiteSpace(phoneNumber) && CheckUserKey(user_key) != "")
             {

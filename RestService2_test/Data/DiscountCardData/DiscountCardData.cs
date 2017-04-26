@@ -12,7 +12,7 @@ namespace RestService
     public class DiscountCardData
     {
         //Загрузка привязанных карт в Приложение
-        public static List<Models.DiscountCard> SqlFindDiscountCard(int accountID, string user_key)
+        public static List<DiscountCard> SqlFindDiscountCard(int accountID, string user_key)
         {
             List<Models.DiscountCard> list = new List<Models.DiscountCard>();
             try
@@ -57,7 +57,7 @@ namespace RestService
 
 
         //Привязка дисконтной карты в Системе
-        public static int SqlInsertDiscountCard(int accountID, Int64 cardNumber, string cardName, string user_key)
+        public static int SqlInsertDiscountCard(int accountID, long cardNumber, string cardName, string user_key)
         {
             string param = "";
             try
