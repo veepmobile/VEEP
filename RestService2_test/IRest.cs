@@ -206,7 +206,7 @@ namespace RestService
         UriTemplate = "get")]
         List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0);
 
-        [OperationContract]
+        [OperationContract(Name = "GetOrderDiscount")]
         [WebInvoke(Method = "PUT",
         ResponseFormat = WebMessageFormat.Xml,
         RequestFormat = WebMessageFormat.Xml,
@@ -253,7 +253,7 @@ namespace RestService
         UriTemplate = "get")]
         List<Order> GetPaymentBinding(int restaurantID, string orderNumber, decimal paymentSum, long paymentBank, string user_key, string bindingId, decimal tippingProcent, string phoneCode = "7", int language = 0);
 
-        [OperationContract]
+        [OperationContract(Name = "GetPaymentBindingDiscount")]
         [WebInvoke(Method = "PUT",
         ResponseFormat = WebMessageFormat.Xml,
         RequestFormat = WebMessageFormat.Xml,
