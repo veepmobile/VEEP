@@ -33,3 +33,15 @@ C:\inetpub\wwwroot\RestService2_test\bin\System.Web.Http.WebHost.xml
 C:\inetpub\wwwroot\RestService2_test\obj\Release\RestService.csprojResolveAssemblyReference.cache
 C:\inetpub\wwwroot\RestService2_test\obj\Release\RestService.dll
 C:\inetpub\wwwroot\RestService2_test\obj\Release\RestService.pdb
+F:\2\Git\VEEP\RestService2_test\bin\RestService.dll.config
+F:\2\Git\VEEP\RestService2_test\bin\RestService.dll
+F:\2\Git\VEEP\RestService2_test\bin\RestService.pdb
+F:\2\Git\VEEP\RestService2_test\bin\Calabonga.Xml.Exports.dll
+F:\2\Git\VEEP\RestService2_test\bin\System.Net.Http.Formatting.dll
+F:\2\Git\VEEP\RestService2_test\bin\System.Web.Http.dll
+F:\2\Git\VEEP\RestService2_test\bin\System.Web.Http.WebHost.dll
+F:\2\Git\VEEP\RestService2_test\bin\System.Net.Http.Formatting.xml
+F:\2\Git\VEEP\RestService2_test\bin\System.Web.Http.xml
+F:\2\Git\VEEP\RestService2_test\bin\System.Web.Http.WebHost.xml
+F:\2\Git\VEEP\RestService2_test\obj\Release\RestService.dll
+F:\2\Git\VEEP\RestService2_test\obj\Release\RestService.pdb

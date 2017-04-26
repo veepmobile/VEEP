@@ -269,8 +269,9 @@ namespace RestService
         }
 
         //Привязка дисконтной карты в Системе
-        public int InsertDiscountCard(string phoneNumber, Int64 cardNumber, string cardName, string user_key, string phoneCode = "7", int language = 0)
+        public string InsertDiscountCard(string phoneNumber, long cardNumber, string cardName, string user_key, string phoneCode = "7", int language = 0)
         {
+            string ret = "Карта не привязана";
             int ID = 0;
             if (!String.IsNullOrWhiteSpace(phoneNumber) && cardNumber != 0 && CheckUserKey(user_key) != "")
             {
@@ -279,9 +280,17 @@ namespace RestService
                 {
                     int accountID = Convert.ToInt32(AccountData.SqlFindClientId(phoneNumber, phoneCode));
                     ID = DiscountCardData.SqlInsertDiscountCard(accountID, cardNumber, cardName, user_key);
+                    if (ID < 0)
+                    {
+                        ret = "Карта уже привязана другим пользователем";
+                    }
+                    if (ID > 0)
+                    {
+                        ret = "Для подтверждения привязки при посещении ресторана авторизуйтесь в заказе и предъявите дисконтную карту официанту. Обратите внимание карту можно привязать только к одному профилю!";
+                    }
                 }
             }
-            return ID;
+            return ret;
         }
 
         //Изменение статуса (удаление) дисконтной карты в Системе
@@ -300,7 +309,7 @@ namespace RestService
         }
 
         //Редактирование названия дисконтной карты
-        public int UpdateDiscountCardName(string phoneNumber, Int64 cardNumber, string cardName, string user_key, string phoneCode = "7", int language = 0)
+        public int UpdateDiscountCardName(string phoneNumber, long cardNumber, string cardName, string user_key, string phoneCode = "7", int language = 0)
         {
             if (!String.IsNullOrWhiteSpace(phoneNumber) && cardNumber != 0 && CheckUserKey(user_key) != "")
             {
@@ -326,12 +335,12 @@ namespace RestService
                     if (item.DiscountCard.CardStatus == 1)
                     {
                         long? result_status = UpdateDiscountCard(phoneNumber, discountCard, 1,user_key, phoneCode, language);
-                        return "Дисконтная карта применена";
+                        return "Скидка применена";
                     }
                 }
             }
 
-            return "Дисконтная карта не применена";
+            return "Скидка не применилась. Повторите попытку или обратитесь к официанту";
         }
 
 
@@ -837,6 +846,132 @@ namespace RestService
             return null;
         }
 
+        public List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0)
+        {
+            string phoneNumber = CheckUserKey(user_key);
+            if (phoneNumber != "")
+            {
+                /*
+                //Получение номера привязанной дисконтной карты
+                DiscountCard card = new DiscountCard();
+                card.CardNumber = DiscountCardData.SqlGetDiscountCard(phoneNumber, user_key, restaurantID, phoneCode);
+                */
+                //Запрос к Интеграционному модулю
+                string endpointName = "";
+                string address = "";
+
+                endpointName = Configs.GetEndpoint(restaurantID);
+                address = Configs.GetAddress(restaurantID);
+
+                IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
+                IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, null);
+                if (orders != null)
+                {
+                    List<Order> list = new List<Order>();
+                    foreach (var item in orders)
+                    {
+                        Order order = new Order();
+                        order.OrderNumber = item.OrderNumber;
+                        order.RestaurantID = item.RestaurantID;
+                        order.TableID = item.TableID;
+                        if (item.Waiter != null)
+                        {
+                            Waiter waiter = new Waiter();
+                            waiter.ID = item.Waiter.ID;
+                            waiter.Name = item.Waiter.Name;
+                            order.Waiter = waiter;
+                        }
+                        if (item.Items != null)
+                        {
+                            List<OrderItem> list_items = new List<OrderItem>();
+                            foreach (var order_item in item.Items)
+                            {
+                                OrderItem list_item = new OrderItem();
+                                list_item.Name = order_item.Name;
+                                list_item.Qty = order_item.Qty;
+                                list_item.Price = order_item.Price;
+                                list_items.Add(list_item);
+                            }
+                            order.OrderItems = list_items;
+                        }
+                        if (item.OrderStatus != null)
+                        {
+                            OrderStatus os = new OrderStatus();
+                            os.StatusID = item.OrderStatus.StatusID;
+                            os.StatusDate = item.OrderStatus.StatusDate;
+                            order.OrderStatus = os;
+                        }
+                        if (item.OrderPayment != null)
+                        {
+                            OrderPayment op = new OrderPayment();
+                            op.OrderTotal = item.OrderPayment.OrderTotal;
+                            op.DiscountSum = item.OrderPayment.DiscountSum;
+                            op.OrderSum = item.OrderPayment.OrderSum;
+                            op.OrderBank = 0;
+                            order.OrderPayment = op;
+                        }
+                        order.Message = item.Message;
+                        order.Error = item.Error;
+                        order.ErrorCode = item.ErrorCode;
+                        list.Add(order);
+
+                        //для теста
+                        //if (order.OrderNumber == "00045C98") { order.ErrorCode = 31; }
+                        Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "", 1);
+
+                        //Проверка ошибки 31 - официант работает с заказом
+                        if (item.ErrorCode == 31)
+                        {
+                            order.ErrorCode = 31;
+                            //order.Error = "Официант редактирует заказ. Повторите запрос через минуту.";
+                            order.Error = Helper.GetError(31, language);
+                            Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "Официант работает с заказом", 1);
+                            return list;
+                        }
+                        //Проверка оплаты заказа в БД
+                        if (OrderData.GetStatus(order.OrderNumber) == 2)
+                        {
+                            order.ErrorCode = 5;
+                            //order.Error = "Вы уже оплатили данный заказ. Для открытия нового заказа обратитесь к официанту.";
+                            order.Error = Helper.GetError(5, language);
+                            Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: ", "Заказ уже оплачен", 1);
+                            return list;
+                        }
+                        //Проверка закрытия заказа на кассе
+                        if (order.OrderStatus != null)
+                        {
+                            if (order.OrderStatus.StatusID == 2)
+                            {
+                                order.ErrorCode = 6;
+                                //order.Error = "Ваш заказ закрыт. Для открытия нового заказа обратитесь к официанту.";
+                                order.Error = Helper.GetError(6, language);
+                                Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID.ToString() + ", StatusID: " + order.OrderStatus.StatusID.ToString(), "Заказ закрыт", 1);
+                                return list;
+                            }
+                        }
+
+                        if (order.ErrorCode != 0)
+                        {
+                            order.ErrorCode = 100;
+                            order.Error = Helper.GetError(100, language);
+                            return list;
+                        }
+                        //Запись заказа в БД
+                        OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order, phoneCode);
+
+                    }
+                    XMLGenerator<List<Order>> listXML = new XMLGenerator<List<Order>>(list);
+                    Helper.saveToLog(0, user_key, "GetOrder", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Найдены заказы: " + listXML.GetStringXML(), 0);
+                    return list;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            Helper.saveToLog(0, user_key, "GetOrder", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Заказ не найден.", 1);
+            return null;
+        }
 
         //Вызов официанта
         public int CallWaiter(int restaurantID, string tableID, string orderNumber, int code, string user_key, string phoneCode = "7", int language = 0)
@@ -849,7 +984,7 @@ namespace RestService
                         
                         //Получаем заказ по номеру
                         List<Order> list = new List<Order>();
-                        list = GetOrder(restaurantID, orderNumber, user_key);
+                        list = GetOrder(restaurantID, orderNumber, user_key, phoneCode, language);
                         //Проверяем номер стола
                         if (list != null)
                         {
@@ -913,7 +1048,7 @@ namespace RestService
                 {
                     //Получаем заказ по номеру
                     List<Order> list = new List<Order>();
-                    list = GetOrder(restaurantID, orderNumber, user_key);
+                    list = GetOrder(restaurantID, orderNumber, user_key,"7",0);
                     //Проверяем номер стола
                     if (list != null)
                     {
@@ -955,7 +1090,7 @@ namespace RestService
             if (phoneNumber != "")
                 {
                     //Получаем заказ по номеру
-                    list = GetOrder(restaurantID, orderNumber, user_key);
+                    list = GetOrder(restaurantID, orderNumber, user_key, phoneCode, language);
                     //Проверка суммы заказа
                     foreach (var item in list)
                     {
@@ -1093,7 +1228,7 @@ namespace RestService
             List<Order> list = new List<Order>();
             //костыль
             //Получаем заказ по номеру
-            list = GetOrder(restaurantID, orderNumber, user_key);
+            list = GetOrder(restaurantID, orderNumber, user_key, phoneCode, language);
             return list;
             //конец костыля
 
@@ -1349,6 +1484,164 @@ namespace RestService
 
             return null;
         }
+
+        public List<Order> GetPaymentBinding(int restaurantID, string orderNumber, decimal paymentSum, long paymentBank, string user_key, string bindingId, decimal tippingProcent, string phoneCode = "7", int language = 0)
+        {
+            List<Order> list = new List<Order>();
+            string phoneNumber = CheckUserKey(user_key);
+
+            if (phoneNumber != "")
+            {
+                if (phoneCode == "") { phoneCode = "7"; }
+                string clientId = GetClientId(phoneNumber, phoneCode);
+                //Поиск заказа в БД
+                string orderNum = OrderData.SqlFindOrders(phoneNumber, user_key, orderNumber, restaurantID);
+                if (!String.IsNullOrWhiteSpace(orderNum))
+                {
+                    //Получаем заказ по номеру
+                    list = GetOrder(restaurantID, orderNumber, user_key, phoneCode, language);
+                    //Проверка суммы заказа
+                    foreach (var item in list)
+                    {
+                        //для теста
+                        // if (item.OrderNumber == "00045C98") { item.ErrorCode = 31; }
+
+                        if (item.ErrorCode == 31)
+                        {
+                            //item.Error = "Подождите минуту. Официант работает с заказом";
+                            item.Error = Helper.GetError(31, language);
+                            Helper.saveToLog(0, user_key, "GetPaymentBinding", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + item.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "Официант работает с заказом", 1);
+                            return list;
+                        }
+                        //проверка оплаты заказа
+                        if (OrderData.GetStatus(item.OrderNumber) == 2)
+                        {
+                            item.ErrorCode = 5;
+                            //item.Error = "Вы уже оплатили данный заказ. Для открытия нового заказа обратитесь к официанту.";
+                            item.Error = Helper.GetError(5, language);
+                            Helper.saveToLog(0, user_key, "GetPaymentBinding", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + item.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "Заказ уже оплачен", 1);
+                            return list;
+                        }
+                        if (item.OrderPayment.OrderSum != paymentSum)
+                        {
+                            item.ErrorCode = 20;
+                            //item.Error = "В заказ внесены изменения. Сумма изменена.";
+                            item.Error = Helper.GetError(20, language);
+                            Helper.saveToLog(0, user_key, "GetPaymentBinding", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + item.TableID + ", paymentSum=" + paymentSum.ToString() + ",item.OrderPayment.OrderSum=" + item.OrderPayment.OrderSum.ToString() + "paymentBank=" + paymentBank.ToString() + ", ErrorCode: " + item.ErrorCode.ToString(), "В заказ внесены изменения. Сумма изменена.", 1);
+                            //list = OrderCancelPrecheck(restaurantID, orderNumber, null, user_key);
+                            return list;
+                        }
+                        if (item.ErrorCode != 0)
+                        {
+                            item.ErrorCode = 100;
+                            item.Error = Helper.GetError(100, language);
+                            return list;
+                        }
+                    }
+
+                    //Замена номера заказа для повторной оплаты
+                    string new_number = Helper.getNewGUID();
+                    int ret = OrderData.SqlChangeNumberOrder(orderNum, new_number);
+                    if (ret > 0)
+                    {
+                        orderNum = new_number;
+                    }
+
+                    if (!String.IsNullOrWhiteSpace(bindingId))
+                    {
+                        //Оплата заказа с использованием связок
+
+                        //Регистрация заказа в платежной системе
+                        registerResponse response = new registerResponse();
+                        string returnUrl = "http://185.26.113.204/Payment/Result";
+                        //string returnUrl = "http://test.veep.su/Payment/Result";
+                        response = MerchantData.registerOrder(restaurantID, orderNum, paymentBank, returnUrl, clientId, bindingId);
+                        if (response != null)
+                        {
+                            DateTime paymentDate = DateTime.Now;
+                            XMLGenerator<registerResponse> respon = new XMLGenerator<registerResponse>(response);
+                            Helper.saveToLog(0, user_key, "GetPaymentBinding/registerOrder", "restaurantID=" + restaurantID.ToString() + ", phoneNumber=" + phoneNumber + ", orderNumber=" + orderNum + ", paymentSum=" + paymentSum.ToString() + ", paymentBank=" + paymentBank.ToString() + ", clientId=" + clientId + ", bindingId=" + bindingId, "Регистрация заказа в платежной системе: orderId=" + response.orderId + ", formUrl=" + response.formUrl + ", errorCode=" + response.errorCode.ToString() + ", errorMessage=" + response.errorMessage + ", response = " + respon.GetStringXML(), 0);
+                            //Вставка платежа в БД
+                            string insert_result = OrderData.SqlInsertPayment(user_key, restaurantID, phoneNumber, orderNumber, orderNum, paymentBank, DateTime.Now, response.orderId, response.formUrl, response.errorCode, response.errorMessage, clientId, bindingId, tippingProcent, phoneCode);
+
+                            paymentOrderBindingResponse paymentResponse = new paymentOrderBindingResponse();
+                            paymentResponse = MerchantData.paymentOrderBinding(restaurantID, response.orderId, bindingId);
+                            if (paymentResponse != null)
+                            {
+                                if (paymentResponse.redirect != null && paymentResponse.redirect != "")
+                                {
+                                    list[0].FormUrl = paymentResponse.redirect;
+                                }
+                                else
+                                {
+                                    list[0].FormUrl = paymentResponse.acsUrl + "&MD=" + response.orderId + "&PaReq=" + paymentResponse.pareq + "&TermUrl=" + paymentResponse.termUrl;
+                                }
+                            }
+
+                            if (tippingProcent > 0)
+                            {
+                                //расчет чаевых в рубл с округлением
+                                //decimal tippingSum = Decimal.Round((tippingProcent * paymentSum) / 100);
+
+                                OrderData.SqlInsertTipping(restaurantID, orderNum, tippingProcent, phoneNumber, phoneCode);
+                            }
+
+                            return list;
+                        }
+                    }
+                    else
+                    {
+                        //Оплата заказа без использования связок
+                        //Регистрация заказа в платежной системе
+                        registerResponse response = new registerResponse();
+                        string returnUrl = "http://185.26.113.204/Payment/Result";
+                        //string returnUrl = "http://test.veep.su/Payment/Result";
+                        response = MerchantData.registerOrder(restaurantID, orderNum, paymentBank, returnUrl, clientId, "");
+                        if (response != null)
+                        {
+                            DateTime paymentDate = DateTime.Now;
+                            Helper.saveToLog(0, user_key, "registerOrder", "restaurantID=" + restaurantID.ToString() + ", phoneNumber=" + phoneNumber + ", orderNumber=" + orderNum + ", paymentSum=" + paymentSum.ToString() + ", paymentBank=" + paymentBank.ToString() + ", clientId=" + clientId.ToString(), "Регистрация заказа в платежной системе: orderId=" + response.orderId + ", formUrl=" + response.formUrl + ", errorCode=" + response.errorCode.ToString() + ", errorMessage=" + response.errorMessage, 0);
+                            //Вставка платежа в БД
+                            string insert_result = OrderData.SqlInsertPayment(user_key, restaurantID, phoneNumber, orderNumber, orderNum, paymentBank, DateTime.Now, response.orderId, response.formUrl, response.errorCode, response.errorMessage, clientId, null, 0);
+                            if (!String.IsNullOrWhiteSpace(response.formUrl))
+                            {
+                                list[0].FormUrl = response.formUrl;
+                            }
+                            else
+                            {
+                                list[0].Error = response.errorMessage;
+                            }
+
+                            //return (!String.IsNullOrWhiteSpace(response.formUrl)) ? response.formUrl : response.errorMessage;
+                            return list;
+                        }
+                    }
+                }
+                else
+                {
+                    if (list == null || list.Count == 0)
+                    {
+                        return new List<Order>(){
+                           new Order(){
+                               //ErrorCode = 1,
+                               //Error = "Заказ не найден или оплачен. Для открытия нового заказа обратитесь к официанту."}
+                               ErrorCode = 100,
+                               Error = Helper.GetError(100,language)}
+                       };
+                    }
+                    else
+                    {
+                        //list[0].Error = "Заказ не найден или оплачен. Для открытия нового заказа обратитесь к официанту.";
+                        list[0].ErrorCode = 100;
+                        list[0].Error = Helper.GetError(100, language);
+                        return list;
+                    }
+                }
+            }
+
+            return null;
+        }
+
 
         //Оплата заказа без связок
         public string GetPayment(int restaurantID, string orderNumber, decimal paymentSum, long paymentBank, string user_key, int language = 0)

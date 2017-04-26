@@ -75,9 +75,20 @@ namespace RestService
                     con.Open();
                     object oIdent = DBNull.Value;
                     oIdent = cmd.ExecuteScalar();
-                    int pid = (oIdent != DBNull.Value) ? Convert.ToInt32(oIdent) : -1;
+                    int pid = (oIdent != DBNull.Value) ? Convert.ToInt32(oIdent) : 0;
                     param = "@card_number=" + cardNumber + ", @card_name=" + cardName + ", @account_id=" + accountID;
-                    Helper.saveToLog(accountID, user_key, "SqlInsertDiscountCard", "param: " + param, "Дисконтная карта привязана: card.ID = " + pid.ToString(), 0);
+                    if(pid > 0)
+                    { 
+                        Helper.saveToLog(accountID, user_key, "SqlInsertDiscountCard", "param: " + param, "Дисконтная карта привязана: card.ID = " + pid.ToString(), 0);
+                    }
+                    if (pid < 0)
+                    {
+                        Helper.saveToLog(accountID, user_key, "SqlInsertDiscountCard", "param: " + param, "Дисконтная карта уже привязана: card.ID = " + pid.ToString(), 0);
+                    }
+                    if (pid == 0)
+                    {
+                        Helper.saveToLog(accountID, user_key, "SqlInsertDiscountCard", "param: " + param, "Дисконтная карта не привязана: card.ID = " + pid.ToString(), 0);
+                    }
 
                     return pid;
                 }
