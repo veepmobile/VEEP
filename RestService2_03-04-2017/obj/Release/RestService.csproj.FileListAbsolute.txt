@@ -46,3 +46,15 @@ F:\2\Git\VEEP\RestService2_03-04-2017\bin\System.Web.Http.WebHost.xml
 F:\2\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.csprojResolveAssemblyReference.cache
 F:\2\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.dll
 F:\2\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.pdb
+D:\Projects\RestaurantService\Git\VEEP\RestService2_03-04-2017\bin\RestService.dll
+D:\Projects\RestaurantService\Git\VEEP\RestService2_03-04-2017\bin\RestService.pdb
+D:\Projects\RestaurantService\Git\VEEP\RestService2_03-04-2017\bin\Calabonga.Xml.Exports.dll
+D:\Projects\RestaurantService\Git\VEEP\RestService2_03-04-2017\bin\System.Net.Http.Formatting.dll
+D:\Projects\RestaurantService\Git\VEEP\RestService2_03-04-2017\bin\System.Web.Http.dll
+D:\Projects\RestaurantService\Git\VEEP\RestService2_03-04-2017\bin\System.Web.Http.WebHost.dll
+D:\Projects\RestaurantService\Git\VEEP\RestService2_03-04-2017\bin\System.Net.Http.Formatting.xml
+D:\Projects\RestaurantService\Git\VEEP\RestService2_03-04-2017\bin\System.Web.Http.xml
+D:\Projects\RestaurantService\Git\VEEP\RestService2_03-04-2017\bin\System.Web.Http.WebHost.xml
+D:\Projects\RestaurantService\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.csprojResolveAssemblyReference.cache
+D:\Projects\RestaurantService\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.dll
+D:\Projects\RestaurantService\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.pdb

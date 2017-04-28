@@ -165,7 +165,7 @@ namespace RestService.BLL
                     return "BasicHttpBinding_IIntegrationCMD13";
                 case 361750001: /*KWAK pub Мичуринский*/
                     return "BasicHttpBinding_IIntegrationCMD14";
-                case 361750002: /*KWAK pub Покровка*/
+                case 361750003: /*KWAK pub Покровка*/
                     return "BasicHttpBinding_IIntegrationCMD15";
             }
             return "";
@@ -209,8 +209,8 @@ namespace RestService.BLL
                     return "http://79.174.68.175:57004/";
                 case 361750001: /*KWAK pub Мичуринский*/
                     return "http://46.38.47.43:9090/";
-                case 361750002: /*KWAK pub Покровка*/
-                    return "http://";
+                case 361750003: /*KWAK pub Покровка*/
+                    return "http://82.204.144.18:9090/";
             }
             return "";
         }
@@ -252,7 +252,7 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantUser15"].ToString();
                 case 361750001: /*KWAK pub Мичуринский*/
                     return WebConfigurationManager.AppSettings["merchantUser16"].ToString();
-                case 361750002: /*KWAK pub Покровка*/
+                case 361750003: /*KWAK pub Покровка*/
                     return WebConfigurationManager.AppSettings["merchantUser17"].ToString();
             }
             return "";
@@ -349,7 +349,7 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantPsw15"].ToString();
                 case 361750001: /*KWAK pub Мичуринский*/
                     return WebConfigurationManager.AppSettings["merchantPsw16"].ToString();
-                case 361750002: /*KWAK pub Покровка*/
+                case 361750003: /*KWAK pub Покровка*/
                     return WebConfigurationManager.AppSettings["merchantPsw17"].ToString();
             }
             return "";
@@ -436,7 +436,7 @@ namespace RestService.BLL
                     return 15;
                 case 361750001: /*KWAK pub Мичуринский*/
                     return 16;
-                case 361750002: /*KWAK pub Покровка*/
+                case 361750003: /*KWAK pub Покровка*/
                     return 17;
             }
             return 1;
