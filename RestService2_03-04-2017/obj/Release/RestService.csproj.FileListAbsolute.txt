@@ -33,3 +33,16 @@ C:\inetpub\wwwroot\RestService2_03-04-2017\bin\System.Web.Http.WebHost.xml
 C:\inetpub\wwwroot\RestService2_03-04-2017\obj\Release\RestService.csprojResolveAssemblyReference.cache
 C:\inetpub\wwwroot\RestService2_03-04-2017\obj\Release\RestService.dll
 C:\inetpub\wwwroot\RestService2_03-04-2017\obj\Release\RestService.pdb
+F:\2\Git\VEEP\RestService2_03-04-2017\bin\RestService.dll.config
+F:\2\Git\VEEP\RestService2_03-04-2017\bin\RestService.dll
+F:\2\Git\VEEP\RestService2_03-04-2017\bin\RestService.pdb
+F:\2\Git\VEEP\RestService2_03-04-2017\bin\Calabonga.Xml.Exports.dll
+F:\2\Git\VEEP\RestService2_03-04-2017\bin\System.Net.Http.Formatting.dll
+F:\2\Git\VEEP\RestService2_03-04-2017\bin\System.Web.Http.dll
+F:\2\Git\VEEP\RestService2_03-04-2017\bin\System.Web.Http.WebHost.dll
+F:\2\Git\VEEP\RestService2_03-04-2017\bin\System.Net.Http.Formatting.xml
+F:\2\Git\VEEP\RestService2_03-04-2017\bin\System.Web.Http.xml
+F:\2\Git\VEEP\RestService2_03-04-2017\bin\System.Web.Http.WebHost.xml
+F:\2\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.csprojResolveAssemblyReference.cache
+F:\2\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.dll
+F:\2\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.pdb
