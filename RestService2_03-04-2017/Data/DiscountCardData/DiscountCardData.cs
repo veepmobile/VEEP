@@ -12,7 +12,7 @@ namespace RestService
     public class DiscountCardData
     {
         //Загрузка привязанных карт в Приложение
-        public static List<Models.DiscountCard> SqlFindDiscountCard(string phoneNumber, string user_key)
+        public static List<Models.DiscountCard> SqlFindDiscountCard(int accountID, string user_key)
         {
             List<Models.DiscountCard> list = new List<Models.DiscountCard>();
             try
@@ -21,7 +21,7 @@ namespace RestService
                 {
                     SqlCommand cmd = new SqlCommand("Rest.dbo.FindDiscountCard", con);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@phone_number", SqlDbType.VarChar).Value = phoneNumber;
+                    cmd.Parameters.Add("@account_id", SqlDbType.Int).Value = accountID;
                     con.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -30,6 +30,7 @@ namespace RestService
                         card.ID = (int)reader["id"];
                         card.RestaurantID = (int)reader["restaurant_id"];
                         card.CardNumber = (Int64)reader["card_number"];
+                        //card.CardName = (String)reader["card_name"];
                         Models.Account account = new Models.Account();
                         account.ID = (int)reader["account_id"];
                         card.Account = account;
@@ -49,7 +50,8 @@ namespace RestService
             }
             catch (Exception e)
             {
-                Helper.saveToLog(0, user_key, "SqlFindDiscountCard", "phoneNumber=" + phoneNumber, "Внутренняя ошибка сервиса: " + e.Message, 1);
+                // Helper.saveToLog(0, user_key, "SqlFindDiscountCard", "phoneNumber=" + phoneNumber, "Внутренняя ошибка сервиса: " + e.Message, 1);Helper.saveToLog(0, user_key, "SqlFindDiscountCard", "accountID=" + accountID, "Внутренняя ошибка сервиса: " + e.Message, 1);
+                Helper.saveToLog(0, user_key, "SqlFindDiscountCard", "accountID=" + accountID, "Внутренняя ошибка сервиса: " + e.Message, 1);
                 return null;
             }
         }

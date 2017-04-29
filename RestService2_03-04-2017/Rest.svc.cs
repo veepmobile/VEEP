@@ -261,7 +261,9 @@ namespace RestService
                 string check = CheckSession(phoneNumber); //проверка открытой сессии
                 if (check != "")
                 {
-                    return DiscountCardData.SqlFindDiscountCard(phoneNumber, check);
+                    int accountID = Convert.ToInt32(AccountData.SqlFindClientId(phoneNumber, phoneCode));
+                    return DiscountCardData.SqlFindDiscountCard(accountID, check);
+                    //return DiscountCardData.SqlFindDiscountCard(phoneNumber,check);
                 }
             }
             return null;
