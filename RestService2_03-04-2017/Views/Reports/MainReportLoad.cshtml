@@ -3,6 +3,7 @@
 @{
     if (Model != null && Model.Count() > 0)
     {
+        <br />
        <table class="table" border="1" cellpadding="3" cellspacing="0" style="padding-left:-20px!important;">
             <thead style="background-color:#1a4471; color:#ffffff;">
             <th align="center" valign="middle">Код страны</th>
@@ -31,7 +32,7 @@
                 foreach (var item in Model)
                 {
                     <text>
-                    <tr class="account_header">         
+                    <tr>         
                         <td align="center" valign="top">@item.PhoneCode</td> 
                         <td align="center" valign="top">@item.PhoneNumber</td>
                         <td align="center" valign="top">@(item.IsValid==1 ? "Активен" : "Не активен")</td>

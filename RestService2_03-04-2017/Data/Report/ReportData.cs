@@ -51,11 +51,11 @@ namespace RestService
                         }
                         item.RestaurantID = (reader["restaurant_id"] != DBNull.Value) ? Convert.ToInt32(reader["restaurant_id"]) : 0;
                         item.RestaurantName = !String.IsNullOrEmpty((string)reader["restaurant_name"]) ? reader["restaurant_name"].ToString() : "";
-                        item.TableID = !String.IsNullOrEmpty((string)reader["table_id"]) ? reader["table_id"].ToString() : "";
+                        item.TableID = !String.IsNullOrEmpty((string)reader["tableId"]) ? reader["tableId"].ToString() : "";
                         item.OrderTotal = (reader["order_total"] != DBNull.Value) ? Convert.ToDecimal(reader["order_total"]) : 0;
                         item.DiscountSum = (reader["discount_sum"] != DBNull.Value) ? Convert.ToDecimal(reader["discount_sum"]) : 0;
                         item.OrderSum = (reader["order_rest_sum"] != DBNull.Value) ? Convert.ToDecimal(reader["order_rest_sum"]) : 0;
-                        item.TippingProcent = (reader["tipping_proc"] != DBNull.Value) ? Convert.ToDecimal(reader["tipping_proc"]) : 0;
+                        item.TippingProcent = (reader["tipping_procent"] != DBNull.Value) ? Convert.ToDecimal(reader["tipping_procent"]) : 0;
                         item.TippingSum = (reader["tipping_sum"] != DBNull.Value) ? Convert.ToDecimal(reader["tipping_sum"]) : 0;
                         item.Waiter = (reader["waiterName"] != DBNull.Value) ? Convert.ToString(reader["waiterName"]) : "";
                         item.PaymentResult = (reader["payment_result"] != DBNull.Value) ? Convert.ToString(reader["payment_result"]) : "";
