@@ -300,6 +300,7 @@
     <Compile Include="Data\Order\OrderData.cs" />
     <Compile Include="Data\PaymentData\PaymentData.cs" />
     <Compile Include="Data\Personal\PersonalData.cs" />
+    <Compile Include="Data\Report\ReportData.cs" />
     <Compile Include="Data\Restaurant\RestaurantData.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -421,6 +422,8 @@
     <Content Include="Views\Tip\TipLoad.cshtml" />
     <Content Include="Views\Accounts\AccountsLoad.cshtml" />
     <Content Include="veeppay.crt" />
+    <Content Include="Views\Reports\MainReport.cshtml" />
+    <Content Include="Views\Reports\MainReportLoad.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

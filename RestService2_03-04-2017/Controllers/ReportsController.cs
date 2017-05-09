@@ -64,7 +64,6 @@ namespace RestService.Controllers
            return View();
        }
 
-
        [HttpPost]
        public ActionResult AccountNewLoad(Filters filter)
        {
@@ -86,6 +85,66 @@ namespace RestService.Controllers
                {
                    Session["report_accounts"] = report_accounts;
                    return PartialView(report_accounts);
+               }
+               else
+               {
+                   return null;
+               }
+           }
+           catch (Exception ex)
+           {
+               string error = ex.Message;
+           }
+
+           return null;
+       }
+
+       [HttpGet]
+       public ActionResult MainReport()
+       {
+           if (Session["user_id"] == null)
+           {
+               return RedirectToAction("Index", "Admin");
+           }
+
+           // Фильтр
+           Filters filter = new Filters();
+
+           //Начальный диапазон дат
+           filter.FilterBeginDate = ViewBag.beginDate = new DateTime(DateTime.Now.Year, 1, 1);
+           filter.FilterEndDate = ViewBag.endDate = DateTime.Today;
+
+           ViewBag.Filter = filter;
+           Session["Filters"] = filter;
+
+           ViewBag.Title = "Отчеты: Сводный отчет";
+           ViewBag.PageID = 7;
+
+           return View();
+
+       }
+
+       [HttpPost]
+       public ActionResult MainReportLoad(Filters filter)
+       {
+           ViewBag.Filter = filter;
+           Session["Filters"] = filter;
+           ViewBag.Title = "Отчеты: Сводный отчет";
+           ViewBag.PageID = 7;
+
+           DateTime begindate = (filter.FilterBeginDate.Year == 1) ? new DateTime(1900, 1, 1) : filter.FilterBeginDate;
+           DateTime enddate = (filter.FilterEndDate.Year == 1) ? DateTime.Today : filter.FilterEndDate;
+           TimeSpan time = new TimeSpan(23, 59, 59);
+           enddate = enddate.Add(time);
+
+           try
+           {
+               List<ReportMain> report_main = new List<ReportMain>();
+               report_main = ReportData.GetMainReport(begindate, enddate);
+               if (report_main != null)
+               {
+                   Session["report_main"] = report_main;
+                   return PartialView(report_main);
                }
                else
                {

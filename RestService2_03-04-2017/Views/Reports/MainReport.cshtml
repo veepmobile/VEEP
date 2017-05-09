@@ -1,6 +1,6 @@
 ﻿@model List<RestService.Models.ReportAccountNew>
 @{
-    ViewBag.Title = "Отчеты: Новые посетители";
+    ViewBag.Title = "Отчеты: Сводный отчет";
     ViewBag.PageID = 7;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -86,7 +86,7 @@ Html.Partial("_FilterSelect")-->
                 $('#LoadingImage').show();
                 $.ajax({
                     type: "POST",
-                    url: '@Url.Action("AccountNewLoad", "Reports")',
+                    url: '@Url.Action("MainReportLoad", "Reports")',
                     data: filters,
                     success: function (msg) {
                         $('#LoadingImage').hide();
@@ -106,7 +106,7 @@ Html.Partial("_FilterSelect")-->
         function exportexcel() {
             var dfrom = $('#beginDate').val();
             var dto = $('#endDate').val();
-            document.location.href = "/Reports/ExcelExport?dfrom=" + dfrom + "&dto=" + dto;
+            document.location.href = "/Reports/MainReportExport?dfrom=" + dfrom + "&dto=" + dto;
         }
     </script>
 

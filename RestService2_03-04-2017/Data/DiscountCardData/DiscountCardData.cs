@@ -151,7 +151,35 @@ namespace RestService
             }
         }
 
-
+        //Список номеров дисконтных карт, привязанных к клиенту
+        public static List<string> SqlDiscountCardList(int accountID)
+        {
+            List<string> list = new List<string>();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(BLL.Configs.ConnectionString))
+                {
+                    SqlCommand cmd = new SqlCommand("Rest.dbo.FindDiscountCard", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@account_id", SqlDbType.Int).Value = accountID;
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        string num = reader["card_number"].ToString();
+                        if (!String.IsNullOrEmpty(num))
+                        {
+                            list.Add(num);
+                        }
+                    }
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                 return null;
+            }
+        }
 
     }
 }
