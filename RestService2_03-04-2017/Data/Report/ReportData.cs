@@ -34,8 +34,12 @@ namespace RestService
                         item.IsValid = (reader["isValid"] != DBNull.Value) ? Convert.ToInt32(reader["isValid"]) : 0;
                         item.OS = (reader["phone_os"] != DBNull.Value) ? Convert.ToInt32(reader["phone_os"]) : 0;
                         item.PhoneModel = !String.IsNullOrEmpty((string)reader["phone_model"]) ? reader["phone_model"].ToString() : "";
-                        item.BankCards = !String.IsNullOrEmpty((string)reader["bank_card"]) ? reader["bank_card"].ToString() : "";
-                        item.DiscountCards = !String.IsNullOrEmpty((string)reader["discount_card"]) ? reader["discount_card"].ToString() : "";
+                        item.BankCards = (reader["bank_card"] != DBNull.Value) ? reader["bank_card"].ToString() : "";
+                        item.DiscountCards = (reader["discount_card"] != DBNull.Value) ? reader["discount_card"].ToString() : "";
+                        if (reader["cdate"] != DBNull.Value)
+                        {
+                            item.OrderDate = (DateTime)reader["cdate"];
+                        }
                         item.RestaurantID = (reader["restaurant_id"] != DBNull.Value) ? Convert.ToInt32(reader["restaurant_id"]) : 0;
                         item.RestaurantName = !String.IsNullOrEmpty((string)reader["restaurant_name"]) ? reader["restaurant_name"].ToString() : "";
                         item.TableID = !String.IsNullOrEmpty((string)reader["tableId"]) ? reader["tableId"].ToString() : "";
