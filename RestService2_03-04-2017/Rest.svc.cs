@@ -1450,6 +1450,7 @@ namespace RestService
         //Список ресторанов, подключенных к сети
         public List<RestNetwork> FindRestaurant(string user_key, int language = 0)
         {
+            //language = 1;
             List<RestNetwork> list = new List<RestNetwork>();
             if (CheckUserKey(user_key) != "")
             {
