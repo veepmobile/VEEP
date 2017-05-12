@@ -12,7 +12,7 @@ namespace RestService
     public class RestaurantData
     {
         //Список сетей ресторанов, подключенных к сети
-        public static List<RestNetwork> GetRestNetwork(string user_key, int language = 0)
+        public static List<RestNetwork> GetRestNetwork(string user_key, int language)
         {
             List<RestNetwork> list = new List<RestNetwork>();
             try
@@ -33,7 +33,14 @@ namespace RestService
                         restnetwork.Notes = (language == 0) ? ((reader["notes"] != DBNull.Value) ? (string)reader["notes"] : "") : ((reader["eng_notes"] != DBNull.Value) ? (string)reader["eng_notes"] : "");
                         restnetwork.Image = (reader["image"] != DBNull.Value) ? (string)reader["image"] : "";
                         //Список ресторанов, входящих в данную сеть
-                        restnetwork.Restaurants = GetRestaurantList(restnetwork.ID, language);
+                        if (user_key == "admin")
+                        {
+                            restnetwork.Restaurants = GetRestaurantList(restnetwork.ID, language);
+                        }
+                        else
+                        {
+                            restnetwork.Restaurants = GetRestaurantListMobile(restnetwork.ID, language);
+                        }
                         if (restnetwork != null)
                         {
                             list.Add(restnetwork);
@@ -43,7 +50,14 @@ namespace RestService
 
                     //Список ресторанов, не входящих в сети
                     RestNetwork restnowork = new RestNetwork();
-                    restnowork.Restaurants = GetRestaurantList(0, language);
+                    if (user_key == "admin")
+                    {
+                        restnowork.Restaurants = GetRestaurantList(0, language);
+                    }
+                    else
+                    {
+                        restnowork.Restaurants = GetRestaurantListMobile(0, language);
+                    }
                     if (restnowork != null)
                     {
                         list.Add(restnowork);
@@ -66,7 +80,7 @@ namespace RestService
             {
                 using (SqlConnection con = new SqlConnection(BLL.Configs.ConnectionString))
                 {
-                    SqlCommand cmd = new SqlCommand("Rest.dbo.GetRestaurantList", con);
+                    SqlCommand cmd = new SqlCommand("Rest.dbo.GetRestaurantList2", con);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@net_id", SqlDbType.Int).Value = net_id;
                     con.Open();
@@ -133,6 +147,52 @@ namespace RestService
             }
         }
 
+        public static List<Restaurant> GetRestaurantListMobile(int net_id, int language = 0)
+        {
+            List<Restaurant> list = new List<Restaurant>();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(BLL.Configs.ConnectionString))
+                {
+                    SqlCommand cmd = new SqlCommand("Rest.dbo.GetRestaurantList2", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@net_id", SqlDbType.Int).Value = net_id;
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Restaurant restaurant = new Restaurant();
+                        restaurant.ID = (int)reader["id"];
+                        restaurant.Name = (language == 0) ? (string)reader["name"] : (string)reader["eng_name"];
+                        restaurant.Logo = (reader["logo"] != DBNull.Value) ? (string)reader["logo"] : "";
+                        restaurant.Notes = (language == 0) ? ((reader["notes"] != DBNull.Value) ? (string)reader["notes"] : "") : ((reader["eng_notes"] != DBNull.Value) ? (string)reader["eng_notes"] : "");
+                        restaurant.Image = (reader["image"] != DBNull.Value) ? (string)reader["image"] : "";
+                        restaurant.WorkTime = (language == 0) ? (string)reader["work_time"] : (string)reader["eng_work_time"];
+                        restaurant.Address = (language == 0) ? (string)reader["address"] : (string)reader["eng_address"];
+                        restaurant.Phone = (reader["phone"] != DBNull.Value) ? (string)reader["phone"] : "";
+                        restaurant.WWW = (reader["www"] != DBNull.Value) ? (string)reader["www"] : "";
+                        restaurant.Geocode = (reader["geocode"] != DBNull.Value) ? (string)reader["geocode"] : "";
+                        restaurant.Call = (reader["call"] != DBNull.Value) ? (bool)reader["call"] : false;
+                        restaurant.Tipping = (reader["tipping"] != DBNull.Value) ? (int)reader["tipping"] : 1;
+                        restaurant.TippingMin = (reader["tipping_min"] != DBNull.Value) ? (decimal)reader["tipping_min"] : 0;
+                        restaurant.TippingMax = (reader["tipping_max"] != DBNull.Value) ? (decimal)reader["tipping_max"] : 0;
+                        restaurant.IsPay = (reader["is_pay"] != DBNull.Value) ? (int)reader["is_pay"] : 0;
+                        restaurant.Rating = GetRating(restaurant.ID);
+                        if (restaurant != null)
+                        {
+                            list.Add(restaurant);
+                        }
+                    }
+
+                    return list;
+                }
+            }
+            catch (Exception e)
+            {
+                Helper.saveToLog(0, "", "GetRestaurantList", "", "Внутренняя ошибка сервиса: " + e.Message, 1);
+                return null;
+            }
+        }
         //Информация о ресторане
         public static Restaurant RestaurantInfo(int restaurantID, string user_key, int language = 0)
         {

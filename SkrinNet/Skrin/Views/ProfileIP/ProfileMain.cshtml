@@ -1,0 +1,354 @@
+﻿@using Skrin.Models.ProfileIP
+@using Skrin.BLL.Infrastructure
+
+@model ProfileIP
+@{
+    Layout = null;
+    int _i = 0;
+    var _id = "";
+}
+
+
+<div class="left_content_html">
+    @if (!string.IsNullOrWhiteSpace(Model.fio))
+    {
+        <h1>@Model.fio</h1>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.typeip_name))
+    {
+        <h3>@Model.typeip_name</h3>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.citizenship_name))
+    {
+        <h5>Гражданство: @Model.citizenship_name</h5>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.regorg_address))
+    {
+        <h5>Адрес регистрирующего органа по месту жительства: @Model.regorg_address</h5>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.email))
+    {
+        <h5>@Model.email</h5>
+    }
+    @if (!string.IsNullOrEmpty(Model.ogrnip) || Model.data_access == 0)
+    {
+        <div id="StopLightBox" ogrn="@Model.ogrnip">
+           
+                <div id="rating" class="tr_light gre">
+    @if (Model.data_access == 0)
+    {
+                    <span class="tr_info">
+                       ****<br />
+                        <!--span class="explain">(дата проверки @((DateTime.Now.AddDays(-1)).ToRusString()))</span><br/-->
+                        <a href="javascript:showLogin();">Посмотреть протокол проверки</a><br />
+                    </span>
+    }
+                </div>
+            
+        </div>
+    }
+    <div class="info_block">
+        <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <th>Сведения о состоянии</th>
+                <td>
+                    <div class="status">@Model.statusIp</div>
+                </td>
+            </tr>
+            <tr>
+                <th>Статус Росстата</th>
+                @if (Model.issuer_id != "")
+                {
+                    <td>
+                        @Model.gmc_status
+                        <span class="explain">
+                            (данные ГМЦ Росстата на @Model.updt)
+                        </span>
+                    </td>
+                }
+                else
+                {
+                    <td>Нет данных</td>
+                }
+            </tr>
+            <tr>
+                <th>Субьект РФ</th>
+                <td>@Model.region_name</td>
+            </tr>
+            @if (Model.goroda != null)
+            {
+                <tr>
+                    <th>Город</th>
+                    <td>
+                        @if (Model.goroda[0].gerb.Length > 0)
+                        {
+                            <img style="height:36px;float:left;padding-top:1px;" src="/Content/geo/gerb/@Model.goroda[0].gerb" />
+                        }
+                        <div style="float: left;height: 34px;padding-top: 8px;padding-left:8px;">@Model.goroda[0].name</div>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+
+
+    <div class="info_block">
+        <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <th>ИНН</th>
+                <td>@Model.inn</td>
+            </tr>
+            <tr>
+                <th>ОГРНИП</th>
+                <td>@Model.ogrnip</td>
+            </tr>
+            <tr>
+                <th>Дата ОГРНИП</th>
+                <td>@Model.rd</td>
+            </tr>
+            <tr>
+                <th>ОКПО</th>
+                <td>@Model.okpo</td>
+            </tr>
+            <tr>
+                <th>ОКАТО</th>
+                <td>@Model.okato @Model.okato_name</td>
+            </tr>
+            <tr>
+                <th>ОКТМО</th>
+                <td>@Model.oktmo</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="info_block">
+        <div style="font-weight:bold;margin-left:22px;">Сведения об учете в налоговом органе</div>
+        <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <th>Дата постановки<br />на учет</th>
+                <td>@Model.nalog_record_date</td>
+            </tr>
+            <tr>
+                <th>Наименование налогового органа</th>
+                <td>@Model.nalog_name</td>
+            </tr>
+        </table>
+    </div>
+
+    @if (Model.prev_reg != null && Model.prev_reg.Count > 0)
+    {
+        <div class="info_block">
+            <div style="font-weight:bold;margin-left:22px;">Сведения о прочих регистрациях ИП</div>
+            <table class="data_table" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <th>ФИО</th>
+                    <th>ОГРНИП</th>
+                    <th>ИНН</th>
+                    <th>Дата присвоения ОГРНИП</th>
+                    <th>Дата внесения записи о прекращении деятельности</th>
+                </tr>
+                @foreach (var item in Model.prev_reg)
+                {
+                    <tr>
+                        <td>@item.fio</td>
+                        <td><a href="/profile_ip/@item.ogrnip/">@item.ogrnip</a></td>
+                        <td>@item.inn</td>
+                        <td>@(item.reg_date != null ? item.reg_date.ToShortDateString() : "")</td>
+                        <td>@(item.stop_date != null && item.stop_date.Year > 1970 ? item.stop_date.ToShortDateString() : "")</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+
+    <div class="info_block">
+        <div style="font-weight:bold;margin-left:22px;">Сведения о регистрации во внебюджетных фондах</div>
+        <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <th>ПФР</th>
+                @if (Model.pfr_status != null)
+                {
+                    <td>
+                        @if (Model.pfr_status != null)
+                        {
+                            <text><b>Рег.номер: </b></text> @Model.pfr_status
+                        }
+
+                        @if (Model.pfr_date != null && Model.pfr_date.Year > 1970)
+                        {
+                            <text><br /><b>Дата регистрации: </b></text> @Model.pfr_date.ToShortDateString()
+                        }
+
+                        @if (Model.pfr_name != null)
+                        {
+                            <text><br /><b>Рег.орган: </b> </text> @Model.pfr_name
+                        }
+                    </td>
+                }
+                else
+                {
+                    <td>Нет данных</td>
+                }
+            </tr>
+            <tr>
+                <th>ФСС</th>
+                @if (Model.fss_status != null)
+                {
+                    <td>
+                        @if (Model.fss_status != null)
+                        {
+                            <text><b>Рег.номер: </b></text> @Model.fss_status
+                        }
+
+                        @if (Model.fss_date != null && Model.fss_date.Year > 1970)
+                        {
+                            <text><br /><b>Дата регистрации: </b></text> @Model.fss_date.ToShortDateString()
+                        }
+
+                        @if (Model.fss_name != null)
+                        {
+                            <text><br /><b>Рег.орган: </b> </text> @Model.fss_name
+                        }
+                    </td>
+                }
+                else
+                {
+                    <td>Нет данных</td>
+                }
+
+            </tr>
+        </table>
+    </div>
+
+    @if (Model.main_okved != null)
+    {
+        <div class="info_block">
+            <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <th>Основной вид деятельности</th>
+                    <td>@Model.main_okved.kod : @Model.main_okved.name</td>
+                </tr>
+            </table>
+        </div>
+    }
+
+    @if (Model.okveds != null && Model.okveds.Count > 0)
+    {
+        <div class="info_block">
+            <table class="data_table" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <th >Код по ОКВЭД</th>
+                    <th>Наименование вида деятельности</th>
+                </tr>
+                @foreach (var ok in Model.okveds)
+                {
+                    <tr>
+                        <td>@ok.kod</td>
+                        <td>@ok.name</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+    <div class="explain" style="margin-top:20px;margin-left:20px;">
+        @Model.statusNotes
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+    $(document).ready(function () {
+        profile_init();
+    });
+
+    (function () {
+
+        var states = {};
+
+        this.profile_init = function () {
+            $('.more_ico_okved').on('click', show_more_info);
+            change_toggler();
+            $("#const_togler").click(change_toggler);
+            change_etoggler();
+            $("#const_e_togler").click(change_etoggler);        
+
+            if (job_street.length == 0) {
+                $("#job_stats").hide();
+            }
+            $("body").click(hide_job_list);
+        }
+
+        //Отображение дополнительной информации
+        var show_more_info = function (event) {
+            event.stopPropagation();
+            var $target = $(event.target);
+            var id = $target.attr('id');
+            var $hiden_area = $("#" + id + "_area");
+
+
+            if ($hiden_area.is(':hidden')) {
+                states[id] = $target.text();
+                $target.removeClass("icon-angle-down").addClass("icon-angle-up").text("Свернуть");
+                $hiden_area.show();
+            } else {
+                $target.removeClass("icon-angle-up").addClass("icon-angle-down").text(states[id]);
+                $hiden_area.hide();
+
+            }
+        }
+
+        var change_toggler = function (event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            var $el = $("#const_togler");
+            if ($el) {
+                if ($el.hasClass("table_link")) {
+                    $el.removeClass("table_link").addClass("table_unlink").removeClass("icon-angle-down").addClass("icon-angle-up").text("Показать первые 5 позиций");
+                    $('.const_toggle').show();
+                } else {
+                    $el.removeClass("table_unlink").addClass("table_link").removeClass("icon-angle-up").addClass("icon-angle-down").text($el.attr("data-count"));
+                    $('.const_toggle').hide();
+                }
+            }
+        };
+
+        var change_etoggler = function (event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            var $el = $("#const_e_togler");
+            if ($el) {
+                if ($el.hasClass("table_link")) {
+                    $el.removeClass("table_link").addClass("table_unlink").removeClass("icon-angle-down").addClass("icon-angle-up").text("Показать первые 5 позиций");
+                    $('.const_e_toggle').show();
+                } else {
+                    $el.removeClass("table_unlink").addClass("table_link").removeClass("icon-angle-up").addClass("icon-angle-down").text($el.attr("data-count"));
+                    $('.const_e_toggle').hide();
+                }
+            }
+        };
+
+
+    })();
+
+</script>
+
+
+@if (ViewBag.OpenProfile)
+{
+    if (ViewBag.CanShowStopLight)
+    {
+        <script src="~/Scripts/ip/stoplight.js"></script>
+    }
+    else
+    {
+       <script src="~/Scripts/ip/stoplight_info.js"></script>
+    }
+}

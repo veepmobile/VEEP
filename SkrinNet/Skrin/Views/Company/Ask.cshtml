@@ -1,0 +1,66 @@
+﻿@model Dictionary<int,string>
+@{
+    ViewBag.Title = "Ask";
+}
+@section Css{
+    <link href="~/Content/search.css" rel="stylesheet" />
+    <link href="~/Content/company.css" rel="stylesheet" />
+}
+@section Script{
+    <script src="~/Scripts/company/ask.js"></script>
+}
+<div class="content">
+    <div class="company_block form">
+        <h3>Вопросы незарегистрированных пользователей</h3>
+        <div class="form-group">
+            <label class="label_form">Интерес</label>
+            <div class="sub_form">
+                @foreach (var item in Model)
+                {
+                    <div class="sub_form_block">
+                        <input id="theme_@item.Key" name="theme" type="checkbox">@item.Value
+                    </div>                    
+                }
+            </div>
+        </div>
+        <h4>Данные пользователя</h4>
+        <div class="form-group">
+            <label class="label_form" for="company">Компания</label>
+            <div class="sub_form">
+                <input id="company" name="company" class="search_input" placeholder="Компания" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label_form" for="fio">Ф.И.О.</label>
+            <div class="sub_form">
+                <input id="fio" name="fio" class="search_input" placeholder="Ф.И.О." type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label_form" for="phone">Телефон</label>
+            <div class="sub_form">
+                <input id="phone" name="phone" class="search_input" placeholder="Телефон" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label_form" for="email">E-mail</label>
+            <div class="sub_form">
+                <input id="email" name="email" class="search_input" placeholder="E-mail" type="text">
+            </div>
+        </div>
+        <h4>Комментарии/Вопрос</h4>
+        <div class="form-group">
+            <textarea rows="5" style="width: 650px" class="search_input" name="comment" id="comment"></textarea>
+        </div>
+        <div class="form-group">
+            <div class="sub_form">
+                <input id="subscribe" checked="" name="subscribe" type="checkbox">Подписаться на рассылку новостей СКРИН
+            </div>
+        </div>
+        <div class="form-group">
+            <button id="btnSend" class="btns darkblue large" >Отправить</button>
+        </div>
+    </div>
+
+</div>
+

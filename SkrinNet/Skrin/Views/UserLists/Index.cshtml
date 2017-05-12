@@ -1,0 +1,62 @@
+﻿@model int
+@using Skrin.BLL.Infrastructure
+@using Skrin.Models.Authentication
+@using Skrin.BLL.Authorization
+
+@{
+    UserSession us = Context.GetUserSession();
+    int group_limit = us.GroupLimit;
+}
+
+@section Css{
+    <link href="~/Content/search.css" rel="stylesheet" />
+    <link href="~/Content/groups.css" rel="stylesheet" />
+}
+
+@section Script{
+    <script src="~/Scripts/userlist/groups.js?20170404"></script>
+    <script src="~/Scripts/dropdown.js"></script>
+    <script>
+        var selected = {
+            id: @Model
+        };
+
+        var group_limit=@group_limit;
+    </script>
+}
+<div id="search_block" class="grops_search_block">
+    <div class="content">
+        <div id="base_block">
+            <div class="form-group">
+                <div class="sub_form">
+                    <label for="grops_list" class="label_form">Группа</label>
+                    <select id="grops_list" class="search_input">
+                        <option value="0" selected>Выберите группу</option>
+                    </select>
+                    <div class="group_command_block" id="new_group_comand_block">
+                        <button class="btns grey" id="create_new_group_btn">Импортировать список</button>
+                    </div>
+                    <div class="group_command_block" id="edit_group_comand_block">
+                        <button class="btns grey" id="import_group_btn">Импорт</button>
+                        <button class="btns grey" id="rename_group_btn">Переименовать</button>
+                        <button class="btns grey" id="delete_group_btn">Удалить</button>
+                        <div class="btn-group">
+                            <button class="btns grey dropdown-toggle" id="export_group_btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Экспорт в список<span class="icon-angle-down"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" onclick="export_codes(1); return false;">ИНН</a></li>
+                                <li><a href="#" onclick="export_codes(2); return false;">ОГРН</a></li>
+                                <li><a href="#" onclick="export_codes(3); return false;">Коды СКРИН</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="result_block">
+    <div class="content">
+        <div id="search_result" style="display:none;">
+        </div>
+    </div>
+</div>

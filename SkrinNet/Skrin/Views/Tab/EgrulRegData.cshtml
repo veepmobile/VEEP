@@ -1,0 +1,136 @@
+﻿@using Skrin.Models.Iss.Content
+@model RegDataModel
+@{
+    Layout = null;
+    var _v_opf = "";
+    DateTime? egrul_date = ViewBag.Fsns2EgrulDate;
+    DateTime now = DateTime.Now;
+    bool egrul_date_today = egrul_date == null ? false : (new DateTime(egrul_date.Value.Year, egrul_date.Value.Month, egrul_date.Value.Day) == new DateTime(now.Year, now.Month, now.Day));
+}
+<div class="vislinks_button" id="payegrulcontainer">
+    @if (egrul_date != null)
+    {
+        <span id="payegrulcontainer_result" onclick="getRTF('/Report/Egrul/@ViewBag.Ogrn');">
+            <span class="icon-file-word word ico"></span><span>Выписка МИ ФНС России по ЦОД от @egrul_date.Value.ToRusString()</span>
+        </span>
+        if (!egrul_date_today)
+        {
+            <span id="payegrulcontainer_request"  style="font-size:18px;" onclick="get_paid_egrul(event,false)">
+                <span class="icon-spin3 word ico"></span>
+            </span>
+        }
+    }
+    else
+    {
+        <span id="payegrulcontainer_result"  onclick="get_paid_egrul(event,true)">
+            <span class="icon-file-word word ico"></span><span>Сформировать выписку МИ ФНС России по ЦОД</span>
+        </span>
+    }      
+</div>
+Данные на @(DateTime.Now.ToRusString())
+
+
+@if (Model.MaincodesTable != null && Model.MaincodesTable.RowCount > 0)
+{
+    @Html.Raw(Model.MaincodesTable.FormatedHeader)
+    <table class="profile_table" cellspacing="0" cellpadding="2">
+        @for (int i = 0, i_max = Model.MaincodesTable.RowCount; i < i_max; i++)
+        {
+            <tr>
+                @if (Model.MaincodesTable.Columns["name"].ColumnValues[i].Value.ToString() == "opf_ref")
+                {
+                    _v_opf = Model.MaincodesTable.Columns["val"].ColumnValues[i].Value.ToString();
+                }
+                else if (Model.MaincodesTable.Columns["name"].ColumnValues[i].Value.ToString() == "opf")
+                {
+                    <td @Html.Raw(Model.MaincodesTable.Columns["name"].ColumnAttributes)>@Html.Raw(string.Format(Model.MaincodesTable.Columns["name"].ColumnValues[i].Format, _v_opf))</td>
+                    <td @Html.Raw(Model.MaincodesTable.Columns["val"].ColumnAttributes)>@Html.Raw(Model.MaincodesTable.Columns["val"].ColumnValues[i].FormatedValue)</td>
+                }
+                else
+                {
+                    <td @Html.Raw(Model.MaincodesTable.Columns["name"].ColumnAttributes)>@Html.Raw(Model.MaincodesTable.Columns["name"].ColumnValues[i].FormatedValue)</td>
+                    <td @Html.Raw(Model.MaincodesTable.Columns["val"].ColumnAttributes)>@Html.Raw(Model.MaincodesTable.Columns["val"].ColumnValues[i].FormatedValue)</td>
+                }
+            </tr>
+        }
+    </table>
+    <br>
+}
+
+@if (Model.NamesTable != null && @Model.NamesTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTablePrim.cshtml", @Model.NamesTable)
+    <br />
+}
+
+@if (Model.NameHistoryTable != null && @Model.NameHistoryTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.NameHistoryTable)
+    <br />
+}
+
+@if (Model.AddressTable != null && @Model.AddressTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTablePrim.cshtml", @Model.AddressTable)
+    <br />
+}
+
+@if (Model.AddressHistoryTable != null && @Model.AddressHistoryTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.AddressHistoryTable)
+    <br />
+}
+
+@if (Model.StatusTable != null && @Model.StatusTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTablePrim.cshtml", @Model.StatusTable)
+    <br />
+}
+
+@if (Model.StopingTable != null && @Model.StopingTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTablePrim.cshtml", @Model.StopingTable)
+    <br />
+}
+
+@if (Model.ReginfoTable != null && @Model.ReginfoTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTablePrim.cshtml", @Model.ReginfoTable)
+    <br />
+}
+
+@if (Model.RegoldinfoTable != null && @Model.RegoldinfoTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTablePrim.cshtml", @Model.RegoldinfoTable)
+    <br />
+}
+
+@if (Model.RegorginfoTable != null && @Model.RegorginfoTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTablePrim.cshtml", @Model.RegorginfoTable)
+    <br />
+}
+
+@if (Model.RecordTable != null && @Model.RecordTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTablePrim.cshtml", @Model.RecordTable)
+    <br />
+}
+
+@if (Model.PFRegistrationTable != null && @Model.PFRegistrationTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTablePrim.cshtml", @Model.PFRegistrationTable)
+    <br />
+}
+
+@if (Model.FSSRegistrationTable != null && @Model.FSSRegistrationTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTablePrim.cshtml", @Model.FSSRegistrationTable)
+    <br />
+}
+
+@if (Model.OKVRDsTable != null && @Model.OKVRDsTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.OKVRDsTable)
+    <br />
+}

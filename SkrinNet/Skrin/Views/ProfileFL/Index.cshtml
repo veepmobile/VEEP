@@ -1,0 +1,187 @@
+﻿@using Skrin.BLL.Infrastructure
+@using Skrin.BLL.Authorization
+@using Skrin.BLL.Root
+@using Skrin.Models.Iss
+
+@model Skrin.Models.ProfileFL.ProfileFLModel
+@{Layout = null;}
+
+@{
+    UserSession us = Context.GetUserSession();
+    int user_id = us.UserId;
+}
+
+<style>
+    .status_green {
+        color: #03BC00;
+    }
+
+    .status_red {
+        color: #CD2B25;
+    }
+
+    .title {
+        position: relative;
+    }
+
+        .title em {
+            display: none;
+        }
+
+        .title:hover em {
+            background-color: #fffbed;
+            border-radius: 5px;
+            top: 32px;
+            box-shadow: 0 0 5px #666;
+            color: #555;
+            display: block;
+            font-style: normal;
+            right: 10px;
+            line-height: 16pt;
+            padding: 10px;
+            position: absolute;
+            text-decoration: none;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+</style>
+
+<script type="text/javascript">
+    var fio = "@Model.fio";
+    var inn = "@Model.inn";
+    function getProfileFLPdf(fio, inn) {
+        var addr = String(location.href).split("/")[2]
+        location.href = '/ProfileFL/Export?fio=' + fio + '&inn=' + inn + '&url=' + addr;
+    }
+    var user_id=@(user_id);
+</script>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="~/Content/iss/tabs.css" rel="stylesheet" />
+    <link href="~/Content/iss/stoplight.css" rel="stylesheet" />
+    <link href="~/Content/iss/fontello/css/fontello.css" rel="stylesheet" />
+    <link href="~/Content/iss/fontello/css/animation.css" rel="stylesheet" />
+    <link href="~/Content/forms.css" rel="stylesheet" />
+    <link href="~/Content/modals.css" rel="stylesheet" />
+    <link href="~/Content/modal_dialog.css" rel="stylesheet" />
+    <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Scripts/multiple-select/multiple-select.css" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400&subset=latin,cyrillic' rel='stylesheet' type='text/css' />
+    <link href="~/Content/iss/iss_main.css" rel="stylesheet" />
+    <title>СКРИН. Карточка физического лица</title>
+    <script src="~/Scripts/jquery144.js"></script>
+    <script src="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+    <script src="/Scripts/multiple-select/multiple-select.js"></script>
+</head>
+<body>
+    <div class="main">
+        <div class="left-menu" style="min-height:170px">
+            <div id="logo" data-toggle="popover" data-placement="bottom">
+                <div id="skrin_services_html" style="display:none">
+                    <div id="skrin_services">
+                        <a class="skrin_service" href="@Url.Content("~/")"><span class="span_service_header" id="span_service_title_k"></span><span class="span_service_title">Контрагент</span></a>
+                        <hr />
+                        <a class="skrin_service" href="http://podft.skrin.ru"><span class="span_service_header" id="span_service_title_p"></span><span class="span_service_title">ПОД/ФТ</span></a>
+                        <a class="skrin_service" href="http://marketing.skrin.ru"><span class="span_service_header" id="span_service_title_m"></span><span class="span_service_title">Маркетинг и закупки</span></a>
+                        <a class="skrin_service" href="http://disclosure.skrin.ru"><span class="span_service_header" id="span_service_title_d"></span><span class="span_service_title">Раскрытие информации</span></a>
+                        <a class="skrin_service" href="http://center.skrin.ru"><span class="span_service_header" id="span_service_title_u"></span><span class="span_service_title">Обучение</span></a>
+                        <hr />
+                        <a class="skrin_service" href="http://skrin.ru"><span class="span_service_header">&nbsp;</span><span class="span_service_title">Все сервисы</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="firts_level">
+                <li>
+                    <div class="t_level selected linkable" id="mn1">Профиль</div>
+                </li>
+                @if (Model.isBancruptcy)
+                {
+                    <li>
+                        <div class="t_level linkable" id="mn2">Сообщения о банкротстве</div>
+                    </li>
+                }
+                <li>
+                    <div class="t_level linkable" id="mn3">Проверка паспортов</div>
+                </li>
+            </ul>
+        </div>
+        <div class="content">
+            <div id="header_panel">
+                <div id="authorization">
+                    @if (us.AuthenticationResult == AuthenticationType.Ok)
+                    {
+                        <span id="user_btn" class="icon-user login_info" data-toggle="popover" data-placement="bottom"></span>
+                        <div id="info_user_block">
+                            <span id="user_info" data-toggle="popover" data-placement="bottom" class="login_info">@us.User.Login</span><br />
+                            @if (!us.User.UsePCBinding)
+                            {
+                                @Html.ActionLink("Выход", "Logout", "Authentication", null, new { id = "user_exit" })
+                            }
+                        </div>
+                        <div id="user_hidden_info" style="display:none;">
+                            <div class="form-group" style="width:220px;">
+                                <label>Логин: @us.User.Login</label>
+                            </div>
+                            <div class="form-group" style="width:220px;">
+                                <label>Доступ: @us.User.FullAccessName</label>
+                            </div>
+                            <div class="form-group">
+                                <a href="/Authentication/Logout/" class="btns darkblue" style="color:#fff;text-decoration:none;">Выход</a>
+                            </div>
+                        </div>
+
+                    }
+                    else
+                    {
+                        <span id="user_btn" class="icon-user login" data-toggle="popover" data-placement="bottom"></span>
+                        <div id="info_user_block">
+                            <a href="#" data-toggle="popover" data-placement="bottom" id="login" class="login">Авторизация</a>
+                        </div>
+                    }
+                </div>
+                <div id="control_menu">
+                    @if (Model.user_id > 0)
+                    {
+                        <span class="title hidden" id="print_title">
+                            <em>Печать</em>
+                            <span class="icon-print" id="print_btn"></span>
+                        </span>
+                        <span class="title" id="pdf_title">
+                            <em>Экспорт в PDF</em>
+                            <span class="icon-file-pdf" id="pdf_btn" onclick="getProfileFLPdf('@Model.fio','@Model.inn')"></span>
+                        </span>
+                    }
+                </div>
+            </div>
+            <div class="main_content">
+                <div class="tabular">
+                    <div id="tab_content">
+                    </div>
+                </div>
+            </div>
+            <div id="bottom">
+                <div class="bottom_info">
+                    <div class="restr_info">Воспроизведение, перепечатка или распространение иным образом материалов данного сайта возможно только с письменного разрешения и при указании гиперссылки на http://www.skrin.ru</div>
+                    <div class="contact_info">
+                        Отдел продаж СКРИН<br />
+                        Тел.: +7 (495) 787-17-67<br />
+                        Факс: +7 (495) 787-17-66<br />
+                        e-mail: sales@skrin.ru<br />
+                        &copy;1999-2016 АО «СКРИН»
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/profilefl/app.js"></script>
+    <script src="~/Scripts/modals.js"></script>
+    <script src="~/Scripts/lib.js"></script>
+    <script src="~/Scripts/progs2.js"></script>
+    <script src="~/Scripts/jquery.maskedinput.min.js"></script>
+</body>
+</html>

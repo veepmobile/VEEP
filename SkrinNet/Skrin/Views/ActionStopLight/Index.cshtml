@@ -1,0 +1,40 @@
+﻿@model Skrin.Models.Iss.StopLight.ASL
+@{
+    Layout = null;
+}
+@if (ViewBag.TotalCount!=null)
+{ 
+<div id="stoplight_inner" data-show="@ViewBag.CanShowStopLight">
+    <h5>Индекс активности</h5>
+    <div class="asl_chart" id="asl" data-percent="@ViewBag.TotalCount"></div>
+    <a class="asl_more" href="#">Протокол проверки...</a>
+</div>
+}
+@if (ViewBag.TotalCount != null && ViewBag.CanShowStopLight)
+{
+    <div id="stoplight_content">
+        <div id="aprotocol_box">
+            <h1 id="astoplight_issuer_name"></h1>
+            <h2>Показатели активности</h2>
+            <div style="width: 749px;" class="thead">
+                <div style="width: 350px; padding-left: 20px;" class="th">Сфера проявления активности</div>
+                <div style="padding-left: 20px; border-right: none" class="th">Дата последней активности</div>
+            </div>
+            <div style="width: 751px;" class="tline"></div>
+            @foreach (var item in Model.items)
+            {
+                <div class="srclist_tbl" style="width:751px;">
+                    <div class="tabtr @item.color_class" style="width: 350px; padding-left: 20px;">
+                        @item.factor
+                    </div>
+                    <div class="tabtr" style="width: 200px; padding-left: 20px;">
+                        @item.info
+                    </div>
+                </div>
+            }
+            <div class="explain" style="clear:both;padding-top:10px; ">ВНИМАНИЕ: в связи с особенностями функционирования и обновления указанного источника информации АО "СКРИН" не может гарантировать абсолютную актуальность и достоверность данных.</div>
+        </div>        
+    </div>
+}
+
+

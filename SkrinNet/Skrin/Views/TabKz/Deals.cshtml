@@ -1,0 +1,22 @@
+﻿@model List<string>
+@{
+    Layout = null;
+}
+
+<div class="left_content KZ_codes">
+    <div class="subcaption">Основная деятельность</div>
+    <div class="info_block">
+        <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+            @foreach (var C in Model)
+            {
+                <tr>
+                    <th>Страна партнер</th>
+                    <td>@C</td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="explain" style="margin-top:20px;margin-left:20px;">
+        Источник данных: РГП «ИВЦ Агентства РК по статистике»
+    </div>
+</div>

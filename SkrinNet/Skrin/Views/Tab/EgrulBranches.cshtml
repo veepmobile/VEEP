@@ -1,0 +1,15 @@
+﻿@model Skrin.Models.Iss.Content.BranchesModel
+@{
+    Layout = null;
+}
+Данные на @(DateTime.Now.ToRusString())
+@if (Model.BranchesTable != null && Model.BranchesTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.BranchesTable)
+    <br />
+}
+@if (Model.OutputsTable != null && Model.OutputsTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.OutputsTable)
+    <br />
+}

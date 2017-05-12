@@ -1,0 +1,143 @@
+﻿
+@{
+    ViewBag.Title = "СКРИН";
+}
+@section Css{
+<link href="~/Content/index.css" rel="stylesheet" />
+}
+@section Script{
+<script src="~/Scripts/index.js"></script>
+}
+<div id="top_main">
+    <div class="content">
+        <div id="statistic_block" class="left_col">
+            <span class="title">
+                <em>Количество юр. лиц в базе</em>
+                <span id="ul_count"></span>
+            </span>
+            <span class="title">
+                <em>Количество ИП в базе</em>
+                <span id="fl_count"></span>
+            </span>
+        </div>
+        <div class="right_col">
+            <div class="news_block">
+                <h2><a href="/company/base_skrin/new/">Новое на сайте</a></h2>
+                <table id="site_updates_conteiner" class="right_divider" border="0" cellpadding="0" cellspacing="0"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="middle_main">
+    <div class="content">
+        <a href="/company/apages/check/">
+            <div id="bl1" class="bl">
+                <div class="bl_int">
+                    <h2>Проверка компаний и ИП</h2>
+                    <ul>
+                        <li>Стоп-сигналы</li>
+                        <li>Взаимосвязи</li>
+                        <li>Финансовое состояни</li>
+                        <li>Банкротства, арбитраж</li>
+                        <li>Участие в Госкзакупках</li>
+                        <li>Мониторинг изменений</li>
+                    </ul>
+
+
+                </div>
+            </div>
+        </a>
+
+        <a href="/company/apages/tprice/">
+            <div id="bl2" class="bl">
+                <div class="bl_int">
+                    <h2>Трансфертное ценообразование</h2>
+                    <ul>
+                        <li>Контролируемые сделки</li>
+                        <li>Расчет интервала рентабельности</li>
+                        <li>Трансфертное ценообразование</li>
+
+                    </ul>
+                </div>
+            </div>
+        </a>
+
+
+
+
+        <a href="/company/apages/action/">
+            <div id="bl4" class="bl">
+                <div class="bl_int">
+                    <h2> Информация по ценным бумагам</h2>
+                    <ul>
+                        <li>Выпуски ценных бумаг</li>
+                        <li>Дивиденды/купоны</li>
+                        <li>Эмиссионные документы</li>
+                        <li>Реестродержатель, владельцы</li>
+                        <li>Итоги торгов</li>
+                    </ul>
+
+
+                </div>
+            </div>
+        </a>
+        <a href="/company/apages/marketing/">
+            <div id="bl5" class="bl">
+                <div class="bl_int">
+                    <h2>Работа с массивами данных</h2>
+                    <ul>
+                        <li>Поиск товаров, заказчиков, поставщиков</li>
+                        <li>Анализ госзакупок</li>
+                        <li>Формирование баз юридических лиц по заданным критериям</li>
+                    </ul>
+
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+<div id="bottom_main">
+    <div class="content">
+        <div id="bottom_main1">
+            <div class="left_col">
+                <div class="news_block">
+                    <h2>
+                        <a href="/dbsearch/dbsearchru/news/?n=5">Корпоративные события</a>
+                    </h2>
+                    <table border="0" cellpadding="0" cellspacing="0" id="last_events_container"></table>
+                </div>
+            </div>
+            <div class="right_col">
+                <div class="news_block">
+                    <h2>
+                        <a href="/dbsearch/dbsearchru/news/?n=2">Последние сообщения</a>
+                    </h2>
+                    <table class="right_divider" id="last_reports_container" border="0" cellpadding="0" cellspacing="0"></table>
+                </div>
+            </div>
+        </div>
+        <div id="bottom_main2">
+            <div class="left_col">
+                <div class="news_block">
+                    <h2><a href="/analytics/">Аналитика и статистика</a></h2>
+                    <table border="0" cellpadding="0" cellspacing="0" id="analitics_container"></table>
+                </div>
+            </div>
+            <div class="right_col">
+                <div class="news_block">
+                    <h2>Последние обновления</h2>
+                    <table class="right_divider" border="0" cellpadding="0" cellspacing="0" id="ul_updates_container"></table>
+                </div>
+            </div>
+            <table class="sites">
+                <tr>
+                    <td class="sbtn orange"><a href="http://k.skrin.ru" style="text-decoration:none;" target="_blank"><span class="sbtn">Проверка контрагента</span></a></td>
+                    <td class="sbtn purple"><a href="http://podft.skrin.ru" style="text-decoration:none;" target="_blank"><span class="sbtn">ПОД/ФТ</span></a></td>
+                    <td class="sbtn broun"><a href="http://d.skrin.ru" style="text-decoration:none;" target="_blank"><span class="sbtn">Раскрытие информации</span></a></td>
+                    <td class="sbtn green"><a href="http://center.skrin.ru" style="text-decoration:none;" target="_blank"><span class="sbtn">Учебный центр</span></a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>

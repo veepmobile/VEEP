@@ -1,0 +1,96 @@
+﻿@using Skrin.Models.Iss.Content
+@model Issue_DocsModel
+
+@{
+    Layout = null;
+}
+
+<table style="width:650px;">
+    <tr>
+        <td class="table_caption">Выпуск</td>
+        <td class="table_caption" colspan="2">Наименование документа</td>
+    </tr>
+    @foreach (var z in Model.Items)
+    {
+        var f1 = true;
+        foreach (var f in z.Items)
+        {
+            <tr>
+                @if (@f1)
+                {
+                    <td rowspan=@z.Items.Count style="text-align: center;">@z.sec_name<br />@z.issue_no от @z.issue_date</td>
+                }
+                <td style="border-right:none">@f.GetLink(Model.ticker)</td>
+                <td class="doc_extra_info">(@Html.Raw(f.pages == 0 ? f.file_size : f.pages.ToString() + " стр."))</td>
+            </tr>
+            f1 = false;
+        }
+    }
+</table>
+
+
+<style>
+    #image_content_div {
+        text-align: center;
+    }
+
+    #image_content {
+        max-width: 900px;
+    }
+
+    .content_img_button_block {
+    }
+
+    #img_button_block_paging {
+        color: #666;
+        font-style: italic;
+        padding: 0 10px;
+    }
+</style>
+<script>
+    (function(){
+        window.showscans = function (id, page_count, ticker, page) {
+            var content="<div id=\"image_content_div\"> \
+                <div class=\"content_img_button_block\"> \
+                    <button class=\"btns darkblue\" id=\"prev_img\"><<</button> \
+                    <span id=\"img_button_block_paging\"></span> \
+                    <button class=\"btns darkblue\" id=\"next_img\">>></button> \
+                </div> \
+                <img id=\"image_content\" />   \
+            </div>";
+
+            show_dialog({ "content": content, "extra_style": "width:900px;", is_print: false });
+
+            load_image_content(id, page_count, ticker, page);
+        }
+
+        this.load_image_content = function (id, page_count, ticker, page) {
+            $('#image_content').attr('src', '/Documents/Index?iss=' + ticker + '&id=' + id + '&page_no=' + page).on('load', function () {
+                var image_width = this.clientWidth;
+                $('.modal-dialog').css('width', function () { return image_width + 50 });
+            });
+
+            $('#img_button_block_paging').text(page + ' из ' + page_count);
+
+            if (page > 1) {
+                $('#prev_img').removeClass('disabled');
+                $('#prev_img').click(function () {
+                    load_image_content(id, page_count, ticker, page - 1);
+                });
+            } else {
+                $('#prev_img').unbind().addClass('disabled');
+            }
+            if (page < page_count) {
+                $('#next_img').removeClass('disabled');
+                $('#next_img').click(function () {
+                    load_image_content(id, page_count, ticker, page + 1);
+                });
+            } else {
+                $('#next_img').unbind().addClass('disabled');
+            }
+        }
+
+
+
+    })();
+</script>

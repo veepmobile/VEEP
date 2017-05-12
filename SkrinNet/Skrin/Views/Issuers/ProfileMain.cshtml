@@ -1,0 +1,1002 @@
+﻿@model Skrin.Models.Iss.Content.Profile
+@using Skrin.BLL.Infrastructure
+@{
+    Layout = null;
+    int _i = 0;
+    var _id = "";
+}
+
+
+<div class="left_content_html">
+    @if (Model.logo_path != null)
+    { <div id="company_logo">
+        <img border="0" src="@Model.logo_path">
+    </div>
+    }
+    <h1>@Model.short_name</h1>
+    <h3>@Model.name</h3>
+    @if (!string.IsNullOrWhiteSpace(Model.eng_name))
+    {
+        <h4>@Model.eng_name</h4>
+    }
+
+    <div id="contact_info">
+        @Model.legal_address.Formated("{0}<br/>")
+        
+        @if (Model.mass_reg != "")
+        {
+           
+           @Model.mass_reg.Formated("<span class=\"bad_info\"><span class=\"icon-attention-circled\"></span>Адрес массовой регистрации: {0}</span><br/>");
+        }
+        @if (Model.bad_addr == "1")
+        {
+            @:<span class="bad_info"><span class="icon-attention-circled"></span>Связь по указанному адресу (месту нахождения), внесенному в ЕГРЮЛ, отсутствует</span><br/>
+        }
+        @if (Model.legal_phone + Model.legal_fax != "")
+        {
+            @Model.legal_phone.Formated("Тел: {0}")
+            if (Model.legal_fax != "")
+            {
+                if (Model.legal_phone != "")
+                {
+                    @:,&#160;
+            }
+            @:Факс: @Model.legal_fax
+        }
+        <br />
+        }
+        @if (Model.legal_email + Model.www != "")
+        {
+            @Model.www
+            if (Model.legal_email != "")
+            {
+                if (Model.www != "")
+                {
+                    @:,&#160;
+            }
+            @Model.legal_email
+            }
+            <br />
+        }
+    </div>
+    @if (Model.opf != 90)
+    { 
+        if (Model.egrul_name_hist.Count > 0 || Model.egrul_addr_hist.Count > 0)
+        {
+            <span class="icon-angle-down more_ico_okved" id="anameaddr">История изменений</span>
+            <div id="anameaddr_area" class="more_info_block">
+                @if (Model.egrul_name_hist.Count > 0)
+                {
+                    <h5>Сведения об изменениях наименования ЮЛ</h5>
+                    <table class="data_table" border="0" cellpadding="0" cellspacing="0" style="float:none;">
+                        <tr>
+                            <th width="25%">Дата начала действия сведений</th>
+                            <th>Полное / краткое наименование ЮЛ </th>
+                        </tr>
+                        @foreach (var nh in Model.egrul_name_hist)
+                        {
+                            <tr>
+                                <td>@nh.ds</td>
+                                <td>@nh.fullName / @nh.shortName</td>
+                            </tr>
+                        }
+                    </table>
+                    <div class="data_comment_r">Источник данных: ЕГРЮЛ</div>
+                }
+                @if (Model.egrul_addr_hist.Count > 0)
+                {
+                    <h5>Сведения об изменениях  адреса (место нахождения) ЮЛ</h5>
+                    <table class="data_table" border="0" cellpadding="0" cellspacing="0" style="float:none;">
+                        <tr>
+                            <th width="25%">Дата начала действия сведений</th>
+                            <th>Адрес (место нахождения) юр.лица </th>
+                        </tr>
+                        @foreach (var ah in Model.egrul_addr_hist)
+                        {
+                            <tr>
+                                <td>@ah.ds</td>
+                                <td>@ah.address</td>
+                            </tr>
+                        }
+                    </table>
+                    <div class="data_comment_r">Источник данных: ЕГРЮЛ</div>
+                }
+            </div>
+        }
+    }
+    
+    @if (Model.ul2_ogrn != null) { 
+    <div class="info_block">
+        <div id="sl_container" class="asl_container" data-ogrn="@Model.ul2_ogrn">
+            
+        </div>
+        <div id="asl_container" class="asl_container">
+
+        </div>
+        
+    </div>
+    }
+
+    <div class="info_block">
+        <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <th>Сведения о состоянии</th>
+                <td>
+                    <span style="vertical-align: bottom;">@Html.Raw(Model.free_egrul_status)</span>
+                </td>
+            </tr>
+            <tr>
+                <th>Статус Росстата</th>
+                <td>@Model.gks_stat</td>
+            </tr>
+            <tr>
+                <th>Субъект РФ</th>
+                <td>@Model.region</td>
+            </tr>
+            @if (Model.gorod != null)
+            {
+                <tr>
+                    <th>Город</th>
+                    <td>
+                        @if (!string.IsNullOrWhiteSpace(Model.gorod.gerb))
+                        {
+                            <img style="height:32px;float:left;padding-top:7px;" src="/Content/geo/gerb/@Model.gorod.gerb" />
+                        }
+                        <div style="float: left;height: 34px;padding-top: 10px;padding-left:8px;">@Model.gorod.name</div>
+                    </td>
+                </tr>
+            }            
+        </table>
+        <h3>Руководитель @Model.short_name</h3>
+        <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <th>&nbsp;</th>
+                <td>
+                    <table>
+                        @for (int i = 0; i < Model.ruler_list.Count; i++)
+                        {
+                            <tr>                               
+                                <td style="width:100%;border-width:0px;padding:0px;">
+                                    @if (ViewBag.CanFL)
+                                    {
+                                        if (@Model.ruler_list[i].ruler_inn.Trim().Length == 10)
+                                        {
+                                            <a target="_blank" href="/dbsearch/dbsearchru/?name=@HttpUtility.UrlEncode(@Model.ruler_list[i].ruler_fio.Trim()).Replace("+", "%20")">
+                                                @Model.ruler_list[i].ruler @(!string.IsNullOrWhiteSpace(@Model.ruler_list[i].ruler_inn) ? "(ИНН" + @Model.ruler_list[i].ruler_inn + ")" : "")
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a target="_blank" href="/profilefl/?fio=@HttpUtility.UrlEncode(@Model.ruler_list[i].ruler_fio.Trim()).Replace("+", "%20")&inn=@Model.ruler_list[i].ruler_inn">
+                                                @Model.ruler_list[i].ruler @(!string.IsNullOrWhiteSpace(@Model.ruler_list[i].ruler_inn) ? "(ИНН" + @Model.ruler_list[i].ruler_inn + ")" : "")
+                                            </a>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="disable" onclick="@ViewBag.AccessFunction">
+                                            @Model.ruler_list[i].ruler @(!string.IsNullOrWhiteSpace(@Model.ruler_list[i].ruler_inn) ? "(ИНН" + @Model.ruler_list[i].ruler_inn + ")" : "")
+                                        </div>
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </td>
+            </tr>
+        </table>
+        @if (Model.disqual == "1")
+        {
+              @:<span class="bad_info"><span class="icon-attention-circled"></span>В состав исполнительного органа входят дисквалифицированные лица</span><br/>
+        }
+        @if (Model.opf != 90)
+        { 
+            if (Model.egrul_man_hist.Count > 0)
+            {
+                <span class="icon-angle-down more_ico_okved" id="aman">История изменений</span>
+                <div id="aman_area" class="more_info_block">
+                    <h5>Сведения об изменениях физических лиц, имеющих право действовать без доверенности</h5>
+                    <table class="data_table" border="0" cellpadding="0" cellspacing="0" style="float:none;">
+                        <tr>
+                            <th width="25%">Дата начала действия сведений</th>
+                            <th>ФИО/Должность</th>
+                            <th>ИНН</th>
+                        </tr>
+                        @foreach (var mh in Model.egrul_man_hist)
+                        {
+                            <tr>
+                                <td style="text-align:center !important;">@mh.ds</td>
+                                <td>
+                                    @if (ViewBag.CanFL)
+                                    {
+                                        <a target="_blank" href="/profilefl/?fio=@HttpUtility.UrlEncode(mh.fio).Replace("+", "%20")&inn=@mh.inn">
+                                            @mh.name
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <div class="disable" onclick="@ViewBag.AccessFunction">
+                                            @mh.name
+                                        </div>
+                                    }
+                                </td>
+                                <td>@mh.inn</td>
+                            </tr>
+                        }
+                    </table>
+                    <div class="data_comment_r">Источник данных: ЕГРЮЛ</div>
+                </div>
+            }
+        }
+    </div>
+    <div class="info_block">
+        <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+            @if (@Model.is_branch)
+            {
+                <tr>
+                    <th>ИНН головной организации</th>
+                    <td>@Model.inn</td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <th>ИНН</th>
+                    <td>@Model.inn</td>
+                </tr>
+            }
+            <tr>
+                <th>КПП</th>
+                <td>@Model.kpp</td>
+            </tr>
+            <tr>
+                <th>Код СКРИН</th>
+                <td>@Model.ticker</td>
+            </tr>
+            @if (@Model.is_branch)
+            {
+                <tr>
+                    <th>ОГРН головной организации</th>
+                    <td>@Model.ogrn</td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <th>Код ФСФР</th>
+                    <td>@Model.fcsm_code</td>
+                </tr>
+                <tr>
+                    <th>ОГРН</th>
+                    <td>@Model.ogrn</td>
+                </tr>
+            }
+            <tr>
+                <th>Дата ОГРН</th>
+                <td>@Model.ogrn_date</td>
+            </tr>
+            <tr>
+                <th>Наименование регистрирующего органа, внесшего запись</th>
+                <td>@Model.reg_org</td>
+            </tr>
+            <tr>
+                <th>ОКПО</th>
+                <td>@Model.okpo</td>
+            </tr>
+            <tr>
+                <th style="vertical-align: top;">Основной вид деятельности</th>
+                <td>
+                    @foreach (var ok in Model.okveds)
+                    {
+                        if (@ok.vis == 1)
+                        {
+                            <div>@Html.Raw(ok.kod + "&#160;" + ok.name)</div>
+                        }
+                    }
+                </td>
+            </tr>
+        </table>
+        @if (Model.okveds.Count > 1)
+        {
+            <span class="icon-angle-down more_ico_okved" id="aokved">Дополнительные виды деятельности (@(Model.okveds.Count - 1))</span>
+            <div id="aokved_area" class="more_info_block">
+                <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <th>Код по ОКВЭД</th>
+                        <th>Наименование дополнительного  вида деятельности</th>
+                    </tr>
+                    @foreach (var ok in Model.okveds)
+                    {
+                        if (@ok.vis == 0)
+                        {
+                            <tr>
+                                <td>@ok.kod</td>
+                                <td>@ok.name</td>
+                            </tr>
+                        }
+                    }
+                </table>
+                <div class="data_comment_r">Источник данных:  @Model.src</div>
+            </div>
+        }
+    </div>
+
+    @if (Model.opf != 90)
+    {
+        if (Model.RsmpData != null && ViewBag.OpenProfile)
+        {
+            <div class="info_block">
+                <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <th>Дата внесения сведений в реестр субъектов МСП</th>
+                        <td>@Model.RsmpData.IncludeDate</td>
+                    </tr>
+                    <tr>
+                        <th>ЮЛ является вновь созданным</th>
+                        <td>@Model.RsmpData.IsNew</td>
+                    </tr>
+                    <tr>
+                        <th>Категория субъекта МСП</th>
+                        <td>@Model.RsmpData.SubjectType</td>
+                    </tr>
+                </table>
+            </div>
+        }
+    }
+
+    @if ((Model.aoi != null || Model.api != null) && ViewBag.OpenProfile)
+    {
+        <div class="info_block">
+            <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <th>Организатор торгов</th>
+                    <td>ОАО Московская биржа</td>
+                </tr>
+                @if (Model.aoi != null)
+                {
+                    <tr>
+                        <th>Акции обыкновенные - цена последней сделки</th>
+                        <td>@Model.aoi</td>
+                    </tr>
+                }
+                @if (Model.api != null)
+                {
+                    <tr>
+                        <th>Акции привилегированные - цена последней сделки</th>
+                        <td>@Model.api</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+    @if(!string.IsNullOrEmpty(Model.state_capital))
+    {
+        <div class="info_block">
+            <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <th>Размер уставного капитала</th>
+                    <td>@Model.state_capital</td>
+                </tr>
+            </table>
+        </div>
+    }
+
+    @if (Model.main_balance != null)
+        {       
+            <div class="info_block">
+                <h3>Финасовая отчетность</h3>
+                <table class="data_table" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <th>
+                            Основные финансовые показатели<br />
+                            @switch (Model.iss_type)
+                            {
+                                case 2:
+                                    <text>субъекта крупного  предпринимательства (руб.)</text>
+                                    break;
+                                case 1:
+                                <text>субъекта малого предпринимательства (руб.)</text>
+                                    break;
+                                case 0:
+                                <text>социально-ориентированной некоммерческой организации (руб.)</text>
+                                    break;
+                            }
+                        </th>
+                        @foreach (var bal in Model.main_balance)
+                        {
+                            <th>@bal.year г.</th>
+                        }
+                    </tr>
+
+                    @if (Model.iss_type == 2 || Model.iss_type < 0)
+                    {
+                        <tbody>
+                            <tr>
+                                <td>Выручка</td>
+                                @foreach (var mbl in Model.main_balance)
+                                {
+                                    <td style="text-align:right;padding-right:5px;">@(mbl.bal_1.NullableToString("N0"))</td>
+                                }
+                            </tr>
+                            <tr>
+                                <td>Прибыль (убыток) до налогообложения</td>
+                                @foreach (var mbl in Model.main_balance)
+                                {
+                                    <td style="text-align:right;padding-right:5px;">@(mbl.bal_2.NullableToString("N0"))</td>
+                                }
+                            </tr>
+                            <tr>
+                                <td>Чистая прибыль (убыток)</td>
+                                @foreach (var mbl in Model.main_balance)
+                                {
+                                    <td style="text-align:right;padding-right:5px;">@(mbl.bal_3.NullableToString("N0"))</td>
+                                }
+                            </tr>
+                        </tbody>
+                    }
+                    @if (Model.iss_type == 0)
+                    {
+                        <tbody>
+                            <tr>
+                                <td>Остаток средств на начало отчетного года</td>
+                                @foreach (var mbl in Model.main_balance)
+                                {
+                                    <td style="text-align:right;padding-right:5px;">@(mbl.bal_1.NullableToString("N0"))</td>
+                                }
+                            </tr>
+                            <tr>
+                                <td>Использовано средств на целевые мероприятия</td>
+                                @foreach (var mbl in Model.main_balance)
+                                {
+                                    <td style="text-align:right;padding-right:5px;">@(mbl.bal_2.NullableToString("N0"))</td>
+                                }
+                            </tr>
+                            <tr>
+                                <td>Остаток средств на конец  отчетного года</td>
+                                @foreach (var mbl in Model.main_balance)
+                                {
+                                    <td style="text-align:right;padding-right:5px;">@(mbl.bal_3.NullableToString("N0"))</td>
+                                }
+                            </tr>
+                        </tbody>
+                    }
+                    @if (Model.iss_type == 1)
+                    {
+                        <tbody>
+                            <tr>
+                                <td>Выручка (за минусом налога на добавленную стоимость, акцизов)</td>
+                                @foreach (var mbl in Model.main_balance)
+                                {
+                                    <td style="text-align:right;padding-right:5px;">@(mbl.bal_1.NullableToString("N0"))</td>
+                                }
+                            </tr>
+                            <tr>
+                                <td>
+                                    Чистая прибыль (убыток)
+                                </td>
+                                @foreach (var mbl in Model.main_balance)
+                                {
+                                    <td style="text-align:right;padding-right:5px;">@(mbl.bal_2.NullableToString("N0"))</td>
+                                }
+                            </tr>
+                        </tbody>
+                    }
+
+                </table>
+                <div class="data_comment_r" style="white-space:nowrap;">Источник данных: ГМЦ Росстата</div>
+            </div>
+        }
+
+
+       @if (Model.has_factors && ViewBag.OpenProfile)
+        {
+            <div class="info_block chart_block">
+                <div class="chart" style="margin-right:50px;">
+
+                    <canvas id="myChart" width="250" height="200"></canvas>
+                    <div id="myChearImgPlacer"></div>
+                    <h6>
+                        Коэффициент абсолютной ликвидности - %
+                        <span class="title">
+                            <em>
+                                Показывает, какую часть краткосрочной задолженности предприятие может погасить в ближайшее время за счет денежных средств и краткосрочных ценных бумаг.<br />
+                                (Денежные средства на конец отчетного периода) + (Краткосрочные финансовые вложения на конец отчетного периода) *100 / (Краткосрочные обязательства на конец отчетного периода)
+                            </em>
+                        </span>
+                    </h6>
+
+                </div>
+                <div class="chart">
+                    <canvas id="myChart1" width="250" height="200"></canvas>
+                    <div id="myChearImgPlacer1"></div>
+                    <h6>
+                        Коэффициент обеспеченности собственными оборотными средствами - %
+                        <span class="title">
+                            <em>
+                                Показывает, какая часть оборотных активов финансируется за счет собственных источников.<br />
+                                (Капитал и резервы на конец отчетного периода) – (Внеоборотные активы на конец отчетного периода) *100 / (Оборотные активы на конец отчетного периода)
+                            </em>
+                        </span>
+                    </h6>
+                </div>
+            </div>
+        }
+
+
+    @if ((Model.const_egrul != null && Model.const_egrul.Count > 0) || Model.consts != null)
+    {
+        <h3 style="float: left;margin: 20px 0 0;">Учредители (участники) @Model.short_name</h3>
+    }
+    @if (Model.consts != null)
+    {
+        <div class="info_block">
+            <table class="data_table" border="0" cellpadding="0" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th rowspan="2">
+                            Наименование учредителя или участника
+                        </th>
+                        <th rowspan="2">
+                            ИНН
+                        </th>
+                        <th colspan="2">
+                            Доля в уставном капитале
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            %
+                        </th>
+                        <th>
+                            руб.
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ _i = 0; }
+                    @foreach (var cns in Model.consts)
+                    {
+                        _i++;
+                        _id = (!string.IsNullOrWhiteSpace(cns.ticker) ? cns.ticker : cns.inn);
+                        <tr @(_i > 5 ? Html.Raw("class=\"const_toggle\"") : Html.Raw(""))>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td style="width:100%;border-width:0px;padding:0px;">
+                                            @if (!string.IsNullOrWhiteSpace(cns.ticker))
+                                            {
+                                                <a href="/issuers/@cns.ticker">@cns.name</a>
+                                            }
+                                            else
+                                            {
+                                                @cns.name
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                @cns.inn
+                            </td>
+                            <td style="text-align:right;padding-right:5px;">
+                                @cns.share.NullableToString()
+                            </td>
+                            <td style="text-align:right;padding-right:5px;">
+                                @cns.share_pecuniary.NullableToString("N0")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                @if (Model.consts.Count > 5)
+                {
+                    <tfoot>
+                        <tr>
+                            <td style="text-align:right; padding-right:15px;" colspan="4">
+                                <a class="table_unlink" id="const_togler" href="#" data-count="Показать все (@Model.consts.Count.ToString() позиций).">
+                                    Показать первые 5 позиций.
+                                </a>
+                            </td>
+                        </tr>
+                    </tfoot>
+                }
+            </table>
+            <div class="data_comment_r">
+                Источник данных: ГМЦ Росстата
+            </div>
+        </div>
+    }
+    @if (Model.const_egrul != null && Model.const_egrul.Count > 0)
+    {
+        <div class="info_block">
+            <table class="data_table" border="0" cellpadding="0" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th rowspan="2">
+                            Наименование учредителя или участника
+                        </th>
+                        <th rowspan="2">
+                            ИНН
+                        </th>
+                        <th colspan="2">
+                            Доля в уставном капитале
+                        </th>
+                        <th rowspan="2">
+                            ГРН и дата внесения записи в ЕГРЮЛ
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            &nbsp;
+                        </th>
+                        <th>
+                            руб.
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{_i = 0; }
+                    @foreach (var ecns in Model.const_egrul)
+                    {
+                        _i++;
+                        _id = (string.IsNullOrWhiteSpace(ecns.ticker) ? ecns.uid : ecns.ticker);
+                        <tr @(_i > 5 ? Html.Raw("class=\"const_e_toggle\"") : Html.Raw(""))>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td style="width:100%;border-width:0px;padding:0px;">
+                                            <span class="@ecns.css const_ico"></span>
+                                            @if (ViewBag.OpenProfile && (!string.IsNullOrWhiteSpace(ecns.ticker) || !string.IsNullOrWhiteSpace(ecns.inn) || (ecns.ord == 8)))
+                                            {
+                                                if (ecns.ord != 8)
+                                                {
+                                                    if (!string.IsNullOrWhiteSpace(ecns.ticker))
+                                                    {
+                                                        <a href="/issuers/@ecns.ticker">
+                                                            @ecns.name
+                                                        </a>
+                                                    }
+                                                    if (string.IsNullOrWhiteSpace(ecns.ticker))
+                                                    {
+                                                        if (ecns.name.Split('~').Length == 1)
+                                                        {
+                                                            <a target="_blank" href="/dbsearch/dbsearchru/?name=@HttpUtility.UrlEncode(@ecns.name.Split('~')[0]).Replace("+", "%20")">
+                                                                @ecns.name.Split('~')[0]
+                                                            </a>
+                                                        }
+                                                        if (ecns.name.Split('~').Length == 3)
+                                                        {
+                                                            @ecns.name.Split('~')[0]<br />
+                                                            @ecns.name.Split('~')[1]
+                                                            <a target="_blank" href="/dbsearch/dbsearchru/?name=@HttpUtility.UrlEncode(@ecns.name.Split('~')[2]).Replace("+", "%20")">
+                                                                @ecns.name.Split('~')[2]
+                                                            </a>
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (ViewBag.CanFL)
+                                                    {
+                                                        <a target="_blank" href="/profilefl/?fio=@HttpUtility.UrlEncode(@ecns.name).Replace("+", "%20")&inn=@ecns.inn">
+                                                            @ecns.name
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="disable" onclick="ViewBag.AccessFunction">
+                                                            @ecns.name
+                                                        </div>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                @ecns.name.Split('~')[0]
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>@ecns.inn</td>
+                            <td style="text-align:right;padding-right:5px;">
+                                @ecns.share_part  @if (ecns.share_part != "-")
+                                {
+                                    <span class="explain">(@ecns.share_head)</span>
+                                }
+                            </td>
+                            <td style="text-align:right;padding-right:5px; white-space:nowrap;">
+                                @if (!string.IsNullOrEmpty(ecns.encumbrance_type))
+                                {
+                                    <span class="title">
+                                        <em style="font-weight:normal;">
+                                            <div style="width:480px;">
+                                                <table style="width:480px;" class="data_table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Вид обременения</th>
+                                                            <th>Срок обременения</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>@ecns.encumbrance_type</td>
+                                                            <td style="white-space:normal;">@ecns.encumbrance_per</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </em>
+                                        <span class="icon-attention-circled danger"></span>
+                                    </span>
+                                }
+                                @ecns.share
+                            </td>
+                            <td style="text-align:center;">@ecns.grn<br />@ecns.grn_date</td>
+                        </tr>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.const_egrul_share))
+                    {
+                        <tr>
+                            <td>Доля в уставном капитале, принадлежащая обществу</td>
+                            <td></td>
+                            <td style="text-align:right;padding-right:5px;">
+                                @Model.const_egrul_part @if (Model.const_egrul_part != "-")
+                                {
+                                    <span class="explain">(@Model.const_egrul_part_ei)</span>
+                                }
+                            </td>
+                            <td style="text-align:right;padding-right:5px;white-space:nowrap;">@Model.const_egrul_share</td>
+                            <td style="text-align:center;">@Model.const_egrul_grn<br />@Model.const_egrul_grn_date</td>
+                        </tr>
+                    }
+                </tbody>
+                @if (Model.const_egrul.Count > 5)
+                {
+                    <tfoot>
+                        <tr>
+                            <td style="text-align:right; padding-right:15px;" colspan="5">
+                                <a class="table_unlink" id="const_e_togler" href="#" data-count="Показать все (@Model.const_egrul.Count  позиций).">
+                                    Показать первые 5 позиций.
+                                </a>
+                            </td>
+                        </tr>
+                    </tfoot>
+                }
+            </table>
+            <div class="explain">
+                <span class=" icon-user const_ico"></span> - ФЛ, <span class="icon-building const_ico"></span> - ЮЛ, <span class="icon-globe-1 const_ico"></span> - Иностранные ЮЛ,  <span class="icon-bank const_ico"></span> - Субъекты РФ
+            </div>
+            <div class="data_comment_r">
+                Источник данных: ЕГРЮЛ
+            </div>
+            @if (Model.opf != 90)
+            { 
+                if (Model.egrul_coowner_hist.Count > 0)
+                {
+                    <span class="more_ico_okved icon-angle-down" id="afndr">История изменений</span>
+                    <div id="afndr_area" style="display:none;">
+                        <div style="font-weight:bold;margin-left:22px;">Сведения об изменениях  в составе учредителей (участниках)</div>
+                        <table class="data_table" border="0" cellpadding="0" cellspacing="0" style="float:none;">
+                            <tr>
+                                <th rowspan="2">Дата начала действия сведений</th>
+                                <!--<th rowspan="2">Дата окончания действия сведений</th>-->
+                                <th rowspan="2">Наименование учредителя или участника</th>
+                                <th rowspan="2">ИНН</th>
+                                <th colspan="2">
+                                    Доля в уставном капитале
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    %
+                                </th>
+                                <th>
+                                    руб.
+                                </th>
+                            </tr>
+                            @foreach (var fh in Model.egrul_coowner_hist)
+                            {
+                                <tr>
+                                    <td style="text-align:center !important;">@fh.dtstart</td>
+                                    <td>
+                                        <span class="@fh.coowner_type const_ico"></span>
+                                        @if (ViewBag.OpenProfile && (!string.IsNullOrWhiteSpace(fh.ticker) || !string.IsNullOrWhiteSpace(fh.inn) || (fh.coowner_type == "icon-user")))
+                                        {
+                                            if (fh.coowner_type != "icon-user")
+                                            {
+                                                if (!string.IsNullOrWhiteSpace(fh.ticker))
+                                                {
+                                                    <a href="/issuers/@fh.ticker">
+                                                        @fh.name
+                                                    </a>
+                                                }
+                                                if (string.IsNullOrWhiteSpace(fh.ticker))
+                                                {
+                                                    if (fh.name.Split('~').Length == 1)
+                                                    {
+                                                        <a target="_blank" href="/dbsearch/dbsearchru/?name=@HttpUtility.UrlEncode(@fh.name.Split('~')[0]).Replace("+", "%20")">
+                                                            @fh.name.Split('~')[0]
+                                                        </a>
+                                                    }
+                                                    if (fh.name.Split('~').Length == 3)
+                                                    {
+                                                        @fh.name.Split('~')[0]<br />
+                                                        @fh.name.Split('~')[1]
+                                                        <a target="_blank" href="/dbsearch/dbsearchru/?name=@HttpUtility.UrlEncode(@fh.name.Split('~')[2]).Replace("+", "%20")">
+                                                            @fh.name.Split('~')[2]
+                                                        </a>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (ViewBag.CanFL)
+                                                {
+                                                    <a target="_blank" href="/profilefl/?fio=@HttpUtility.UrlEncode(@fh.name).Replace("+", "%20")&inn=@fh.inn">
+                                                        @fh.name
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <div class="disable" onclick="ViewBag.AccessFunction">
+                                                        @fh.name
+                                                    </div>
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @fh.name.Split('~')[0]
+                                        }
+                                    </td>
+                                    <td>@fh.inn</td>
+                                    <td>
+                                        @fh.share_part
+                                        @if (fh.share_part != "-")
+                                        {
+                                            <span class="explain">(@fh.share_head)</span>
+                                        }
+                                    </td>
+                                    <td>@fh.summa.NullableToString("N0")</td>
+                                </tr>
+                            }
+                        </table>
+                        <div class="data_comment_r">Источник данных: ЕГРЮЛ</div>
+                    </div>
+                }
+            }
+        </div>
+    }
+    <div class="info_block">
+        <div id="map"></div>
+    </div>
+    @if (Model.free_egrul_status == "Действующее*")
+    {
+        <div class="explain" style="float:left; margin-top:25px;">*Сведения о прекращении деятельности (реорганизации, ликвидации ) отсутствуют.</div>
+    }
+</div>
+
+<script>
+
+
+    $(document).ready(function () {
+        profile_init();
+    });
+
+    INIT_FUNCT["YMAPS"] = function () {
+        ymaps.ready(y_init);
+    };
+
+    (function () {
+
+        var states = {};
+
+        this.profile_init = function () {
+            $('.more_ico_okved').on('click', show_more_info);
+            change_toggler();
+            $("#const_togler").click(change_toggler);
+            change_etoggler();
+            $("#const_e_togler").click(change_etoggler);
+            
+
+            if (job_street.length == 0) {
+                $("#job_stats").hide();
+            }
+            $("body").click(hide_job_list);
+        }
+
+         //Отображение дополнительной информации
+        var show_more_info = function (event) {
+            event.stopPropagation();
+            var $target = $(event.target);
+            var id = $target.attr('id');
+            var $hiden_area = $("#" + id + "_area");
+
+
+            if ($hiden_area.is(':hidden')) {
+                states[id] = $target.text();
+                $target.removeClass("icon-angle-down").addClass("icon-angle-up").text("Свернуть");
+                $hiden_area.show();
+            } else {
+                $target.removeClass("icon-angle-up").addClass("icon-angle-down").text(states[id]);
+                $hiden_area.hide();
+
+            }
+        }
+
+        var change_toggler = function (event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            var $el = $("#const_togler");
+            if ($el) {
+                if ($el.hasClass("table_link")) {
+                    $el.removeClass("table_link").addClass("table_unlink").removeClass("icon-angle-down").addClass("icon-angle-up").text("Показать первые 5 позиций");
+                    $('.const_toggle').show();
+                } else {
+                    $el.removeClass("table_unlink").addClass("table_link").removeClass("icon-angle-up").addClass("icon-angle-down").text($el.attr("data-count"));
+                    $('.const_toggle').hide();
+                }
+            }
+        };
+
+        var change_etoggler = function (event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            var $el = $("#const_e_togler");
+            if ($el) {
+                if ($el.hasClass("table_link")) {
+                    $el.removeClass("table_link").addClass("table_unlink").removeClass("icon-angle-down").addClass("icon-angle-up").text("Показать первые 5 позиций");
+                    $('.const_e_toggle').show();
+                } else {
+                    $el.removeClass("table_unlink").addClass("table_link").removeClass("icon-angle-up").addClass("icon-angle-down").text($el.attr("data-count"));
+                    $('.const_e_toggle').hide();
+                }
+            }
+        };
+
+
+
+        window.y_init=function() {
+            var myMap = new ymaps.Map('map', {
+                center: [55.753994, 37.622093],
+                zoom: 9
+            });
+
+            ymaps.geocode('@Model.legal_address', {
+                results: 1
+            }).then(function (res) {
+                var firstGeoObject = res.geoObjects.get(0),
+                    coords = firstGeoObject.geometry.getCoordinates(),
+                    bounds = firstGeoObject.properties.get('boundedBy');
+                myMap.geoObjects.add(firstGeoObject);
+                myMap.setBounds(bounds, {
+                    checkZoomRange: true
+                });
+
+
+            });
+        }
+
+
+    })();
+
+    
+
+</script>
+@if (ViewBag.OpenProfile)
+{
+    if (Model.has_factors)
+    {
+        <script src="~/Scripts/Chart.min.js"></script>
+        <script src="~/Scripts/iss/graph.js"></script>
+    }
+
+   
+}
+
+<script src="~/Scripts/iss/stoplight.js"></script>

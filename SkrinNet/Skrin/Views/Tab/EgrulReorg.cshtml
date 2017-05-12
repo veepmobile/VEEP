@@ -1,0 +1,20 @@
+﻿@model Skrin.Models.Iss.Content.ReorgModel
+
+@{
+    Layout = null;
+}
+Данные на @(DateTime.Now.ToRusString())
+@if (Model.ReorgTable != null && Model.ReorgTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.ReorgTable)
+    <br />
+}
+@if (Model.PredecessorsTable != null && Model.PredecessorsTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.PredecessorsTable)
+    <br />
+}
+@if (Model.SuccessorsTable != null && Model.SuccessorsTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.SuccessorsTable)
+}

@@ -1,0 +1,35 @@
+﻿@model Skrin.Models.Iss.Content.ManagementModel
+@{
+    Layout = null;
+}
+Данные на @(DateTime.Now.ToRusString())
+@if (Model.ManagersTable != null && Model.ManagersTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.ManagersTable)
+    <br>
+}
+@if (Model.ManagersHistoryTable != null && Model.ManagersHistoryTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.ManagersHistoryTable)
+    <br>
+}
+@if (Model.ManagementCompaniesTable != null && Model.ManagementCompaniesTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.ManagementCompaniesTable)
+    <br>
+}
+@if (Model.ManagementForeignCompaniesTable != null && Model.ManagementForeignCompaniesTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.ManagementForeignCompaniesTable)
+    <br>
+}
+@if (Model.ManagementForeignCompanyFilialsTable != null && Model.ManagementForeignCompanyFilialsTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.ManagementForeignCompanyFilialsTable)
+    <br>
+}
+@if (Model.ManagementForeignCompanyFilialsManagerTable != null && Model.ManagementForeignCompanyFilialsManagerTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.ManagementForeignCompanyFilialsManagerTable)
+    <br>
+}

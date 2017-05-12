@@ -1,0 +1,40 @@
+﻿@model Skrin.Models.Iss.Content.ConstitutorsModel
+@{
+    Layout = null;
+}
+Данные на @(DateTime.Now.ToRusString())
+@if (Model.ConstitutorsTable != null && Model.ConstitutorsTable.RowCount > 0)
+{
+    var cols = Model.ConstitutorsTable.Columns.Values.ToList();
+    @Html.Raw(Model.ConstitutorsTable.FormatedHeader)
+    <table class="profile_table" cellspacing="0" cellpadding="2">
+        <tr>
+            <th rowspan="2" class="table_caption" @Html.Raw(cols[0].HeaderAttributes)>@cols[0].FormatedHeader</th>
+            <th rowspan="2" class="table_caption" @Html.Raw(cols[1].HeaderAttributes)>@cols[1].FormatedHeader</th>
+            <th rowspan="2" class="table_caption" @Html.Raw(cols[2].HeaderAttributes)>@cols[2].FormatedHeader</th>
+            <th colspan="2" class="table_caption" @Html.Raw(cols[3].HeaderAttributes)>@cols[3].FormatedGroupHeader</th>
+            <th rowspan="2" class="table_caption" @Html.Raw(cols[5].HeaderAttributes)>@cols[5].FormatedHeader</th>
+            <th rowspan="2" class="table_caption" @Html.Raw(cols[6].HeaderAttributes)>@cols[6].FormatedHeader</th>
+            <th rowspan="2" class="table_caption" @Html.Raw(cols[7].HeaderAttributes)>@cols[7].FormatedHeader</th>
+        </tr>
+        <tr>
+            <th class="table_caption" @Html.Raw(cols[3].HeaderAttributes)>@cols[3].FormatedHeader </th>
+            <th class="table_caption" @Html.Raw(cols[4].HeaderAttributes)>@cols[4].FormatedHeader</th>
+        </tr>
+        @for (int i = 0, i_max = Model.ConstitutorsTable.RowCount; i < i_max; i++)
+        {
+            <tr>
+                @foreach (var column in Model.ConstitutorsTable.Columns.Values)
+                {
+                    <td @Html.Raw(column.ColumnAttributes)>@Html.Raw(column.ColumnValues[i].FormatedValue)</td>
+                }
+            </tr>
+        }
+    </table>
+    <br>
+}
+@if (Model.ConstitutorsHistoryTable != null && Model.ConstitutorsHistoryTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.ConstitutorsHistoryTable)
+    <br>
+}

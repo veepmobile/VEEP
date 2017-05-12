@@ -1,0 +1,92 @@
+﻿@using Skrin.BLL.Infrastructure
+@using Skrin.BLL.Authorization
+@using Skrin.BLL.Root
+@using Newtonsoft.Json
+
+@{
+    UserSession us = Context.GetUserSession();
+    string add_tag = us.AuthenticationResult == AuthenticationType.Ok ? "" : " readonly=\"readonly\" onclick=\"united_login(5);\" ";
+    int user_id = us.UserId;
+}
+
+@section Css{
+    <link href="~/Content/search.css?v=20170417" rel="stylesheet" />
+    <link href="~/Content/tree.css" rel="stylesheet" />
+    <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" rel="stylesheet" />
+    <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery.ui.datepicker.css" rel="stylesheet" />
+}
+
+@section Script{
+    <script src="~/Scripts/progs2.js"></script>
+    <script src="~/Scripts/date.format.js"></script>
+    <script src="~/Scripts/messages/fedresurs.js"></script>
+    <script src="~/Scripts/messages/groupselector.js?20170412"></script>
+    
+    <script>
+    var extGroupList =  @Html.Raw(JsonConvert.SerializeObject(AuthenticateSqlUtilites.GetExtGroupList(user_id)));
+    var user_id=@(user_id);
+
+    var roles_object=@Html.Raw(ViewBag.RolesJson);
+
+    </script>
+}
+
+<div id="search_block" class="search_block_messages">
+    <div id="search_block_base">
+        <div class="content">
+            <div id="base_block">
+                <div class="form-group">
+                    <label for="comp" class="label_form">Наименование, ИНН, ОГРН</label>
+                    <div class="sub_form">
+                        <input id="search_name" type="text" class="search_input" placeholder="Наименование, ИНН, ОГРН" data-check />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="gropVal" class="label_form">Группа</label>
+                    <div class="sub_form">
+                        <div id="groupSelect" class="customSelect" onclick="show_groupSelector();">
+                            <span id="gropVal" class="customVal" data-check="" val="0">Нет</span>
+                            <span class="icon-angle-down"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="label_form">Период</label>
+                    <div class="sub_form">
+                        <span style="padding: 0 10px 0 0;"> c </span>
+                        <input id="dfrom" type="text" class="search_input short" data-check placeholder="ДД.ММ.ГГГГ" @Html.Raw(add_tag) />
+                        <span style="padding: 0 10px;"> по </span>
+                        <input id="dto" type="text" class="search_input short" data-check placeholder="ДД.ММ.ГГГГ" @Html.Raw(add_tag) />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="types" class="label_form">Тип сообщения</label>
+                    <div class="sub_form">
+                        <input id="types" type="text" class="search_input" onclick="show_tree_selector(event,23,1)" placeholder="Тип сообщения" title="Тип сообщения" />
+                    </div>
+                    <input type="hidden" id="types_val" value="" data-check /><input type="hidden" id="types_excl" value="0" />
+                </div>
+                <div class="form-group">
+                    <label for="comp" class="label_form">Текст</label>
+                    <div class="sub_form">
+                        <input id="search_text" type="text" class="search_input" placeholder="Текст в сообщении" data-check />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btns darkblue large" id="btn_find">Найти</button>
+                    <button class="btns grey large" id="btn_clear">Очистить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="result_block" class="events_search">
+    <div class="content">
+        <div id="search_count">
+        </div>
+        <div id="event_search_result">
+        </div>
+        <div style="clear:both"></div>
+    </div>
+</div>

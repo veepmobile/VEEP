@@ -1,0 +1,167 @@
+﻿@using Skrin.BLL.Infrastructure;
+@using Skrin.BLL.Authorization;
+@using System.Globalization;
+@using Skrin.BLL;
+@using Skrin.Models.ProfileKZ;
+
+@model ProfileKZ
+
+@{
+    UserSession us = Context.GetUserSession();
+    IEnumerable<int> a_types = null;
+    if (us.UserId > 0)
+    {
+        var accesses = us.User.SitesAccess.Where(p => !p.IsOutOfDate).Select(p => p.AccessType);
+        if (!accesses.Contains(AccessType.Emitent))
+        {
+            a_types = accesses.Select(p => (int)p);
+        }
+    }
+
+    Layout = null;
+    var _j = 0;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="~/Content/iss/tabs.css" rel="stylesheet" />
+    <link href="~/Content/iss/fontello/css/fontello.css" rel="stylesheet" />
+    <link href="~/Content/iss/fontello/css/animation.css" rel="stylesheet" />
+    <link href="~/Content/forms.css" rel="stylesheet" />
+    <link href="~/Content/modals.css" rel="stylesheet" />
+    <link href="~/Content/modal_dialog.css" rel="stylesheet" />
+    <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.css" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <link href="~/Content/iss/iss_main.css" rel="stylesheet" />
+    <title>@Model.name</title>
+    <script src="~/Scripts/jquery144.js"></script>
+    <script src="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+    <script>
+        var ISS = "@Model.Code";
+        var NAME="@Model.name";
+        var ACCESS=@(a_types==null ? "[]":("["+ string.Join(",",a_types) +"]"));
+        //Список функций запускаемый после инициализвции меню
+        var INIT_FUNCT={};
+        var OPEN_COMPANY=false;
+        var job_street = [];
+    </script>
+
+</head>
+<body>
+    <div class="main">
+        <div class="left-menu">
+            <div id="logo" data-toggle="popover" data-placement="bottom">
+                <div id="skrin_services_html" style="display:none">
+                    <div id="skrin_services">
+                        <a class="skrin_service" href="@Url.Content("~/")"><span class="span_service_header" id="span_service_title_k"></span><span class="span_service_title">Контрагент</span></a>
+                        <hr />
+                        <a class="skrin_service" href="http://podft.skrin.ru"><span class="span_service_header" id="span_service_title_p"></span><span class="span_service_title">ПОД/ФТ</span></a>
+                        <a class="skrin_service" href="http://marketing.skrin.ru"><span class="span_service_header" id="span_service_title_m"></span><span class="span_service_title">Маркетинг и закупки</span></a>
+                        <a class="skrin_service" href="http://disclosure.skrin.ru"><span class="span_service_header" id="span_service_title_d"></span><span class="span_service_title">Раскрытие информации</span></a>
+                        <a class="skrin_service" href="http://center.skrin.ru"><span class="span_service_header" id="span_service_title_u"></span><span class="span_service_title">Обучение</span></a>
+                        <hr />
+                        <a class="skrin_service" href="http://skrin.ru"><span class="span_service_header">&nbsp;</span><span class="span_service_title">Все сервисы</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div id="header_panel">
+                <div id="authorization">
+
+                    @if (us.AuthenticationResult == AuthenticationType.Ok)
+                    {
+                        <span id="user_btn" class="icon-user login_info" data-toggle="popover" data-placement="bottom"></span>
+                        <div id="info_user_block">
+                            <span id="user_info" data-toggle="popover" data-placement="bottom" class="login_info">@us.User.Login</span><br />
+                            @if (!us.User.UsePCBinding)
+                            {
+                                @Html.ActionLink("Выход", "Logout", "Authentication", null, new { id = "user_exit" })
+                            }
+                        </div>
+                        <div id="user_hidden_info" style="display:none;">
+                            <div class="form-group" style="width:220px;">
+                                <label>Логин: @us.User.Login</label>
+                            </div>
+                            <div class="form-group" style="width:220px;">
+                                <label>Доступ: @us.User.FullAccessName</label>
+                            </div>
+                            <div class="form-group">
+                                <a href="/Authentication/Logout/" class="btns darkblue" style="color:#fff;text-decoration:none;">Выход</a>
+                            </div>
+                        </div>
+
+                    }
+                    else
+                    {
+                        <span id="user_btn" class="icon-user login" data-toggle="popover" data-placement="bottom"></span>
+                        <div id="info_user_block">
+                            <a href="#" data-toggle="popover" data-placement="bottom" id="login" class="login">Авторизация</a>
+                        </div>
+                    }
+                </div>
+                <div id="control_menu">
+                    @*<span class="title">
+                            <em>Добавить в группу</em>
+                            <span class="icon-plus"></span>
+                        </span>*@
+                    <span class="title">
+                        <em>Экспорт в Word</em>
+                        <span class="icon-file-word disabled" id="wrd_btn"></span>
+                    </span>
+                    <span class="title">
+                        <em>Экспорт в Pdf</em>
+                        <span class="icon-file-pdf disabled" id="pdf_btn"></span>
+                    </span>
+                    <span class="title">
+                        <em>Экспорт в Excel</em>
+                        <span class="icon-file-excel disabled" id="xls_btn"></span>
+                    </span>
+                    <span class="title">
+                        <em>Печать</em>
+                        <span class="icon-print disabled" id="print_btn"></span>
+                    </span>
+                </div>
+                @*<div id="job_stats" class="title">
+                        <em>Ход текущих заданий</em>
+                        <div id="rot_box" class="animate-spin" onmouseover="show_job_list(event);" onclick="event.stopPropagation();"><span class="icon-cog"></span></div>
+                        <div class="icon_job_cnt"></div>
+                        <div id="job_list"></div>
+                    </div>*@
+            </div>
+            <div class="main_content">
+                <div class="left_content">
+                    @Html.Action("ProfileMain", new { ticker = Model.Code })
+                </div>
+                @*<div class="right_content">
+                        @Html.Action("ProfileRightMenu", new { ticker = Model.Code })
+                    </div>*@
+            </div>
+            <div id="bottom">
+                <div class="bottom_info">
+                    @Html.Partial("ContactInfo");
+                    @Html.Partial("Counters");
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+    <script src="~/Scripts/kz/app.js"></script>
+    <script src="~/Scripts/kz/app.desctop.js"></script>
+    <script src="~/Scripts/modals.js"></script>
+    <script src="~/Scripts/lib.js"></script>
+    <script src="~/Scripts/progs2.js"></script>
+    <script src="~/Scripts/jquery.maskedinput.min.js"></script>
+</body>
+</html>

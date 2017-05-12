@@ -1,0 +1,140 @@
+﻿.modal-content {
+  box-shadow: 0 27px 24px 0 rgba(0, 0, 0, 0.2), 0 40px 77px 0 rgba(0, 0, 0, 0.22);
+  border-radius: 2px;
+  border: none;
+}
+.modal-content .modal-header {
+  border-bottom: none;
+/*  padding-top: 24px;
+  padding-right: 24px;
+  padding-bottom: 0px;
+  padding-left: 24px;*/
+}
+.modal-content .modal-body {
+  padding-top: 0px;
+  padding-right: 24px;
+  padding-bottom: 16px;
+  padding-left: 24px;
+}
+.modal-content .modal-footer {
+  border-top: none;
+  padding: 7px;
+}
+.modal-content .modal-footer button {
+  margin: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-left:10px;
+  width: auto;
+}
+.modal-content .modal-footer button.pull-left {
+  padding-left: 5px;
+  padding-right: 5px;
+  position: relative;
+  left: -5px;
+}
+/*.modal-content .modal-footer button + button {
+  margin-bottom: 16px;
+}*/
+.modal-content .modal-body + .modal-footer {
+  padding-top: 0;
+}
+.modal-backdrop {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+button.close {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    border: 0 none;
+    cursor: pointer;
+    padding: 0;
+}
+.close {
+    color: #000;
+    float: right;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    opacity: 0.2;
+    text-shadow: 0 1px 0 #fff;
+}
+.modal-body {
+    clear:both;
+}
+
+.modal-content .confirm-dialog{
+    margin: 20px 10px 10px;
+    text-align: center;
+}
+
+.modal-content .confirm-dialog button{
+    margin: 0 10px;
+}
+
+
+.modal-content table{
+    line-height: 20px;
+    font-size: 14px;
+    border-collapse: collapse;
+}
+
+.modal-content table td{
+     text-align: left;
+     padding: 5px 10px;
+     background-color: #fff;
+     border: solid 1px #ddd;
+}
+
+.modal-content table td span {
+	font-weight: bold;
+}
+
+.modal-content table tr{
+    background-color:#fff !important;
+}
+
+.modal-content table td.table_item_center{
+     text-align: center;
+     padding: 5px 10px;
+     background-color: #fff;
+     border: solid 1px #ddd;
+}
+
+.modal-content table td.table_item_right{
+     text-align: right;
+     padding: 5px 10px;
+     background-color: #fff;
+     border: solid 1px #ddd;
+}
+
+.modal-content table td.table_caption{
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #f9fafc;
+    border: solid 1px #ddd;
+    font-weight:bold;
+}
+
+
+.modal-content table td.table_caption_left{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #f9fafc;
+    border: solid 1px #ddd;
+    font-weight:bold;
+}
+
+.modal-content table.no_border{
+     text-align: left;
+     padding: 5px 5px 5px 20px;
+     background-color: #fff;
+     border: 0px;
+}
+
+.modal-content table.no_border td{
+     text-align: left;
+     padding: 5px 5px 5px 20px;
+     background-color: #fff;
+     border: 0px;
+}

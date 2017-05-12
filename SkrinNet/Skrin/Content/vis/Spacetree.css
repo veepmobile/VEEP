@@ -1,0 +1,149 @@
+.jit-autoadjust-label {
+  padding: 0px;
+}
+
+#update, #restore {
+  text-align: center;
+  width: 100px;
+  margin:0px 35px 10px 35px;
+}
+
+.button {
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font: 14px / 100% Arial, Helvetica, sans-serif;
+  padding: 0.5em 1em 0.55em;
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  border-radius: 0.5em;
+  -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.button:hover {
+  text-decoration: none;
+}
+
+.button:active {
+  position: relative;
+  top: 1px;
+}
+
+/* white */
+.white {
+  color: #606060;
+  border: solid 1px #b7b7b7;
+  background: #fff;
+  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ededed));
+  background: -moz-linear-gradient(top,  #fff,  #ededed);
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed');
+}
+
+.white:hover {
+  background: #ededed;
+  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#dcdcdc));
+  background: -moz-linear-gradient(top,  #fff,  #dcdcdc);
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dcdcdc');
+}
+
+.white:active {
+  color: #999;
+  background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#fff));
+  background: -moz-linear-gradient(top,  #ededed,  #fff);
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#ffffff');
+}
+.st_label
+{
+	  background-color: #bbb;
+    border: medium none;
+    border-radius: 5px;
+    box-shadow: 5px 0 rgba(0, 0, 0, 0.1);
+    color: #000;
+    font-family: Arial;
+    font-size: 0.85em;
+    height: 60px;
+    padding-left: 5px;
+    text-align: left;
+    width: 185px;
+}
+.sto_p
+{
+	background-image: url(/iss/css/img/plus.gif);
+	background-repeat: no-repeat;
+	background-position: right center;
+
+}
+.sto_m
+{
+	background-image: url(/iss/css/img/minus.gif);
+	background-repeat: no-repeat;
+	background-position: right center;
+
+}
+.knopki
+{
+	float:right;
+	vertical-align:middle;
+	border:solid 1px #000;
+	height:45px;
+	width:11px;
+}
+.scale_plus 
+{
+	position:relative; float:left; background-image:url('/Content/vis/up.gif'); cursor:pointer; width:28px;height:28px; z-index:1000; margin:4px 0 0 4px;
+}
+.scale_minus
+{
+	position:relative; float:left; background-image:url('/Content/vis/down.gif'); cursor:pointer; width:28px;height:28px; z-index:1000; margin:4px 0 0 4px;
+}
+.nname
+{
+    font-size:9px;
+}
+.labtab {
+    font-size: 9px;
+    height: 59px;
+    margin-left: -5px;
+    margin-top: 0px;
+    width: 190px;
+    border-radius:4px;
+    
+    background-color:#ffEEEE;
+}
+
+.m {
+    background-color:#DDFFDD;
+    
+}
+.pfzy{
+   background-color:#AAEEFF;
+}
+.mrfzy{
+   background-color:#FFDDDD;
+}
+.p{
+    background-color:#AAEEFF;
+    
+}
+.r {
+    background-color:#FFFFDD;
+    
+}
+.mr {
+    background-color:#FFDDDD;
+    
+}
+.fzy {
+    background-color:#FFDDFF;
+}
+.gr {
+    background-color:#EEE;
+}
+.lt_legend {
+    float:left;margin-right:15px;width:110px; height:35px; padding-left:2px; padding-top:3px;color:#555;
+}
