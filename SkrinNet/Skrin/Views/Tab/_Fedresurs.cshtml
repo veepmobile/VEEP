@@ -1,0 +1,367 @@
+﻿@model Skrin.Models.Iss.Content.FedresursModel
+@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+    var SO = {};
+    var iss = $("#iss").val();
+    var types = null;
+
+    $(document).ready(function() {
+        init_fr_calendar();
+        init_fr_selectors();
+
+        $('#btn_find').click(function () {
+            save_search_params();
+            search(1);
+            get_date();
+        });
+
+        save_search_params();
+        search(1);
+        get_date();
+    });
+</script>
+
+<div id="div_barg">
+    <div class="form_container" style="height:48px; padding-bottom:20px; background-color: rgb(240,240,240);">
+        <form name="news_form" id="news_form" onkeypress="news_search(event);">
+            <input type="hidden" id="iss" value="@Model.FedresursCompany.Ticker" />
+            <table cellspacing="3" cellpadding="0" width="100%" border="0">
+                <tr>
+                    <td nowrap="yes" style="white-space:nowrap;">Период с:</td>
+                    <td>
+                        <input type="text" name="dfrom" id="dfrom" class="system_form" style="width:80px;" />
+                    </td>
+                    <td>по:</td>
+                    <td>
+                        <input type="text" name="dto" id="dto" class="system_form" style="width:80px;" />
+                    </td>
+                    <td>Тип&#160;сообщения:</td>
+                    <td id="td_bt" style="width: 100%; white-space: nowrap;padding-right:8px;" title="">
+                        <input type="text" id="bt" name="bt" style="width: 100%; cursor: pointer;" readonly="readonly" class="system_form" onfocus="this.blur()" />
+                        <input type="hidden" id="bt_val" value="" /> <!-- test = ngmnt 11 -->
+                        <input type="hidden" id="bt_excl" value="0" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="7">
+                        <table style="width:100%" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td>
+                                    Текст:
+                                </td>
+                                <td width="100%" colspan="6">
+                                    <input type="text" name="kw" id="kw" class="system_form" style="width:100%;" />
+                                </td>
+                                <td valign="top">
+                                    <input type="button" id="btn_find" class="system_form btns blue" value="НАЙТИ" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<div style="float:left;width:100%;padding-top:20px;" id="fedresurs_found">
+    <div id="search_count" style="margin-top:6px;"></div>
+    <div id="t_content"></div>
+    <div id="pager"></div>
+    <div id="link_details"></div>
+    <div id="testing" />
+</div>
+
+<!--<script src="~/Scripts/iss/fedresurs.js"></script>-->
+
+<script type="text/javascript">
+    var SO = {};
+    var iss = $("#iss").val();
+
+    $(document).ready(function () {
+        init_calendar();
+        //init_bc_selectors();
+
+        $('#btn_find').click(function () {
+            save_search_params();
+            search(1);
+            get_date();
+        });
+
+        save_search_params();
+        search(1);
+        get_date();
+
+    });
+
+    //инициализация календаря
+    function init_calendar() {
+        var dates = $("#dfrom, #dto").datepicker({
+            changeMonth: true,
+            showButtonPanel: true,
+            changeYear: true,
+            beforeShow: function () {
+                setTimeout(function () {
+                    $('.ui-datepicker').css('z-index', 6);
+                }, 0);
+            },
+            onSelect: function (selectedDate) {
+                var option = this.id == "dfrom" ? "minDate" : "maxDate",
+                instance = $(this).data("datepicker");
+                date = $.datepicker.parseDate(
+                instance.settings.dateFormat ||
+                $.datepicker._defaults.dateFormat,
+                selectedDate, instance.settings);
+                dates.not(this).datepicker("option", option, date);
+            }
+        });
+    }
+
+    function save_search_params() {
+        var dfrom = $('#dfrom').val();
+        var dto = $('#dto').val();
+
+        SO.dfrom = /\d{2}\.\d{2}\.\d{4}/.test(dfrom) ? dfrom : "";
+        SO.dto = /\d{2}\.\d{2}\.\d{4}/.test(dto) ? dto : "";
+        SO.kw = $('#kw').val();
+        SO.type = $('#bt_val').val();
+        SO.type_excl = 0;
+        SO.type_excl = $('#bt_excl').val();
+        SO.iss = iss;
+        SO.step = 20;
+    }
+
+    function restore_search_params() {
+        $('#dfrom').val(SO.dfrom);
+        $('#dto').val(SO.dto);
+        $('#kw').val(SO.kw);
+        $("#bt_val").val(SO.type);
+        $("#bt_excl").val(SO.type_excl);
+    }
+
+    function clear() {
+        $('#dfrom').val('');
+        $('#dto').val('');
+        $('#kw').val('');
+        $("#bt_val").val('');
+        $("#bt_excl").val('0');
+    }
+
+    function getval(val) {
+        if (!val) {
+            return "";
+        }
+        return val;
+    }
+
+    SO.toString = function () {
+        return "dfrom=" + SO.dfrom + "&dto=" + SO.dto + "&kw=" + SO.kw + "&type=" + SO.type + "&type_excl=" + SO.type_excl + "&iss=" + SO.iss + "&page=" + SO.page;
+    }
+
+
+    function _search(page) {
+        showClock();
+        SO.page = page;
+        var url = "/Fedresurs/FedresursSearchAsync";
+        var params = "dfrom=" + SO.dfrom + "&dto=" + SO.dto + "&kw=" + SO.kw + "&type=" + SO.type + "&type_excl=" + SO.type_excl + "&iss=" + SO.iss + "&page=" + SO.page;
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: params,
+            success: function (data) {
+                hideClock();
+                if (data) {
+                    var res = $.parseJSON(data);
+
+                    //Общее количество найденных строк
+                    var total = (res) ? res.total : 0;
+                    if (total) {
+                        $('#search_count').html(total == 0 ? "<table class=\"notfound\" width=\"100%\"><tr><td class=\"notfound\">Нет данных соответствующих заданному условию</td></tr></table>" : "<div class=\"minicaption\" style=\"margin-top:10px;margin-bottom:10px;\">Всего найдено " + total + " сообщений.</div>");
+                        var res_arr = res.results;
+                        if (res_arr.length > 0) {
+                            $('#t_content').text('');
+                            $('#link_details').text('');
+                            generate_result(res_arr, page, total, bcSO.step);
+                        } else {
+                            $('#t_content').html('');
+                            $('#pager').text('');
+                            $('#link_details').text('');
+                        }
+                    } else {
+                        $('#search_count').text('Ошибка сервиса, попробуйте зайти позже.')
+                    }
+                }
+            }
+        });
+
+    }
+
+    function generate_result(res_arr, page, total, step) {
+        restore_search_params();
+        var th_str = "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><td class=\"table_caption\" align=\"center\" style=\"width:145px;\" colspan=\"2\">Дата</td><td class=\"table_caption\" style=\"width:100px;\">Наименование общества</td><td class=\"table_caption\">Вид документа (информации)</td></tr>";
+
+        var counter = 0;
+        for (var i = 0, i_max = res_arr.length; i < i_max; i++) {
+            counter++;
+            var headers = '';
+            if (res_arr[i].type_name == null || res_arr[i].type_name == '') {
+                headers = getval(res_arr[i].headers);
+            }
+            else {
+                headers = getval(res_arr[i].type_name);
+            }
+            var show_iss = "";
+            var ticker = getval(res_arr[i].ticker);
+            if (ticker.Length == 32) {
+                _show_iss = " onclick=\"openPeople('" + ticker + "');\"";
+            }
+            else {
+                _show_iss = " onclick= \"openIssuer('" + ticker + "');\"";
+            }
+            var name = "";
+            if (_show_iss!="")
+            {
+                name = "
+                <a id=\"iss_" + i + " name=\" " + ticker + " \" href=\"#\" " + _show_iss + ">" + getval(res_arr[i].company_name) + "</a>";
+            }
+            else
+            {
+                name = getval(res_arr[i].company_name);
+            }
+            th_str += "
+            <tr>
+                <td class=\"table_item_left\" align=\"left\" style=\"width:20px;\"><input type=\"checkbox\" name=\"ch_vek_" + getval(res_arr[i].id) + "\" id=\"ch_vek_" + getval(res_arr[i].id) + "\" value=\"" + getval(res_arr[i].id) + "\" /></td>" +
+                "
+                <td class=\"table_item_left\" align=\"left\" nowrap=\"yes\" style=\"width:80px;white-space:nowrap;\">" + getval(res_arr[i].show_pub_date) + "</td>" +
+                "
+                <td class=\"table_item_left\" align=\"left\" style=\"width:50%\">" + name + "</td>" +
+                "
+                <td class=\"table_item_left\" align=\"left\" style=\"width:50%\"><a href=\"#\" style=\"cursor:pointer;\" onclick=\"ShowEvent('" + getval(res_arr[i].id) + "');\">" + getval(res_arr[i].type_name) + "...</a></td>
+            </tr>";
+        }
+        th_str += "
+    </table>";
+        $('#t_content').html(th_str);
+
+        //GenPages(total, page, step);
+        get_date();
+        if (counter == 0) {
+            $('#t_content').text('');
+            $('#pager').text('');
+            $('#link_details').text('');
+        }
+        else {
+            GetLinks();
+        }
+    }
+
+
+    function get_date() {
+        var url = "/Fedresurs/GetMessageDatesAsync";
+        var params = "dfrom=" + SO.dfrom + "&dto=" + SO.dto + "&kw=" + SO.kw + "&type=" + SO.type + "&type_excl=" + SO.type_excl + "&iss=" + SO.iss + "&page=" + SO.page;
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: params,
+            success: function (data) {
+                if (data) {
+                    var res = $.parseJSON(data);
+                    var d1 = (bcSO.dfrom != "") ? bcSO.dfrom : format_date(res.results[0].mindate);
+                    var d2 = (bcSO.dto != "") ? bcSO.dto : format_date(res.results[0].maxdate);
+                    $('#dfrom').val(d1);
+                    $('#dto').val(d2);
+                }
+            }
+        });
+    }
+
+    function format_date(ts) {
+        var timestampInMilliSeconds = ts * 1000;
+        var date = new Date(timestampInMilliSeconds);
+        var day = (date.getDate() < 10 ? '0' : '') + date.getDate();
+        var month = (date.getMonth() < 9 ? '0' : '') + (date.getMonth() + 1);
+        var year = date.getFullYear();
+        var formattedDate = day + '.' + month + '.' + year;
+        return formattedDate;
+    }
+
+    function GetLinks() {
+        $('#link_details').text('');
+        var links = "<br /><br /><table width=\"100%\" cellspacing=\"4\" cellpadding=\"0\" border=\"0\"><tr><td valign=\"top\" width=\"16\"><img src=\"/images/icon_only_selected.gif\" width=\"16\" height=\"16\" border=\"0\" /></td><td><a href=\"#\" onclick=\"ShowMessagesSelected();\"><b>Посмотреть выбранные сообщения</b></a><br /></td></tr><tr><td valign=\"top\" width=\"16\"><img src=\"/images/icon_only_selected.gif\" width=\"16\" height=\"16\" border=\"0\" /></td><td><a href=\"#\" onclick=\"ShowMessagesSelected(true)\"><b>Посмотреть все сообщения на странице</b></a><br /></td></tr></table><br /><div class=\"data_comment\">ВНИМАНИЕ: Представленные сведения являются результатом обработки данных первоисточника и отображаются исключительно при наличии в тексте сообщения данных (ОГРН и ИНН) участника процесса. В случае отсутствия ОГРН и/или ИНН участника процесса, информация по делу в данном разделе отсутствует. Дополнительную информацию можно получить в разделе <a href=\"/t/dbsearch/dbsearchru/news/?n =3\" target=\"_blank\">СООБЩЕНИЯ/Сведения о фактах деятельности</a>.</div>";
+        $('#link_details').html(links);
+    }
+
+    function stopEvent(e) {
+
+        if (window.event) {
+            e = window.event;
+        }
+        kk = e.keyCode;
+        if (e.stopPropagation) {
+            e.stopPropagation();
+        } else {
+            e.cancelBubble = true;
+        }
+    }
+
+
+    function ShowEvent(ids) {
+        showClock();
+        var kw = "";
+        iss = (!iss) ? $("#iss").val() : iss;
+        if (getObj("kw")) {
+            kw = $("#kw").val();
+        }
+
+        var url = "/Fedresurs/GetMessage";
+        var params = "ids=" + ids + "&ticker=" + iss;
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: params,
+            success: function (data) {
+                hideClock();
+                if (data) {
+                    show_dialog({ "content": data, "extra_style": "width:990px;", is_print: true });
+                }
+            }
+        });
+
+    }
+
+    function ShowMessagesSelected(all) {
+        var ids = ''
+        var i = 0;
+        var kw = "";
+        if (getObj("kw")) {
+            kw = $("#kw").val();
+        }
+
+        $("input:checkbox[name='ch_fedresurs']" + (all ? "" : ":checked")).each(function () {
+            ids += this.value + ",";
+        })
+        if (ids.length == 0 && !all) {
+            showwin("warning", "Нет ни одного выбранного сообщения.", 2000);
+        }
+        else {
+            showClock()
+            var url = "/Fedresurs/GetMessagesSelected";
+            var params = "ids=" + ids + "&ticker=" + iss;
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: params,
+                success: function (data) {
+                    hideClock();
+                    if (data) {
+                        show_dialog({ "content": data, "extra_style": "width:990px;", is_print: true });
+                    }
+                }
+            });
+        }
+    }
+
+</script>

@@ -1,0 +1,63 @@
+﻿@{
+    Layout = null;
+    string title = "Итоги торгов. " + ViewBag.CompanyName;
+}
+@model Skrin.Models.Iss.Content.TradeInfo
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@title</title>
+    <link href="/Content/iss/iss_main.css" rel="stylesheet">
+    <link href="/Content/form.css" rel="stylesheet">
+    <link href="/Content/modal.css" rel="stylesheet">
+</head>
+<body>
+    <div class="content" style="margin:10px">
+    @if (Model == null)
+    {
+        <script src="~/Scripts/jquery144.js"></script>
+        <script src="~/Scripts/lib.js"></script>
+        <script type="text/javascript">
+            no_rights();
+        </script>
+    }
+    else
+    {
+        if (Model.Items.Count==0)
+        {
+            <span class="notfound">Нет данных за указанный период</span>
+        }
+        else
+        {
+            <h2>@title</h2>
+            <table class="data_table" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                    <th>Дата</th>
+                    <th>Биржевой код</th>
+                    <th>Орг. торг.</th>
+                    @foreach (var item in Model.Headers)
+                    {
+                        <th>@item.Value</th>
+                    }
+                </tr>
+                @foreach (var it in Model.Items)
+                {
+                    <tr>
+                        <td>@it.RegDate</td>
+                        <td>@it.Code</td>
+                        <td>@it.TradePlaceName</td>
+
+                        @foreach (var kvp in Model.Headers)
+                        {
+                            <td>@it.Values[kvp.Key]</td>
+                        }
+                    </tr>
+                }
+            </table>
+        }
+    }
+    </div>
+</body>
+</html>

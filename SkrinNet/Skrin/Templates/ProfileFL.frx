@@ -1,0 +1,391 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReferencedAssemblies="System.dll&#13;&#10;System.Drawing.dll&#13;&#10;System.Windows.Forms.dll&#13;&#10;System.Data.dll&#13;&#10;System.Xml.dll&#13;&#10;System.Web.dll" StartReportEvent="_StartReport" FinishReportEvent="_FinishReport" ReportInfo.Created="03/15/2016 15:24:59" ReportInfo.Modified="08/29/2016 12:43:19" ReportInfo.CreatorVersion="2016.1.2.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using System.Web;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+
+namespace FastReport
+{
+  public class ReportScript
+  {
+    private string profile=&quot;&quot;;
+    private string search=&quot;&quot;;
+    
+    private void _StartReport(object sender, EventArgs e)
+    {
+      if (((Int32)Report.GetParameterValue(&quot;@src&quot;))==2)
+      {
+        profile=&quot;profile&quot;;
+        search=&quot;issuers&quot;;
+      }
+      if (((Int32)Report.GetParameterValue(&quot;@src&quot;))==3) 
+      {
+        profile=&quot;issuers&quot;;
+        search=&quot;/dbsearch/dbsearchru/companies&quot;;
+      }
+      
+      DataSourceBase ds1;
+      DataSourceBase ds2;
+
+      ds1 = Report.GetDataSource(&quot;founder_inn&quot;);
+      ds2 = Report.GetDataSource(&quot;founder_fio&quot;);
+      ds1.Init();
+      ds2.Init();
+      founder_Data.Visible = (ds1.RowCount+ds2.RowCount != 0) ;
+      founder_no_Data.Visible = !founder_Data.Visible; 
+
+      ds1 = Report.GetDataSource(&quot;manager_inn&quot;);
+      ds2 = Report.GetDataSource(&quot;manager_fio&quot;);
+      ds1.Init();
+      ds2.Init();
+      manager_Data.Visible = (ds1.RowCount+ds2.RowCount != 0) ;
+      manager_no_Data.Visible = !manager_Data.Visible; 
+
+      ds1 = Report.GetDataSource(&quot;ip_inn&quot;);
+      ds2 = Report.GetDataSource(&quot;ip_fio&quot;);
+      ds1.Init();
+      ds2.Init();
+      ip_Data.Visible = (ds1.RowCount+ds2.RowCount != 0) ;
+      ip_no_Data.Visible = !ip_Data.Visible; 
+      
+      remark_Data.Visible = founder_Data.Visible || manager_Data.Visible;
+    }
+
+    private void founder_inn_ul_name_Text_BeforePrint(object sender, EventArgs e)
+    {
+      if ((String)Report.GetColumnValue(&quot;founder_inn.ticker&quot;)!=&quot;&quot;)
+        founder_inn_ul_name_Text.Hyperlink.Value=&quot;http://&quot;+(String)Report.GetParameterValue(&quot;@url&quot;)+&quot;/&quot;+profile+&quot;/&quot;+(String)Report.GetColumnValue(&quot;founder_inn.ticker&quot;);
+      else
+        founder_inn_ul_name_Text.Hyperlink.Value=&quot;http://&quot;+(String)Report.GetParameterValue(&quot;@url&quot;)+&quot;/&quot;+search+&quot;/iss_name=&quot;+HttpUtility.UrlEncode((String)Report.GetColumnValue(&quot;founder_inn.ul_name&quot;)).Replace(&quot;+&quot;,&quot;%20&quot;);
+    }
+    
+    private void founder_fio_ul_name_Text_BeforePrint(object sender, EventArgs e)
+    {
+      if ((String)Report.GetColumnValue(&quot;founder_fio.ticker&quot;)!=&quot;&quot;)
+        founder_fio_ul_name_Text.Hyperlink.Value=&quot;http://&quot;+(String)Report.GetParameterValue(&quot;@url&quot;)+&quot;/&quot;+profile+&quot;/&quot;+(String)Report.GetColumnValue(&quot;founder_fio.ticker&quot;);
+      else
+        founder_fio_ul_name_Text.Hyperlink.Value=&quot;http://&quot;+(String)Report.GetParameterValue(&quot;@url&quot;)+&quot;/&quot;+search+&quot;/iss_name=&quot;+HttpUtility.UrlEncode((String)Report.GetColumnValue(&quot;founder_fio.ul_name&quot;)).Replace(&quot;+&quot;,&quot;%20&quot;);
+    }
+
+    private void manager_inn_ul_name_Text_BeforePrint(object sender, EventArgs e)
+    {
+      if ((String)Report.GetColumnValue(&quot;manager_inn.ticker&quot;)!=&quot;&quot;)
+        manager_inn_ul_name_Text.Hyperlink.Value=&quot;http://&quot;+(String)Report.GetParameterValue(&quot;@url&quot;)+&quot;/&quot;+profile+&quot;/&quot;+(String)Report.GetColumnValue(&quot;manager_inn.ticker&quot;);
+      else
+        manager_inn_ul_name_Text.Hyperlink.Value=&quot;http://&quot;+(String)Report.GetParameterValue(&quot;@url&quot;)+&quot;/&quot;+search+&quot;/iss_name=&quot;+HttpUtility.UrlEncode((String)Report.GetColumnValue(&quot;manager_inn.ul_name&quot;)).Replace(&quot;+&quot;,&quot;%20&quot;);
+    }
+
+    private void manager_fio_ul_name_Text_BeforePrint(object sender, EventArgs e)
+    {
+      if ((String)Report.GetColumnValue(&quot;manager_fio.ticker&quot;)!=&quot;&quot;)
+        manager_fio_ul_name_Text.Hyperlink.Value=&quot;http://&quot;+(String)Report.GetParameterValue(&quot;@url&quot;)+&quot;/&quot;+profile+&quot;/&quot;+(String)Report.GetColumnValue(&quot;manager_fio.ticker&quot;);
+      else
+        manager_fio_ul_name_Text.Hyperlink.Value=&quot;http://&quot;+(String)Report.GetParameterValue(&quot;@url&quot;)+&quot;/&quot;+search+&quot;/iss_name=&quot;+HttpUtility.UrlEncode((String)Report.GetColumnValue(&quot;manager_fio.ul_name&quot;)).Replace(&quot;+&quot;,&quot;%20&quot;);
+    }
+
+    private void ip_fio_ogrnip_Text_BeforePrint(object sender, EventArgs e)
+    {
+      if ((Int32)Report.GetParameterValue(&quot;@src&quot;)==2)
+        ip_fio_ogrnip_Text.Hyperlink.Value=&quot;http://&quot;+(String)Report.GetParameterValue(&quot;@url&quot;)+&quot;/profile_ip/&quot;+(String)Report.GetColumnValue(&quot;ip_fio.ogrnip&quot;);            
+      if (((Int32)Report.GetParameterValue(&quot;@src&quot;)==3) &amp;&amp; ((String)Report.GetColumnValue(&quot;ip_fio.id&quot;)!=&quot;&quot;))
+        ip_fio_ogrnip_Text.Hyperlink.Value=&quot;http://&quot;+(String)Report.GetParameterValue(&quot;@url&quot;)+&quot;/dbsearch/dbsearchru/ichp/person_profile.asp?id=&quot;+(String)Report.GetColumnValue(&quot;ip_fio.id&quot;);
+    }
+
+    private void ip_inn_ogrnip_Text_BeforePrint(object sender, EventArgs e)
+    {
+      if ((Int32)Report.GetParameterValue(&quot;@src&quot;)==2)
+        ip_inn_ogrnip_Text.Hyperlink.Value=&quot;http://&quot;+(String)Report.GetParameterValue(&quot;@url&quot;)+&quot;/profile_ip/&quot;+(String)Report.GetColumnValue(&quot;ip_inn.ogrnip&quot;);
+      if (((Int32)Report.GetParameterValue(&quot;@src&quot;)==3) &amp;&amp; ((String)Report.GetColumnValue(&quot;ip_inn.id&quot;)!=&quot;&quot;))
+        ip_inn_ogrnip_Text.Hyperlink.Value=&quot;http://&quot;+(String)Report.GetParameterValue(&quot;@url&quot;)+&quot;/dbsearch/dbsearchru/ichp/person_profile.asp?id=&quot;+(String)Report.GetColumnValue(&quot;ip_inn.id&quot;);
+    }
+  }
+}
+</ScriptText>
+  <Dictionary>
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqe8sz58g0oeEW3mfbPF0P+BKdlienHixgx8Xo7nxNELMAF6ikgFE2ylFZEfOAvvyYqiOiFGcIrpcLRrKx9Gu8psRuOem3nxCeTtWHRbYYheL+PE8PHVN6CSkIB8rklfaj4J7SRN1wIReHEsmsOuUuf/Oe6zHQFBj04P0Mpd8Ha3YNiIZBhePOd9ZtuWAaSz1GTCWPd1QAsu9BwOztCHGQ2A==">
+      <TableDataSource Name="founder_inn" DataType="System.Int32" Enabled="true" SelectCommand="exec web_shop..getProfileFLFounder @fio, @inn, 1">
+        <Column Name="fio" DataType="System.String"/>
+        <Column Name="inn" DataType="System.String"/>
+        <Column Name="share" DataType="System.String"/>
+        <Column Name="share_percent" DataType="System.String" PropName="Column"/>
+        <Column Name="ogrn" DataType="System.String" PropName="Column"/>
+        <Column Name="ul_name" DataType="System.String" PropName="Column1"/>
+        <Column Name="ul_status" DataType="System.String" PropName="Column2"/>
+        <Column Name="gd" DataType="System.String" PropName="Column3"/>
+        <Column Name="ticker" DataType="System.String" PropName="Column4"/>
+        <Column Name="position" DataType="System.String" PropName="Column"/>
+        <Column Name="remark" DataType="System.String" PropName="Column" Calculated="true" Expression="IIf([founder_inn.position]!=&quot;&quot;,&quot;в этом же юр.лице &quot;+[founder_inn.position],&quot;&quot;)"/>
+        <CommandParameter Name="@fio" DataType="22" Expression="[@fio]"/>
+        <CommandParameter Name="@inn" DataType="22" Expression="[@inn]"/>
+      </TableDataSource>
+      <TableDataSource Name="founder_fio" DataType="System.Int32" Enabled="true" SelectCommand="exec web_shop..getProfileFLFounder @fio, @inn, 2">
+        <Column Name="fio" DataType="System.String"/>
+        <Column Name="inn" DataType="System.String"/>
+        <Column Name="share" DataType="System.String"/>
+        <Column Name="share_percent" DataType="System.String" PropName="Column"/>
+        <Column Name="ogrn" DataType="System.String" PropName="Column"/>
+        <Column Name="ul_name" DataType="System.String" PropName="Column1"/>
+        <Column Name="ul_status" DataType="System.String" PropName="Column2"/>
+        <Column Name="gd" DataType="System.String" PropName="Column3"/>
+        <Column Name="ticker" DataType="System.String" PropName="Column4"/>
+        <Column Name="position" DataType="System.String" PropName="Column"/>
+        <Column Name="remark" DataType="System.String" PropName="Column" Calculated="true" Expression="IIf([founder_fio.position]!=&quot;&quot;,&quot;в этом же юр.лице &quot;+[founder_fio.position],&quot;&quot;)"/>
+        <CommandParameter Name="@fio" DataType="22" Expression="[@fio]"/>
+        <CommandParameter Name="@inn" DataType="22" Expression="[@inn]"/>
+      </TableDataSource>
+      <TableDataSource Name="manager_inn" DataType="System.Int32" Enabled="true" SelectCommand="exec web_shop..getProfileFLManager @fio, @inn, 1">
+        <Column Name="fio" DataType="System.String"/>
+        <Column Name="inn" DataType="System.String"/>
+        <Column Name="share" DataType="System.String"/>
+        <Column Name="share_percent" DataType="System.String" PropName="Column"/>
+        <Column Name="ogrn" DataType="System.String" PropName="Column"/>
+        <Column Name="ul_name" DataType="System.String" PropName="Column1"/>
+        <Column Name="ul_status" DataType="System.String" PropName="Column2"/>
+        <Column Name="gd" DataType="System.String" PropName="Column3"/>
+        <Column Name="ticker" DataType="System.String" PropName="Column4"/>
+        <Column Name="position" DataType="System.String" PropName="Column"/>
+        <Column Name="remark" DataType="System.String" PropName="Column" Calculated="true" Expression="IIf([manager_inn.share]!=&quot;&quot;,&quot;в этом же юр.лице учредитель&quot;,&quot;&quot;)"/>
+        <CommandParameter Name="@fio" DataType="22" Expression="[@fio]"/>
+        <CommandParameter Name="@inn" DataType="22" Expression="[@inn]"/>
+      </TableDataSource>
+      <TableDataSource Name="manager_fio" DataType="System.Int32" Enabled="true" SelectCommand="exec web_shop..getProfileFLManager @fio, @inn, 2">
+        <Column Name="fio" DataType="System.String"/>
+        <Column Name="inn" DataType="System.String"/>
+        <Column Name="share" DataType="System.String"/>
+        <Column Name="share_percent" DataType="System.String" PropName="Column"/>
+        <Column Name="ogrn" DataType="System.String" PropName="Column"/>
+        <Column Name="ul_name" DataType="System.String" PropName="Column1"/>
+        <Column Name="ul_status" DataType="System.String" PropName="Column2"/>
+        <Column Name="gd" DataType="System.String" PropName="Column3"/>
+        <Column Name="ticker" DataType="System.String" PropName="Column4"/>
+        <Column Name="position" DataType="System.String" PropName="Column"/>
+        <Column Name="remark" DataType="System.String" PropName="Column" Calculated="true" Expression="IIf([manager_fio.share]!=&quot;&quot;,&quot;в этом же юр.лице учредитель&quot;,&quot;&quot;)"/>
+        <CommandParameter Name="@fio" DataType="22" Expression="[@fio]"/>
+        <CommandParameter Name="@inn" DataType="22" Expression="[@inn]"/>
+      </TableDataSource>
+      <TableDataSource Name="ip_inn" DataType="System.Int32" Enabled="true" SelectCommand="exec web_shop..getProfileFLIP @fio, @inn, 1">
+        <Column Name="fio" DataType="System.String"/>
+        <Column Name="inn" DataType="System.String"/>
+        <Column Name="ogrnip" DataType="System.String" PropName="Column"/>
+        <Column Name="gd" DataType="System.String" PropName="Column3"/>
+        <Column Name="sd" DataType="System.String" PropName="Column3"/>
+        <Column Name="subrf" DataType="System.String" PropName="Column4"/>
+        <Column Name="id" DataType="System.String" PropName="Column"/>
+        <CommandParameter Name="@fio" DataType="22" Expression="[@fio]"/>
+        <CommandParameter Name="@inn" DataType="22" Expression="[@inn]"/>
+      </TableDataSource>
+      <TableDataSource Name="ip_fio" DataType="System.Int32" Enabled="true" SelectCommand="exec web_shop..getProfileFLIP @fio, @inn, 2">
+        <Column Name="fio" DataType="System.String"/>
+        <Column Name="inn" DataType="System.String"/>
+        <Column Name="ogrnip" DataType="System.String" PropName="Column"/>
+        <Column Name="gd" DataType="System.String" PropName="Column3"/>
+        <Column Name="sd" DataType="System.String" PropName="Column3"/>
+        <Column Name="subrf" DataType="System.String" PropName="Column4"/>
+        <Column Name="id" DataType="System.String" PropName="Column"/>
+        <CommandParameter Name="@fio" DataType="22" Expression="[@fio]"/>
+        <CommandParameter Name="@inn" DataType="22" Expression="[@inn]"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+    <Parameter Name="@fio" DataType="System.String" Expression="&quot;САВЕЛЬЕВ ВИТАЛИЙ ГЕННАДЬЕВИЧ&quot;"/>
+    <Parameter Name="@inn" DataType="System.String" Expression="&quot;501104400200&quot;"/>
+    <Parameter Name="@url" DataType="System.String" Expression="&quot;kontragent.skrin.ru&quot;"/>
+    <Parameter Name="@src" DataType="System.Int32" Expression="2"/>
+    <Total Name="founder_inn_Total" TotalType="Count" Evaluator="founder_inn_Data" ResetAfterPrint="false"/>
+    <Total Name="founder_fio_Total" TotalType="Count" Evaluator="founder_fio_Data" ResetAfterPrint="false"/>
+    <Total Name="manager_inn_Total" TotalType="Count" Evaluator="manager_inn_Data" ResetAfterPrint="false"/>
+    <Total Name="manager_fio_Total" TotalType="Count" Evaluator="manage_fio_Data" ResetAfterPrint="false"/>
+    <Total Name="ip_inn_Total" TotalType="Count" Evaluator="ip_inn_Data" ResetAfterPrint="false"/>
+    <Total Name="ip_fio_Total" TotalType="Count" Evaluator="ip_fio_Data" ResetAfterPrint="false"/>
+  </Dictionary>
+  <ReportPage Name="Page1">
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="47.25">
+      <PictureObject Name="Picture1" Left="557.55" Width="160.65" Height="47.25" Image="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"/>
+      <TextObject Name="Text2" Width="557.55" Height="28.35" Text="[@fio]" Font="Arial, 18pt, style=Bold" TextFill.Color="SteelBlue"/>
+      <TextObject Name="Text1" Top="28.35" Width="557.55" Height="18.9" Text="ИНН: [@inn]" Font="Arial, 12pt, style=Bold" TextFill.Color="SteelBlue"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="51.25" Width="718.2" Height="18.9"/>
+    <DataBand Name="Data1" Top="74.15" Width="718.2" Height="122.85">
+      <TextObject Name="Text8" Top="94.5" Width="718.2" Height="18.9" Text="Количество записей по ИНН: [ip_inn_Total] , по ФИО: [ip_fio_Total]" ProcessAt="ReportFinished" Font="Arial, 9pt"/>
+      <TextObject Name="Text7" Top="75.6" Width="718.2" Height="18.9" Text="3. Индивидуальный предприниматель" Font="Arial, 11pt, style=Bold"/>
+      <TextObject Name="Text6" Top="56.7" Width="718.2" Height="18.9" Text="Количество юридических лиц по ИНН: [manager_inn_Total] , по ФИО: [manager_fio_Total]" ProcessAt="ReportFinished" Font="Arial, 9pt"/>
+      <TextObject Name="Text5" Top="37.8" Width="718.2" Height="18.9" Text="2. Руководитель" Font="Arial, 11pt, style=Bold"/>
+      <TextObject Name="Text4" Top="18.9" Width="718.2" Height="18.9" Text="Количество юридических лиц по ИНН: [founder_inn_Total] , по ФИО: [founder_fio_Total]" ProcessAt="ReportFinished" Font="Arial, 9pt"/>
+      <TextObject Name="Text3" Width="718.2" Height="18.9" Text="1. Учредитель(участник)" Font="Arial, 11pt, style=Bold"/>
+    </DataBand>
+    <DataBand Name="Data3" Top="201" Width="718.2" Height="34.02">
+      <TextObject Name="Text9" Width="718.2" Height="18.9" Text="1. Учредитель(участник)" Font="Arial, 11pt, style=Bold"/>
+      <TextObject Name="Text10" Top="18.9" Width="718.2" Height="15.12" Text="Сведения об участии физического лица в уставном (складочном) капитале юридических лиц" Font="Arial, 9pt, style=Bold"/>
+    </DataBand>
+    <DataBand Name="founder_Data" Top="239.02" Width="718.2" Height="49.14">
+      <TextObject Name="Text12" Left="20.79" Width="90.72" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="ФИО учредителя (участника) юр.лица" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text13" Left="185.22" Width="56.7" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="Доля в уставном капитале" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text14" Left="111.51" Width="73.71" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="ИНН учредителя (участника) юр.лица" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text15" Left="241.92" Width="77.49" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="ОГРН учрежденного юр.лица" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text16" Left="319.41" Width="120.96" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="Полное наименование учрежденного юр. лица" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text17" Left="440.37" Width="136.08" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="Сведения о состоянии учрежденного юр.лица" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text18" Left="576.45" Width="58.59" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="Дата внесения записи в ЕГРЮЛ" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text19" Left="635.04" Width="83.16" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="Примечание" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text21" Width="20.79" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="№" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+    </DataBand>
+    <DataBand Name="founder_inn_Data" Top="315.06" Width="718.2" Height="18.9" CanGrow="true" Guides="0,56.7,56.7,56.7,56.7" DataSource="founder_inn">
+      <TextObject Name="Text20" Width="20.79" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[Row#]" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text23" Left="20.79" Width="90.72" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[founder_inn.fio]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="founder_inn_share_Text" Left="185.22" Width="56.7" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[founder_inn.share][IIf([founder_inn.share_percent] !=&quot;&quot;,Chr(13)+&quot; (&quot;+[founder_inn.share_percent]+&quot;%)&quot;,&quot;&quot;)]" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text25" Left="111.51" Width="73.71" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[founder_inn.inn]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text26" Left="241.92" Width="77.49" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[founder_inn.ogrn]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="founder_inn_ul_name_Text" Left="319.41" Width="120.96" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" BeforePrintEvent="founder_inn_ul_name_Text_BeforePrint" Text="[founder_inn.ul_name]" VertAlign="Center" Font="Arial, 7pt, style=Underline" TextFill.Color="Blue"/>
+      <TextObject Name="founder_inn_ul_status_Text" Left="440.37" Width="136.08" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" BeforePrintEvent="founder_inn_ul_status_Text_BeforePrint" Text="[founder_inn.ul_status]" VertAlign="Center" Font="Arial, 7pt">
+        <Highlight>
+          <Condition Expression="[founder_inn.ul_status] == &quot;Действующее*&quot;" TextFill.Color="ForestGreen"/>
+          <Condition Expression="[founder_inn.ul_status] != &quot;Действующее*&quot;" TextFill.Color="Brown"/>
+        </Highlight>
+      </TextObject>
+      <TextObject Name="Text29" Left="576.45" Width="58.59" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[founder_inn.gd]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="founder_inn_remark_Text" Left="635.04" Width="83.16" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[founder_inn.remark]" VertAlign="Center" Font="Arial, 7pt"/>
+      <DataHeaderBand Name="founder_inn_Header" Top="292.16" Width="718.2" Height="18.9">
+        <TextObject Name="Text22" Width="718.2" Height="18.9" Border.Lines="All" Border.Width="0.5" BeforePrintEvent="Text22_BeforePrint" Text="Юридическое лицо найдено по ИНН учредителя (участника)" ProcessAt="ReportFinished" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      </DataHeaderBand>
+    </DataBand>
+    <DataBand Name="founder_fio_Data" Top="360.86" Width="718.2" Height="18.9" CanGrow="true" DataSource="founder_fio">
+      <TextObject Name="Text32" Width="20.79" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[Row#]" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text33" Left="20.79" Width="90.72" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[founder_fio.fio]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text35" Left="111.51" Width="73.71" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[founder_fio.inn]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text36" Left="241.92" Width="77.49" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[founder_fio.ogrn]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="founder_fio_ul_name_Text" Left="319.41" Width="120.96" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" BeforePrintEvent="founder_fio_ul_name_Text_BeforePrint" Text="[founder_fio.ul_name]" VertAlign="Center" Font="Arial, 7pt, style=Underline" TextFill.Color="Blue"/>
+      <TextObject Name="Text38" Left="440.37" Width="136.08" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[founder_fio.ul_status]" VertAlign="Center" Font="Arial, 7pt">
+        <Highlight>
+          <Condition Expression="[founder_fio.ul_status] == &quot;Действующее*&quot;" TextFill.Color="ForestGreen"/>
+          <Condition Expression="[founder_fio.ul_status] != &quot;Действующее*&quot;" TextFill.Color="Brown"/>
+        </Highlight>
+      </TextObject>
+      <TextObject Name="Text39" Left="576.45" Width="58.59" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[founder_fio.gd]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="founder_fio_remark_Text" Left="635.04" Width="83.16" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" BeforePrintEvent="founder_fio_remark_Text_BeforePrint" Text="[founder_fio.remark]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text34" Left="185.22" Width="56.7" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[founder_fio.share][IIf([founder_fio.share_percent] !=&quot;&quot;,Chr(13)+&quot; (&quot;+[founder_fio.share_percent]+&quot;%)&quot;,&quot;&quot;)]" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt"/>
+      <DataHeaderBand Name="founder_fio_Header" Top="337.96" Width="718.2" Height="18.9">
+        <TextObject Name="Text31" Width="718.2" Height="18.9" Border.Lines="All" Border.Width="0.5" Text="Юридическое лицо найдено по ФИО учредителя (участника)" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      </DataHeaderBand>
+    </DataBand>
+    <DataBand Name="founder_no_Data" Top="383.76" Width="718.2" Height="18.9" BeforePrintEvent="founder_no_Data_BeforePrint">
+      <TextObject Name="Text11" Width="718.2" Height="18.9" Text="Данные отсутствуют" VertAlign="Center" Font="Arial, 7pt"/>
+    </DataBand>
+    <DataBand Name="Data2" Top="406.66" Width="718.2" Height="37.8">
+      <TextObject Name="Text40" Top="3.78" Width="718.2" Height="18.9" Text="2. Руководитель" Font="Arial, 11pt, style=Bold"/>
+      <TextObject Name="Text41" Top="22.68" Width="718.2" Height="15.12" Text="Сведения о юридических лицах, от имени которых физическое лицо имеет право действовать без доверенности" Font="Arial, 9pt, style=Bold"/>
+    </DataBand>
+    <DataBand Name="manager_Data" Top="448.46" Width="718.2" Height="49.14">
+      <TextObject Name="Text42" Left="20.79" Width="86.94" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="ФИО руководителя" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text43" Left="181.44" Width="83.16" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="Должность" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text44" Left="107.73" Width="73.71" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="ИНН руководи-теля" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text45" Left="264.6" Width="77.49" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="ОГРН юр.лица" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text46" Left="342.09" Width="120.96" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="Полное наименование юр. лица" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text47" Left="463.05" Width="136.08" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="Сведения о состоянии юр.лица" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text48" Left="599.13" Width="58.59" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="Дата внесения записи в ЕГРЮЛ" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text49" Left="657.72" Width="60.48" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="Примечание" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text50" Width="20.79" Height="49.14" Border.Lines="All" Border.Width="0.5" Text="№" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+    </DataBand>
+    <DataBand Name="manager_inn_Data" Top="524.5" Width="718.2" Height="18.9" CanGrow="true" DataSource="manager_inn">
+      <TextObject Name="Text53" Width="20.79" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[Row#]" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text54" Left="20.79" Width="86.94" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[manager_inn.fio]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text55" Left="181.44" Width="83.16" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[manager_inn.position]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text56" Left="107.73" Width="73.71" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[manager_inn.inn]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text57" Left="264.6" Width="77.49" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[manager_inn.ogrn]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="manager_inn_ul_name_Text" Left="342.09" Width="120.96" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" BeforePrintEvent="manager_inn_ul_name_Text_BeforePrint" Text="[manager_inn.ul_name]" VertAlign="Center" Font="Arial, 7pt, style=Underline" TextFill.Color="Blue"/>
+      <TextObject Name="Text59" Left="463.05" Width="136.08" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" BeforePrintEvent="founder_inn_ul_status_Text_BeforePrint" Text="[manager_inn.ul_status]" VertAlign="Center" Font="Arial, 7pt">
+        <Highlight>
+          <Condition Expression="[manager_inn.ul_status] == &quot;Действующее*&quot;" TextFill.Color="ForestGreen"/>
+          <Condition Expression="[manager_inn.ul_status] != &quot;Действующее*&quot;" TextFill.Color="Brown"/>
+        </Highlight>
+      </TextObject>
+      <TextObject Name="Text60" Left="599.13" Width="58.59" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[manager_inn.gd]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text61" Left="657.72" Width="60.48" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[manager_inn.remark]" VertAlign="Center" Font="Arial, 7pt"/>
+      <DataHeaderBand Name="manager_inn_Header" Top="501.6" Width="718.2" Height="18.9">
+        <TextObject Name="Text51" Width="718.2" Height="18.9" Border.Lines="All" Border.Width="0.5" BeforePrintEvent="Text22_BeforePrint" Text="Юридическое лицо найдено по ИНН руководителя" ProcessAt="ReportFinished" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      </DataHeaderBand>
+    </DataBand>
+    <DataBand Name="manage_fio_Data" Top="570.3" Width="718.2" Height="18.9" CanGrow="true" DataSource="manager_fio">
+      <TextObject Name="Text62" Width="20.79" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[Row#]" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text63" Left="20.79" Width="86.94" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[manager_fio.fio]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text64" Left="181.44" Width="83.16" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[manager_fio.position]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text65" Left="107.73" Width="73.71" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[manager_fio.inn]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text66" Left="264.6" Width="77.49" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[manager_fio.ogrn]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="manager_fio_ul_name_Text" Left="342.09" Width="120.96" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" BeforePrintEvent="manager_fio_ul_name_Text_BeforePrint" Text="[manager_fio.ul_name]" VertAlign="Center" Font="Arial, 7pt, style=Underline" TextFill.Color="Blue"/>
+      <TextObject Name="Text68" Left="463.05" Width="136.08" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" BeforePrintEvent="founder_inn_ul_status_Text_BeforePrint" Text="[manager_fio.ul_status]" VertAlign="Center" Font="Arial, 7pt">
+        <Highlight>
+          <Condition Expression="[manager_fio.ul_status] == &quot;Действующее*&quot;" TextFill.Color="ForestGreen"/>
+          <Condition Expression="[manager_fio.ul_status] != &quot;Действующее*&quot;" TextFill.Color="Brown"/>
+        </Highlight>
+      </TextObject>
+      <TextObject Name="Text69" Left="599.13" Width="58.59" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[manager_fio.gd]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text70" Left="657.72" Width="60.48" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[manager_fio.remark]" VertAlign="Center" Font="Arial, 7pt"/>
+      <DataHeaderBand Name="manager_fio_Header" Top="547.4" Width="718.2" Height="18.9">
+        <TextObject Name="Text52" Width="718.2" Height="18.9" Border.Lines="All" Border.Width="0.5" BeforePrintEvent="Text22_BeforePrint" Text="Юридическое лицо найдено по ФИО руководителя" ProcessAt="ReportFinished" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      </DataHeaderBand>
+    </DataBand>
+    <DataBand Name="manager_no_Data" Top="593.2" Width="718.2" Height="18.9">
+      <TextObject Name="Text71" Width="718.2" Height="18.9" Text="Данные отсутствуют" VertAlign="Center" Font="Arial, 7pt"/>
+    </DataBand>
+    <DataBand Name="remark_Data" Top="616.1" Width="718.2" Height="15.12">
+      <TextObject Name="Text24" Top="3.78" Width="718.2" Height="11.34" Text="*Сведения о прекращении деятельности (реорганизации, ликвидации) отсутствуют" VertAlign="Center" Font="Arial, 7pt" TextFill.Color="Gray"/>
+    </DataBand>
+    <DataBand Name="Data4" Top="635.22" Width="718.2" Height="37.8">
+      <TextObject Name="Text72" Top="3.78" Width="718.2" Height="18.9" Text="3. Индивидуальный предприниматель" Font="Arial, 11pt, style=Bold"/>
+      <TextObject Name="Text73" Top="22.68" Width="718.2" Height="15.12" Text="Сведения о физическом лице, содержащиеся в ЕГРИП" Font="Arial, 9pt, style=Bold"/>
+    </DataBand>
+    <DataBand Name="ip_Data" Top="677.02" Width="718.2" Height="34.02">
+      <TextObject Name="Text74" Left="20.79" Width="154.98" Height="34.02" Border.Lines="All" Border.Width="0.5" Text="ФИО" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text75" Left="302.4" Width="90.72" Height="34.02" Border.Lines="All" Border.Width="0.5" Text="ОГРНИП" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text76" Left="175.77" Width="126.63" Height="34.02" Border.Lines="All" Border.Width="0.5" Text="Субъект РФ" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text77" Left="393.12" Width="75.6" Height="34.02" Border.Lines="All" Border.Width="0.5" Text="ИНН" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text78" Left="468.72" Width="105.84" Height="34.02" Border.Lines="All" Border.Width="0.5" Text="Дата присвоения ОГРНИП" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text79" Width="20.79" Height="34.02" Border.Lines="All" Border.Width="0.5" Text="№" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      <TextObject Name="Text80" Left="574.56" Width="143.64" Height="34.02" Border.Lines="All" Border.Width="0.5" Text="Дата внесения записи о прекращении деятельности" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+    </DataBand>
+    <DataBand Name="ip_inn_Data" Top="737.94" Width="718.2" Height="18.9" CanGrow="true" DataSource="ip_inn">
+      <TextObject Name="Text83" Width="20.79" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[Row#]" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="ip_inn_fio_Text" Left="20.79" Width="154.98" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[ip_inn.fio]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text85" Left="393.12" Width="75.6" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[ip_inn.inn]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text86" Left="175.77" Width="126.63" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[ip_inn.subrf]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text87" Left="468.72" Width="105.84" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[ip_inn.gd]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="ip_inn_ogrnip_Text" Left="302.4" Width="90.72" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" BeforePrintEvent="ip_inn_ogrnip_Text_BeforePrint" Text="[ip_inn.ogrnip]" VertAlign="Center" Font="Arial, 7pt">
+        <Highlight>
+          <Condition Expression="([@src] != 3) || ([ip_inn.id]!=&quot;&quot;)" TextFill.Color="Blue" Font="Arial, 6.75pt, style=Underline" ApplyFont="true"/>
+        </Highlight>
+      </TextObject>
+      <TextObject Name="Text89" Left="574.56" Width="143.64" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" BeforePrintEvent="founder_inn_ul_status_Text_BeforePrint" Text="[ip_inn.sd]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt" TextFill.Color="Brown"/>
+      <DataHeaderBand Name="DataHeader1" Top="715.04" Width="718.2" Height="18.9">
+        <TextObject Name="Text81" Width="718.2" Height="18.9" Border.Lines="All" Border.Width="0.5" BeforePrintEvent="Text22_BeforePrint" Text="Физическое лицо найдено по ИНН" ProcessAt="ReportFinished" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      </DataHeaderBand>
+    </DataBand>
+    <DataBand Name="ip_fio_Data" Top="783.74" Width="718.2" Height="18.9" CanGrow="true" DataSource="ip_fio">
+      <TextObject Name="Text90" Width="20.79" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[Row#]" HorzAlign="Right" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="ip_fio_fio_Text" Left="20.79" Width="154.98" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[ip_fio.fio]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text92" Left="393.12" Width="75.6" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[ip_fio.inn]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text93" Left="175.77" Width="126.63" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[ip_fio.subrf]" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="Text94" Left="468.72" Width="105.84" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" Text="[ip_fio.gd]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt"/>
+      <TextObject Name="ip_fio_ogrnip_Text" Left="302.4" Width="90.72" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" BeforePrintEvent="ip_fio_ogrnip_Text_BeforePrint" Text="[ip_fio.ogrnip]" VertAlign="Center" Font="Arial, 6.75pt">
+        <Highlight>
+          <Condition Expression="([@src] != 3) || ([ip_fio.id]!=&quot;&quot;)" TextFill.Color="Blue" Font="Arial, 6.75pt, style=Underline" ApplyFont="true"/>
+        </Highlight>
+      </TextObject>
+      <TextObject Name="Text96" Left="574.56" Width="143.64" Height="18.9" Border.Lines="All" Border.Width="0.5" CanGrow="true" GrowToBottom="true" BeforePrintEvent="founder_inn_ul_status_Text_BeforePrint" Text="[ip_fio.sd]" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt" TextFill.Color="Brown"/>
+      <DataHeaderBand Name="DataHeader2" Top="760.84" Width="718.2" Height="18.9">
+        <TextObject Name="Text82" Width="718.2" Height="18.9" Border.Lines="All" Border.Width="0.5" BeforePrintEvent="Text22_BeforePrint" Text="Физическое лицо найдено по ФИО" ProcessAt="ReportFinished" HorzAlign="Center" VertAlign="Center" Font="Arial, 7pt, style=Bold"/>
+      </DataHeaderBand>
+    </DataBand>
+    <DataBand Name="ip_no_Data" Top="806.64" Width="718.2" Height="18.9">
+      <TextObject Name="Text97" Width="718.2" Height="18.9" Text="Данные отсутствуют" VertAlign="Center" Font="Arial, 7pt"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="829.54" Width="718.2" Height="18.9"/>
+  </ReportPage>
+</Report>

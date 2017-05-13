@@ -1,0 +1,16 @@
+﻿@using serch_contra_bll.StopLightFreeEgrul.Info
+@using Skrin.BLL.Infrastructure
+@model serch_contra_bll.StopLightFreeEgrul.Info.BankruptcyInfo
+@{
+    Layout = null;
+}
+@foreach (BankruptcyInfoItem bi in Model.Items)
+{
+    <b>Источник данных: @bi.Source</b><br />
+    <b>Дата публикации сообщения: @bi.RegDate.ToRusString()</b>
+    <p style="text-align: justify;">@Html.Raw(bi.News.SaveReplace(@"\n", "<br/>"))</p>
+    <div style="clear: both; height: 10px;"></div>
+
+}
+<div class="explain" style="clear:both;padding-top:10px;">ВНИМАНИЕ: Представленные сведения являются результатом обработки данных первоисточника и отображаются исключительно при наличии в тексте сообщения данных (ОГРН и ИНН) участника процесса. В случае отсутствия ОГРН и/или ИНН участника процесса, информация по делу в данном разделе отсутствует.</div>
+

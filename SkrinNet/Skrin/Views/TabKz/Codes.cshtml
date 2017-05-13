@@ -1,0 +1,104 @@
+﻿@model Skrin.Models.ProfileKZ.ProfileKZCodes
+
+@{
+    Layout = null;
+}
+
+<div class="left_content KZ_codes">
+    <div class="subcaption">Сведения о государственной регистрации</div>
+    <div class="info_block">
+        <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <th width="30%">РНН</th>
+                <td>@Model.r_number</td>
+            </tr>
+            <tr>
+                <th width="30%">Дата регистрации</th>
+                <td>@Model.r_date</td>
+            </tr>
+            <tr>
+                <th width="30%">Дата перерегистрации</th>
+                <td>@Model.r_date2</td>
+            </tr>
+            <tr>
+                <th width="30%">OKПO</th>
+                <td>@Model.code</td>
+            </tr>
+            <tr>
+                <th width="30%">БИН</th>
+                <td>@Model.bin</td>
+            </tr>
+        </table>
+    </div>
+    <br/>
+    <div class="subcaption">Коды государственной статистики</div>
+    <div class="info_block">
+        <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <th width="60%">КФС - Классификатор вида собственности</th>
+                <td>@Model.ownership</td>
+            </tr>
+            <tr>
+                <th width="60%">КСЭ - Классификатор сектора экономики</th>
+                <td>@Model.ectype</td>
+            </tr>
+            <tr>
+                <th width="60%">КРП - Классификатор размерности предприятия по численности занятых</th>
+                <td>@Model.size</td>
+            </tr>
+        </table>
+    </div>
+    @if (!String.IsNullOrEmpty(Model.kato_name))
+    {
+    <br/>
+    <div class="subcaption">КАТО - Классификатор административно-территориальных объектов</div>
+        <div class="info_block">
+            <table class="data_table" border="0" cellpadding="0" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="30%">Код</th>
+                        <th>Описание</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Model.kato</td>
+                        <td>@Model.kato_name</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+
+
+
+    @if (Model.OKEDS.Count > 0)
+    {
+        <br/>
+        <div class="subcaption">ОКЭД - Общий классификатор видов экономической деятельности</div>
+        <div class="info_block">
+            <table class="data_table" border="0" cellpadding="0" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="30%">Код</th>
+                        <th>Описание</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var OKED in Model.OKEDS)
+                    {
+                        <tr>
+                            <td>@OKED.Key</td>
+                            <td>@OKED.Value</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="explain" style="margin-top:20px;margin-left:20px;">
+       Источник данных: РГП «ИВЦ Агентства РК по статистике»
+    </div>
+
+</div>

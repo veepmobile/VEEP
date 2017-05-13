@@ -1,0 +1,270 @@
+﻿@using Skrin.BLL.Infrastructure
+@using Skrin.BLL.Authorization
+
+@model Skrin.Models.ProfileIP.ProfileIpRightMenu
+@{
+    Layout = null;
+    UserSession us = Context.GetUserSession();
+    var _i = 0;
+    var _j = 0;
+}
+<h5 style="text-align:right;">Дата проверки @DateTime.Now.AddDays(-1).ToRusString()</h5>
+
+@if (Model.ogrnip.Length == 15)
+{
+    <div class="link_block">
+        <h3>Выписка из ЕГРИП</h3>
+        <table class="extra_table" border="0" cellpadding="0" cellspacing="0">
+            <tbody id="egrul_body">
+                @if (Model.egrip_is_black)
+                {
+                    <tr>
+                        <td>Информация по данному ИП отсутствует в ЕГРИП.</td>
+                    </tr>
+                }
+                else
+                {
+
+                    <tr>
+                        <td>
+                            <div class="egrul_list">
+                                @if (Model.EGRIPPDFisToday)
+                                {
+                                    if (Model.EGRIPPDFis_pdf == "1")
+                                    {
+                                        <a href="@string.Format("/Report/EgripPdf/{0}/{1}", Model.EGRIPPDFdate, Model.ogrnip)" target="_blank">
+                                            <span class="icon-file-pdf pdf ico" id="top_egrul"></span>
+                                            Выписка из ЕГРИП от @Model.EGRIPPDFdate_string
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" onclick="@("getRTF('/Report/Egrip/" + Model.ogrnip + "');")">
+                                            <span class="icon-file-word word ico"></span>
+                                            Выписка из ЕГРИП от @Model.EGRIPPDFdate_string
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <!--div id="top_egrul" @(us.UserId == 0 ? Html.Raw("class=\"icon_block large disable\" onclick=\"" + ViewBag.LoginFunction + "\"") : Html.Raw("class=\"icon_block large\"  onclick=\"checkEgripPDF(event,'" + Model.ogrnip + "')\""))>
+                                        <span class="icon-download new ico"></span>
+                                        <span>Сформировать актуальную</span>
+                                    </div-->
+                                    
+                                        if (us.UserId > 0)
+                                        {
+                                            <a href="@string.Format("/Report/GetEgrip/{0}/", Model.ogrnip)">
+                                                <span class="icon-file-pdf pdf ico" id="top_egrul"></span>
+                                                <span>Выписка из ЕГРИП от @DateTime.Now.ToRusString()</span>
+                                            </a>
+                                            <span class="ddel" onclick="SaveEgrip('@Model.ogrnip')"><span class="ddel_1">Сохранить в архив</span></span>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" onclick="@ViewBag.LoginFunction">
+                                                <span class="icon-file-pdf pdf ico" id="top_egrul"></span>
+                                                <span>Выписка из ЕГРИП от @DateTime.Now.ToRusString()</span>
+                                            </a>
+                                        }
+
+                                    
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                    if (Model.EGRIPPDF != null)
+                    {
+                        foreach (var u in Model.EGRIPPDF)
+                        {
+                            _j++;
+                            <tr class="rep_arc" @(_j > 1 || (Model.EGRIPPDFisToday) ? "style=display:none; val=1" : "") id="@("ep"+_j)">
+                                <td class="repitem" style="height:38px">
+                                    <div>
+                                        @if (u.is_pdf == "1")
+                                        {
+                                            <a href="@string.Format("/Report/EgripPdf/{0}/{1}", u.datestring, u.ogrnip)" target="_blank">
+                                                <span class="icon-file-pdf pdf ico"></span>
+                                                <span> Выписка из ЕГРИП от @u.dt</span>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" onclick="@("getRTF('/Report/Egrul/" + Model.ogrnip+ "');")">
+                                                <span class="icon-file-word word ico"></span>
+                                                <span> Выписка из ЕГРИП от @u.dt</span>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+
+                        }
+                        <tr class="rep_arc1" id="rep_switch" @((_j > 1 && _j == Model.EGRIPPDF.Count) ? "" : "style=display:none;")>
+                            <td>
+                                <a class="more_ico icon-angle-down" id="report_toglerE" href="#" onclick="showEReps()"> Развернуть архив</a>
+                            </td>
+                        </tr>
+
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+@if (Model.zak_data != null || Model.unf_data != null || Model.pravo_data != null || Model.is_pravo_sphinx)
+{
+    <div class="link_block">
+        <table class="extra_table" cellspacing="0" cellpadding="0" border="0">
+            @if (Model.zak_data != null)
+            {
+                <tr>
+                    <td>
+                        <div class="icon_block med">
+                            <span class="icon-newspaper link ico"></span><span onclick="gotomenu(3)">Государственные контракты</span>
+                            <div class="link_block_info">
+                                <span class="explain">
+                                    @if (!Model.zak_data.customer_cnt.IsNullOrDefault())
+                                    {
+                                        @:В качестве заказчика: @Model.zak_data.customer_cnt<br /> (на сумму: @Model.zak_data.customer_sum.ConvertTextSum())<br />
+                                }
+                                    @if (!Model.zak_data.supplier_cnt.IsNullOrDefault())
+                                    {
+                                        @:В качестве поставщика: @Model.zak_data.supplier_cnt<br />  (на сумму: @Model.zak_data.supplier_sum.ConvertTextSum())<br />
+                                }
+                                    @if (!Model.zak_data.participiant_cnt.IsNullOrDefault())
+                                    {
+                                        @:В качестве участника: @Model.zak_data.participiant_cnt<br />  (на сумму: @Model.zak_data.participiant_sum.ConvertTextSum())
+                                }
+                                </span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+            @if (Model.unf_data != null)
+            {
+                <tr>
+                    <td>
+                        <div class="icon_block med">
+                            <span class="icon-newspaper link ico"></span><span onclick="ShowUnfairInn(@Model.inn)">Недобросоветный поставщик</span>
+                            <div class="link_block_info">
+                                <span class="explain">
+                                    Дата включения @Model.unf_data.start_date (ФАС России)
+                                </span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+            @if (Model.pravo_data != null || Model.is_pravo_sphinx)
+            {
+                <tr>
+                    <td>
+                        @if (Model.pravo_data != null)
+                        {
+                            <div class="icon_block med">
+                                <span class="icon-newspaper link ico"></span><span onclick="gotomenu(2)">Картотека арбитражных дел</span>
+                                @if (Model.pravo_data.applicant_cnt > 0)
+                                {
+                                    <div class="link_block_info">
+                                        <span class="explain">
+                                            как истец: @Model.pravo_data.applicant_cnt.NullableToString() (@Model.pravo_data.applicant_sum.ConvertTextSum())
+                                        </span>
+                                    </div>
+                                }
+                                @if (Model.pravo_data.defendant_cnt > 0)
+                                {
+                                    <div class="link_block_info">
+                                        <span class="explain">
+                                            как ответчик:@Model.pravo_data.defendant_cnt.NullableToString() (@Model.pravo_data.defendant_sum.ConvertTextSum())
+                                        </span>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            if (Model.is_pravo_sphinx != null)
+                            {
+                                <div class="icon_block med">
+                                    <span class="icon-newspaper link ico"></span><span onclick="gotomenu(2)">Картотека арбитражных дел</span>
+                                </div>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.ogrnip))
+{
+    <div class="link_block">
+        <h3>Проверка</h3>
+        <table class="extra_table" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td>
+                    <div id="docreg_check" class="icon_block med check_block" onclick="@(ViewBag.CanCheck ? "docreg_check(event)" : ViewBag.AccessFunction)">
+                        @*<a @(ViewBag.CanCheck ? Html.Raw("href=\"#\" onclick=\"docreg_check()\"") : Html.Raw("href=\"#\" onclick=\"" + ViewBag.AccessFunction + "\""))>*@
+                        <span class="icon-search link ico"></span>
+                        <span class="check_title"> Сведения о представлении ИП заявлений для гос.регистрации в ФНС</span>
+                        @*</a>*@
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+
+<div class="link_block">
+    <h3>Связи</h3>
+    <table class="extra_table" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                @if (ViewBag.CanShowProfileFL)
+                {
+                    <div id="profilefl" class="icon_block med check_block">
+                        <a style="color: #000" href="/profilefl/?fio=@HttpUtility.UrlEncode(@Model.fio).Replace("+", "%20")&inn=@Model.inn" target="_blank">
+                            <span class="icon-newspaper link ico"></span>
+                            <span class="check_title">Взаимосвязанные&#160;лица</span>
+                        </a>
+                    </div> 
+                }
+                else
+                {
+                    <div id="profilefl" class="icon_block med check_block" onclick="@ViewBag.AccessFunction">
+                        <span class="icon-newspaper link ico"></span>
+                        <span class="check_title">Взаимосвязанные&#160;лица</span>
+                    </div>
+                }
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="link_block" id="lb_4">
+    <h3>Состоит в группах</h3>
+    <table class="extra_table" border="0" cellpadding="0" cellspacing="0">
+        <tr id="addgroup_row">
+            <td>
+                <div class="icon_block large" onclick="@(ViewBag.CanAddToGroup ? "AddToGroup('" + @Model.issuer_id + "')" : ViewBag.AccessFunction)">
+                    <span class="icon-plus new ico"></span>
+                    <span>Добавить</span>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<script>
+@if (us.UserId > 0)
+{
+    <text>
+    INIT_FUNCT["GetGroupsList"] = function () {
+        GetGroupsList();
+    };
+    </text>
+}
+</script>

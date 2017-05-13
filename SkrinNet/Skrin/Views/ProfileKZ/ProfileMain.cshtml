@@ -1,0 +1,69 @@
+﻿@using Skrin.Models.ProfileKZ
+@using Skrin.BLL.Infrastructure
+
+@model ProfileKZ
+
+@{
+    Layout = null;
+}
+
+<div class="left_content_html">
+    @if (!String.IsNullOrEmpty(Model.name_short))
+    {
+        <h1>@Model.name_short</h1>
+    }
+    @if (!String.IsNullOrEmpty(Model.fullname))
+    {
+        <h3>@Model.fullname</h3>
+    }
+    <div id="contact_info">
+     @if (!String.IsNullOrEmpty(Model.address))
+     {
+         @Model.address
+     }
+     @if (!String.IsNullOrEmpty(Model.phone))
+     {
+         <br/>@:Тел.: @Model.phone
+     }
+    </div>
+    <div class="info_block">
+        <table class="profile_table" border="0" cellpadding="0" cellspacing="0">           
+            <tr>
+                <th style="width:150px;">Субъект</th>
+                <td>
+                    <div class="status">@Model.area</div>
+                </td>
+            </tr>         
+            <tr>
+                <th style="width:150px;">Местонахождение</th>
+                <td>
+                    <div class="status">@Model.fulladdress</div>
+                </td>
+            </tr>           
+            <tr>
+                <th style="width:150px;">Основной вид экономической деятельности</th>
+                <td>
+                    <div class="status">@Model.main_deal</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="info_block">
+        <table class="profile_table" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <th width="150px">Статус</th>
+                <td>@Model.stat</td>
+            </tr>
+            <tr>
+                <th>БИН</th>
+                <td>@Model.reg_number</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="explain" style="margin-top:20px;margin-left:20px;">
+        Данные на @Model.updatedate
+        <br/>Источник данных: РГП «ИВЦ Агентства РК по статистике»
+    </div>
+</div>

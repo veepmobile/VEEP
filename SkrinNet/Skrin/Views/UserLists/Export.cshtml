@@ -1,0 +1,14 @@
+﻿@model List<string>
+@{
+    Layout = null;
+}
+<div class="group_form">
+    <h3 id="import_group_header"></h3>
+    <textarea id="code_list" rows="10" class="search_input" style="width:80%;margin: 20px 0;">
+        @foreach (string code in Model)
+        {
+             @code
+            @Html.Raw("\n")
+        }
+    </textarea>
+</div>

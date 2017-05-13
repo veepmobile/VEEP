@@ -1,0 +1,78 @@
+﻿.grops_search_block #base_block{
+    margin: 20px 0 20px 135px;
+}
+
+.grops_search_block .label_form{
+    width:100px;
+}
+
+#search_block.grops_search_block{
+    min-height: 100px;
+}
+
+.group_command_block{
+    margin:0 20px;
+    display: inline-block;
+}
+
+#new_group_comand_block{
+
+}
+
+#edit_group_comand_block{
+    display:none;
+}
+
+.form-group .group_command_block  .btns {
+    margin: 0 3px;
+}
+
+
+.check_command_block{
+    float:left;
+    margin-left:20px;
+}
+
+#search_result .check_command_block .icon{
+
+}
+
+#search_result .check_command_block .icon.disabled{
+    color: #999;
+    cursor: not-allowed;
+}
+
+.export_command_block .label_form{
+    padding-top: 8px;
+    width: 130px;
+}
+
+.export_command_block select{
+    width: 250px;
+}
+
+.group_form h3{
+     color: #10327c;
+}
+
+.group_form .explain{
+    color: #666;
+    float: left;
+    font-size: 14px;
+    font-style: italic;
+    margin: 20px 0;
+}
+
+.group_form .label_form{
+    width: 200px;
+}
+
+.group_form .search_input{
+     width: 250px;
+}
+
+.error_list{
+    color:#ba0000;
+    margin-left: 20px;
+    float: left;
+}

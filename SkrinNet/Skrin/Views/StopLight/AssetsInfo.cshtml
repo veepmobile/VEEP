@@ -1,0 +1,17 @@
+﻿@model serch_contra_bll.StopLightFreeEgrul.Info.AssetsInfo
+@{
+    Layout = null;
+}
+<b>Источник данных: ГМЦ Росстата.</b>
+<br>
+<b>Период: @Model.BalanceYear</b>
+<div style="clear: both; height: 10px;"></div>
+<table cellspacing="0" cellpadding="0" border="0" style="width: 60%" class="profile_table">
+    <tr>
+        <th width="200px">Стоимость чистых активов:</th><td>@Model.AssetsCost.ToString("N0") руб.</td>
+    </tr>
+    <tr>
+        <th>Уставной капитал:</th><td>@Model.StateCapital.ToString("N0") руб.</td>
+    </tr>
+</table>
+

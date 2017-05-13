@@ -1,0 +1,72 @@
+﻿@using Skrin.BLL.Infrastructure
+@{
+    ViewBag.Title = "index";
+}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- CSS Files -->
+    <link type="text/css" href="~/Content/vis/base.css?123" rel="stylesheet" />
+    <link type="text/css" href="~/Content/vis/Spacetree.css?133" rel="stylesheet" />
+    <!--JS Files-->
+    <script language="javascript" type="text/javascript" src="~/Content/vis/js/jit.js"></script>
+    <script language="javascript" type="text/javascript" src="~/Content/vis/js/st_fsns.js"></script>
+    <script language="javascript" type="text/javascript" src="~/Content/vis/js/html2canvas.js"></script>
+    <script language="javascript" type="text/javascript" src="~/Content/vis/js/jspdf.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery144.js" ></script>
+    <script type="text/javascript" src="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.js" ></script>
+    <script type="text/javascript">
+    function init_data() {
+        showClock();
+        start_data = $.ajax({ url: "/vis/fsns/getnodes_join.asp", async: false, data: ({ "id": iss, "is_first": 1, "type": "0" }), dataType: "text" }).responseText
+        ds = -1;
+        hideClock();
+        first_node = eval(start_data);
+        init();
+
+    }
+    function nop(){
+        void(0);
+    }
+
+    $(document).ready(function(){
+        $("#infovis").html('<div class="scale_plus" onclick="res(1.25)"></div><div class="scale_minus" onclick="res(.8)"></div>');
+    }) 
+
+    </script>
+
+    </head>
+  
+    <body onload="init_data();" ><h1><%=iss_name%></h1>
+    <h2>Визуализация взаимосвязей</h2>
+    <div id="container" style="width:1500px; height:858px;overflow:auto;text-align:center; vertical-align:middle;position:relative; ">
+    <div id="caption" style="position:relative; padding-top:7px; margin-left:11px; height:25px;text-align:left;"></div>
+
+        <div id="prn">
+        <div id="infovis" style="border:solid 1px #ABABAB;" onmousedown="this.style.cursor='url(\'/iss/visual/css/closedhand.cur\'),move';clicked=true;" onmouseup="this.style.cursor='url(\'/iss/visual/css/openhand.cur\'),default';clicked=false;" onmousemove="if(clicked){this.style.cursor='url(\'/iss/visual/css/closedhand.cur\'),move';}else{this.style.cursor='url(\'/iss/visual/css/openhand.cur\'),default';}">
+        </div>   
+            </div>
+        <div id="log"></div> 
+        <div class="explain" id="cmt" style="    bottom: 0;    left: 0;    margin-left: 5px;    margin-right: 5px;    position: relative;  float:left;  text-align: justify;    z-index: 800;" class="noclass">
+            <div style="margin-bottom:5px;"><div class="labtab m lt_legend" style="margin-left:15px;" >Учредитель/ участник</div>
+            <div class="labtab r lt_legend" >Руководитель</div>
+            <div class="labtab p lt_legend" >Учрежденное ЮЛ</div>
+            <div class="labtab mr lt_legend" >Руководимое ЮЛ</div>
+            <div ><span style="font-size:16px">≈</span> - найдено по ФИО</div>
+        </div><div style="float:left">
+        В связи с особенностями функционирования интернет-браузеров старого поколения функциональность данного сервиса в полном объеме поддерживается только современными версиями браузеров (Internet Explorer 9+, Google Chrome 20+, Mozilla Firefox 10+)
+        <br /><span class="explain" onclick="dosave()">ВНИМАНИЕ: Представленная информация является результатом обработки данных первоисточника (данные организации, сведения ресурсов ЕГРЮЛ и ГМЦ Росстата). В связи с особенностями формирования базы данных первоисточника в приведенной схеме могут отсутствуют персональные данные по физическим лицам, а также могут отсутствовать или быть неактуальными сведения об акционерах акционерных обществ. АО «СКРИН» не несет ответственности за точность представленной информации или ее достоверность. Информация, содержащаяся в настоящей схеме, не является рекомендацией для принятия (или непринятия) каких-либо коммерческих, инвестиционных или иных решений.</span>
+    </div></div>
+
+</div>
+<div id="clock_div1" style="display:none;"></div>
+</body>
+</html>    
+   
+    
+
+
+
+
