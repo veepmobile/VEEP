@@ -1,0 +1,175 @@
+﻿@using Skrin.BLL.Infrastructure
+@using Skrin.BLL.Authorization
+@using Newtonsoft.Json
+@using Skrin.BLL.Root;
+
+@{
+    UserSession us = Context.GetUserSession();
+    string add_tag = us.AuthenticationResult == AuthenticationType.Ok ? "" : " readonly=\"readonly\" onclick=\"united_login(5);\" ";
+    int user_id = us.UserId;
+}
+
+<script>
+    var yearList = @Html.Raw(JsonConvert.SerializeObject(SqlUtiltes.GetGKSYearList()));
+    var user_id = @(user_id);
+    var roles_object=@Html.Raw(ViewBag.RolesJson);
+    var group_limit=@(us.GroupLimit);
+</script>
+
+<div id="search_block" class="tprice_search_block">
+    <div class="content">
+        <span id="search_switcher" class="icon-angle-down">Показать результаты поиска</span>
+        <div id="base_block">
+            <div class="form-group">
+                <label for="tmplVal" class="label_form">Шаблон</label>
+                <div class="sub_form">
+                    <div class="customSelect" id="tmplSelect" onclick="show_tmplSelector();">
+                        <span id="tmplVal" class="customVal" val="0">Нет</span>
+                        <span class="icon-angle-down"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gropVal" class="label_form">Группы</label>
+                <div class="sub_form">
+                    <div class="customSelect" id="groupSelect" onclick="show_groupSelector();">
+                        <span id="gropVal" class="customVal"  val="0">Нет</span>
+                        <span class="icon-angle-down"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-block">
+                <h4>Условия, предусмотренные пунктом 5 статьи 105.8 НК РФ:</h4>
+                <div class="form-group">
+                    <label for="ind" class="label_form">Отрасль</label>
+                    <div class="sub_form">
+                        <input id="ind" type="text" class="search_input" onclick="show_tree_selector(event,ind_type,1,0)" placeholder="Отрасль (ОКВЭД)" title="Общероссийский классификатор видов экономической деятельности" />
+                        <div class="form_switcher">
+                            <input id="ind_default" type="radio" value="24" checked="checked" name="ind_type" onclick="ch_ind_type(this)" />ОКВЭД
+                            <input type="radio" value="99" name="ind_type" onclick="ch_ind_type(this)" />ОКВЭД (основной)
+                        </div>
+                        <input type="hidden" id="ind_val"  value="" /><input type="hidden" id="ind_excl" value="0" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="label_form"></label>
+                    <div class="sub_form">
+                        <div class="sub_form_block">
+                            <input type="checkbox" id="pa" name="pa" value="1" checked="checked"  />Совокупная величина чистых активов не является отрицательной за последний год выбранного периода
+                        </div>
+                        <div class="sub_form_block">
+                            <input type="checkbox" id="loss" name="loss" value="1" checked="checked" />Нет убытков от продаж более чем в одном году в выбранном периоде
+                        </div>
+                        <div class="sub_form_block">
+                            <input type="checkbox" id="constitutors" name="constitutors" value="1" checked="checked" />Нет участников-юридических лиц с долей участия более <input id="ncons" type="text" class="search_input" value="25" style="width:30px" />%
+                            <span class="title"><em>Сведения об участниках-юридических лицах являются результатом<br/>
+                                                обработки данных, предоставленных ГМЦ РОССТАТа. В связи с особенностями<br />
+                                                функционирования и обновления указанного источника информации АО «СКРИН»<br />
+                                                не может гарантировать актуальность и достоверность сведений на текущую дату.</em><span class="icon-info-circled"></span></span>
+                        </div>
+                        <div class="sub_form_block">
+                            <input type="checkbox" id="subs" name="subs" value="1" checked="checked" />Нет дочерних компаний с долей участия юридического лица более <input id="nsubs" type="text" class="search_input" value="25" style="width:30px" />%
+                            <span class="title">
+                                <em>
+                                    Сведения об участниках-юридических лицах являются результатом<br />
+                                    обработки данных, предоставленных ГМЦ РОССТАТа. В связи с особенностями<br />
+                                    функционирования и обновления указанного источника информации АО «СКРИН»<br />
+                                    не может гарантировать актуальность и достоверность сведений на текущую дату.
+                                </em><span class="icon-info-circled"></span>
+                            </span>
+                        </div>
+                    </div>                    
+                </div>
+                <div class="form-group">
+                    <div class="sub_form">
+                        <input type="checkbox" id="suitable" name="suitable" value="1" checked="checked" /><b>Выбрать только годные для расчета</b>
+                        <span class="title">
+                            <em>
+                                Установленная отметка «Выбрать только годные для расчета» означает,<br/> 
+                                что в выборку организаций попадут только те организации,<br/> 
+                                по которым возможен расчет всех показателей рентабельности.
+                            </em><span class="icon-info-circled"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="snp" class="label_form">Отчетность имеется за</label>
+                <div class="sub_form">
+                    <div class="customSelect short_custom" id="dnp" onclick="show_PSelector();">
+                        <span id="snp" class="customVal" val="3">3 года</span>
+                        <span class="icon-angle-down"></span>
+                    </div>
+                     <span>из последних 3-х лет</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="okfs" class="label_form">Форма собственности</label>
+                <div class="sub_form">
+                    <input id="okfs" type="text" class="search_input" onclick="show_tree_selector(event,3,1)" placeholder="Форма собственности" title="в соответствии с ОКФС - Общероссийский классификатор форм собственности" />
+                </div>
+                <input type="hidden" id="okfs_val" value="" /><input type="hidden" id="okfs_excl" value="0" />
+            </div>
+            <div class="form-group">
+                <label for="reg" class="label_form">Регион по ОКАТО</label>
+                <div class="sub_form">
+                    <input id="reg" type="text" class="search_input" onclick="show_tree_selector(event,0,1,0)" placeholder="Регион" title="Общероссийский классификатор объектов административно-территориального деления" />
+                </div>
+                <input type="hidden" id="reg_val"  value="" /><input type="hidden" id="reg_excl" value="0" />
+            </div>
+            <div class="form-block">
+                <h4>Выбор показателей</h4>
+                <div class="form-group">
+                    <div id="qivparam-group_gks">
+                        <div class="sub_form_block">
+                            <div class="form_switcher">
+                                <input id="cond_default" type="radio" value="and" checked="checked" name="cond_selector"  />Все условия
+                                <input type="radio" value="or" name="cond_selector"/>Любое из условий
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btns darkblue" id="qiv_param_add" onclick="addParam()">Добавить параметр</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="countVal" class="label_form">Выводить по</label>
+                <div class="sub_form">
+                    <div class="customSelect" id="countSelect" onclick="show_countSelector();">
+                        <span id="countVal" class="customVal" val="30">30</span>
+                        <span class="icon-angle-down"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group button_block">
+                <button id="btn_search" class="btns darkblue large">Найти</button>
+                <button class="btns grey" id="btn_clear">Очистить</button>
+                <button class="btns grey" id="btn_save_template">Сохранить шаблон</button>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<div id="result_block">
+    <div class="content">        
+        <div id="search_result" style="display:none;">
+        </div>
+        <div id="tprice_container"></div>
+    </div>
+</div>
+
+@section Css{
+    <link href="~/Content/search.css?v=20170417" rel="stylesheet" />
+    <link href="~/Content/tree.css" rel="stylesheet" />
+    <link href="~/Content/tprice.css?v=20170417" rel="stylesheet" />
+    <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" rel="stylesheet" />
+    <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery.ui.datepicker.css" rel="stylesheet" />
+}
+
+@section Script{
+<script src="~/Scripts/progs2.js"></script>
+<script src="~/Scripts/search/tprice.js?v.20170412"></script>
+}
+

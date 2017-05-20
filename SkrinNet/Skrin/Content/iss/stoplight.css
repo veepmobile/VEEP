@@ -1,0 +1,51 @@
+﻿.tr_light {
+    float: none;
+    font-size: 18px;
+    font-weight: 500;
+    margin-left: 20px;
+    margin-top: 38px;
+    min-height: 100px;
+    padding: 20px 0 40px 100px;
+}
+.green {
+    background: transparent url("../img/ge_tl.png") no-repeat scroll 0 0;
+    color: #03bc00;
+}
+.red {
+    background: transparent url("../img/rd_tl.png") no-repeat scroll 0 0;
+    color: #cd2b25;
+}
+
+.red_attention{
+    color: #cd2b25;
+}
+
+.yellow {
+    background: transparent url("../img/ye_tl.png") no-repeat scroll 0 0;
+    color: #fc8f00;
+}
+
+.yellow_attention{
+    color: #fc8f00;
+}
+
+.gre {
+    background: transparent url("../img/gr_tl.png") no-repeat scroll 0 0;
+}
+.tr_light .tr_info {
+    float: left;
+}
+.tr_light btn {
+    float: right;
+}
+.tr_light a {
+    color: #000;
+    font-size: 12px;
+}
+.tr_light a:visited {
+    color: #000;
+}
+
+#StopLightBox{
+    height:100px;
+}

@@ -1,0 +1,10 @@
+﻿@using Skrin.Models.Iss.Content
+@model CapitalModel
+@{
+    Layout = null;
+}
+@if (Model.CapitalTable != null && Model.CapitalTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.CapitalTable)
+}
+

@@ -1,0 +1,78 @@
+﻿#tmplSelect{
+    width:412px;
+}
+
+#dnp{
+    width:100px;
+}
+
+
+#dnp #gropVal {
+    width: 60px;
+}
+
+.tprice_search_block  #base_block {
+    margin: 20px 0 20px 85px;
+    padding-top: 0;
+}
+
+.form-block{
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    float: left;
+    margin: 30px 0;
+    padding: 30px 0;
+    width:100%;
+}
+
+.form-block h4{
+    float:left;
+}
+
+.form-group .icon-info-circled{
+    cursor:pointer;
+}
+
+#btn_search{
+    width:150px;
+}
+
+#tprice_container{
+     float: left;
+    margin: 20px 0;
+}
+
+#search_switcher{
+    display: block;
+    float: right;
+    font-size: 12px;
+    margin: 20px 0;
+    cursor:pointer;
+    display:none;
+}
+
+#search_switcher:hover{
+    text-decoration:underline;
+}
+
+#main{
+     padding-bottom: 50px;
+}
+
+
+#tprice_container .export_block {
+    border-bottom: 1px solid #ddd;
+    float: left;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    width: 100%;
+}
+
+#tprice_container .icon {
+    color: #10327c;
+    cursor: pointer;
+    font-size: 32px;
+}
+#tprice_container .icon:hover{
+    color: #5584ff;
+}

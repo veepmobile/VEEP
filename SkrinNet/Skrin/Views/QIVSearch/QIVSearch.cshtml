@@ -1,0 +1,184 @@
+﻿@model List<string>
+@using Skrin.BLL.Infrastructure
+@using Skrin.BLL.Authorization
+@using Skrin.BLL.Root
+@using Newtonsoft.Json
+@using System.Threading.Tasks;
+@using Skrin.Controllers;
+
+@{
+    UserSession us = Context.GetUserSession();
+    string add_tag = us.AuthenticationResult == AuthenticationType.Ok ? "" : " readonly=\"readonly\" onclick=\"united_login(5);\" ";
+    int user_id = us.UserId;
+//    user_id = 1;//убрать - тест
+//@Html.Raw(add_tag)
+}
+
+@section Css{
+    <link href="~/Content/search.css?v=20170417" rel="stylesheet" />
+    <link href="~/Content/tree.css" rel="stylesheet" />
+    <link href="~/Content/tprice.css?v=20170417" rel="stylesheet" />
+    <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" rel="stylesheet" />
+    <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery.ui.datepicker.css" rel="stylesheet" />
+}
+
+@section Script{
+    <script src="~/Scripts/progs2.js"></script>
+    <script src="~/Scripts/seekEgrul.js"></script>
+    <script src="~/Scripts/issuer_list.js"></script>
+    <script src="~/Scripts/search/qiv_search.js?v=20170417"></script>
+
+    <script>
+        var extGroupList =  @Html.Raw(JsonConvert.SerializeObject(AuthenticateSqlUtilites.GetExtGroupList(user_id)));
+        var user_id = @(user_id);
+        var roles_object = @Html.Raw(ViewBag.RolesJson);
+        var yearList = @Html.Raw(JsonConvert.SerializeObject(SqlUtiltes.GetGKSYearList()));
+        var nauforYearList = @Html.Raw(JsonConvert.SerializeObject(SqlUtiltes.GetNauforYearList()));
+        var msfoYearList = @Html.Raw(JsonConvert.SerializeObject(SqlUtiltes.GetMSFOYearList()));
+        var group_limit=@(us.GroupLimit);
+    </script>
+    <iframe class="service_frame" name="xls_frame" id="xls_frame" onload="hideClock();"></iframe>
+}
+
+<div id="qiv_search_block" class="qiv_search_block">
+    <div class="content">
+        <div id="form_block">
+            <div class="form-group">
+                <label for="tmplVal" class="label_form">Шаблон</label>
+                <div class="sub_form">
+                    <div class="customSelect" id="tmplSelect" onclick="show_tmplSelector();">
+                        <span id="tmplVal" class="customVal" val="0">Нет</span>
+                        <span class="icon-angle-down"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="okopf" class="label_form">ОПФ</label>
+                <div class="sub_form">
+                    <input id="okopf" type="text" class="search_input" onclick="show_tree_selector(event,4,1)" placeholder="ОПФ" title="в соответствии с ОКОПФ - Общероссийский классификатор организационно-правовых форм" />
+                </div>
+                <input type="hidden" id="okopf_val" value="" data-check /><input type="hidden" id="okopf_excl" value="0" />
+            </div>
+            <div class="form-group">
+                <label for="okfs" class="label_form">Форма собственности</label>
+                <div class="sub_form">
+                    <input id="okfs" type="text" class="search_input" onclick="show_tree_selector(event,3,1)" placeholder="Форма собственности" title="в соответствии с ОКФС - Общероссийский классификатор форм собственности" />
+                </div>
+                <input type="hidden" id="okfs_val" value="" data-check /><input type="hidden" id="okfs_excl" value="0" />
+            </div>
+            <div class="form-group">
+                <label class="label_form">Дата ОГРН</label>
+                <div class="sub_form">
+                    <span style="padding: 0 12px 0 0;"> c </span>
+                    <input id="dfrom" type="text" class="search_input short" data-check placeholder="ДД.ММ.ГГГГ" />
+                    <span style="padding: 0 12px ;"> по </span>
+                    <input id="dto" type="text" class="search_input short" data-check placeholder="ДД.ММ.ГГГГ" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ind" class="label_form">Отрасль</label>
+                <div class="sub_form">
+                    <input id="ind" type="text" class="search_input" onclick="show_tree_selector(event,ind_type,1,0)" placeholder="Отрасль (ОКВЭД)" title="Общероссийский классификатор видов экономической деятельности" />
+                    <div class="form_switcher">
+                        <input type="radio" value="24" checked="checked" name="ind_type" onclick="ch_ind_type(this)" />ОКВЭД
+                        <input type="radio" value="99" name="ind_type" onclick="ch_ind_type(this)" />ОКВЭД (основной)
+                    </div>
+                    <input type="hidden" id="ind_val" data-check value="" /><input type="hidden" id="ind_excl" value="0" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="reg" class="label_form">Регион</label>
+                <div class="sub_form">
+                    <input id="reg" type="text" class="search_input" onclick="show_tree_selector(event,reg_type,1,0)" placeholder="Регион" title="Общероссийский классификатор объектов административно-территориального деления" />
+                    <div class="form_switcher">
+                        <input type="radio" value="0" checked="checked" name="reg_type" onclick="ch_reg_type(this)" />ОКАТО
+                        <input type="radio" value="5" name="reg_type" onclick="ch_reg_type(this)" />по регистрации в налоговых органах
+                    </div>
+                </div>
+                <input type="hidden" id="reg_val" data-check value="" /><input type="hidden" id="reg_excl" value="0" />
+            </div>
+            <div class="form-group">
+                <label for="gropVal" class="label_form">Группы</label>
+                <div class="sub_form">
+                    <div class="customSelect" id="groupSelect" onclick="show_groupSelector();">
+                        <span id="gropVal" class="customVal" data-check val="0">Нет</span>
+                        <span class="icon-angle-down"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gropVal" class="label_form">Наличие</label>
+                <div class="sub_form">
+                    <div class="sub_form_block">
+                        <input type="checkbox" id="rgstr" name="rgstr" data-check value="1" @Html.Raw(add_tag) @(user_id != 0 ? "" : "disabled=\"disabled\"") />В реестре Росстата
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <ul class="search_qtabs">
+                    <li class="active" id="qiv_tab_gks"><span>РСБУ (годовая неконсолидированная отчетность)</span></li>
+                    <li id="qiv_tab_naufor"><span>РСБУ (квартальная неконсолидированная отчетность)</span></li>
+                    <li id="qiv_tab_msfo"><span>МСФО (годовая отчетность)</span></li>
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <div id="qivparam-group_gks">
+                    <div class="sub_form_block">
+                        <div class="form_switcher">
+                            <input type="radio" value="and" checked="checked" name="cond_selector_gks" />Все условия
+                            <input type="radio" value="or" name="cond_selector_gks" />Любое из условий
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden" id="qivparam-group_naufor">
+                    <div class="sub_form_block">
+                        <div class="form_switcher">
+                            <input type="radio" value="and" checked="checked" name="cond_selector_naufor" />Все условия
+                            <input type="radio" value="or" name="cond_selector_naufor" />Любое из условий
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden" id="qivparam-group_msfo">
+                    <div class="sub_form_block">
+                        <div class="form_switcher">
+                            <input type="radio" value="and" checked="checked" name="cond_selector_msfo" />Все условия
+                            <input type="radio" value="or" name="cond_selector_msfo" />Любое из условий
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btns grey" id="qiv_param_add" onclick="addParam()">Добавить параметр</button>
+                <hr class="search_tabs" />
+            </div>
+
+            <div class="form-group">
+                <label for="countVal" class="label_form">Выводить по</label>
+                <div class="sub_form">
+                    <div class="customSelect" id="countSelect" onclick="show_countSelector();">
+                        <span id="countVal" class="customVal shortest" val="30">30</span>
+                        <span class="icon-angle-down"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button class="btns darkblue large" onclick="doSearch()">Найти</button>
+                <button class="btns grey" onclick="doClear();addParam();">Очистить</button>
+                <button class="btns grey" id="btn_save_template">Сохранить шаблон</button>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id=" sort_col" name="sort_col" value="7" /><input type="hidden" id=" sort_direct" name="sort_direct" value="desc" />
+
+            <div id="result_block">
+                <div class="content">
+                    <div id="search_result">
+                    </div>
+                </div>
+            </div>
+

@@ -1,0 +1,20 @@
+﻿@using serch_contra_bll.StopLightFreeEgrul.Info
+@using Skrin.BLL.Infrastructure
+@model LegacyIPInfo
+@{
+    Layout = null;
+}
+@foreach (LegacyIPInfoItem item in Model.Items)
+{
+    <table class="profile_table" cellspacing="0" cellpadding="0" border="0" style="width: 60%">
+        <tr>
+            <th style="width: 200px">Сведения о состоянии</th>
+            <td>@item.Name</td>
+        </tr>
+        <tr>
+            <th>ГРНИП и дата внесения записи в ЕГРИП</th>
+            <td>@item.Grnip<br />@item.GrnipDate.ToRusString()</td>
+        </tr>
+    </table>
+    <div style="clear: both; height: 10px;"></div>
+}

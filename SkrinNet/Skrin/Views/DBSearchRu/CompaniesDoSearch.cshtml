@@ -1,0 +1,183 @@
+﻿@model ULSearch.SearchResultElastic
+@{
+    Layout = null;    
+    var comp_name = "";
+}
+
+<input type="hidden" id="total_found" data-check value="@Model.ResultInfo.total_found" />
+<input type="hidden" id="page" data-check value="@(Model.ResultInfo.page+1)" />
+<input type="hidden" id="rcount" data-check value="@Model.ResultInfo.pagecount" />
+
+
+
+@if(Model.Data.Count > 0)
+{
+    for (int i = 0; i < Model.Data.Count; i++)
+    {
+        <div class="res_item">
+            @if(ViewBag.userId > 0)
+            { 
+                <text>
+                <div class="check_block">
+                    <input name="selsissuer" onclick="checkOnOff(this);" type="checkbox" value="@Html.Raw(Model.Data[i].issuer_id + "_" + Model.Data[i].type_id)">
+                </div>
+                </text>
+            }
+            
+            @{
+                comp_name = !string.IsNullOrWhiteSpace(Model.Data[i].short_name) ? Model.Data[i].short_name : comp_name = Model.Data[i].name;
+            }
+
+            <div class="info_block">
+                @if(Model.Data[i].ticker.Length > 0)
+                { 
+                    <a class="comp_title" href="/issuers/@Model.Data[i].ticker" target="_blank">@comp_name</a>
+                }
+                else
+                {
+                    <span class="comp_title">@comp_name</span>
+                }                
+                <div class="comp_info">
+                    @if (ViewBag.key_name != "" && Model.Data[i].key_list != null)
+                    {
+                        var names = Model.Data[i].key_list;
+                        if (names.Count > 0)
+                        {
+                            if (names[0].is_old && (names[0].key_type == 4 || names[0].key_type == 5 || names[0].key_type == 51 || names[0].key_type == 52))
+                            {
+                                <text><p><span class='history'>@names[0].key_value</span></p></text>
+                            }
+                        }
+                    }
+                    @if (ViewBag.userId > 0 && !string.IsNullOrWhiteSpace(Model.Data[i].del_date))
+                    {
+                        <p class='attention'>Исключено из реестра Росстата @Model.Data[i].del_date</p>
+                    }
+                    @if(Model.Data[i].address != null)
+                    {
+                        <p>@Model.Data[i].address</p>
+                    }
+                    @if (ViewBag.key_addr != "" && Model.Data[i].address_list != null)
+                    {
+                        var addr = Model.Data[i].address_list;
+                            if (addr[0].is_old)
+                            {
+                                <text><p><span class='history'>@addr[0].address</span></p></text>
+                            }
+                    }
+                    @if (ViewBag.key_phone != "" && Model.Data[i].phone_list != null)
+                    {
+                        var phone = Model.Data[i].phone_list;
+
+                            if (phone[0].is_old)
+                            {
+                                <text><p>Телефон: <span class='history'>@phone[0].phone</span></p></text>
+                            }
+                            else
+                            {
+                                <text><p>Телефон: @phone[0].phone</p></text>
+                            }
+                    }
+                    @if (Model.Data[i].ruler != null)
+                    {
+                        <p>Руководитель: @Model.Data[i].ruler</p>
+                    }
+                    @if (ViewBag.key_ruler != "" && Model.Data[i].manager_list != null)
+                    {
+                        var manager = Model.Data[i].manager_list;
+                            if (manager[0].is_old)
+                            {
+                                <p><span class='history'>
+                                @(!string.IsNullOrWhiteSpace(manager[0].fio) ? manager[0].fio : "") @(!string.IsNullOrWhiteSpace(manager[0].position) ? " - " + manager[0].position : "")
+                                @(!string.IsNullOrWhiteSpace(manager[0].inn) ? " (ИНН" + manager[0].inn + ")" : "") 
+                                </span></p>
+                            }
+                    }
+                    @if (ViewBag.key_constr != "" && Model.Data[i].constitutor_list != null)
+                    {
+                        var constr = Model.Data[i].constitutor_list;
+
+                            var constitutor = constr[0].name + (!string.IsNullOrWhiteSpace(constr[0].inn) ? " (ИНН " + constr[0].inn + ")" : "");
+                            if (constr[0].is_old)
+                            {
+                                <p>Учредитель: <span class='history'>@constitutor</span></p>
+                            }
+                            else
+                            {
+                                <p>Учредитель: @constitutor</p>
+                            }
+                    }                    
+                    @if (Model.Data[i].okved_name != null)
+                    {
+                        <p>@Model.Data[i].okved_name</p>
+                    }
+                    
+                    @if(ViewBag.userId > 0 && Model.Data[i].ogrn != null) 
+                    {
+                        <p>Сведения о состоянии: 
+                        @if (Model.Data[i].status_list != null && Model.Data[i].status_list.Count > 0)
+                        {
+                            for (int j = 0; j < Model.Data[i].status_list.Count; j++)
+                            {
+                                if(j == 0)
+                                {
+                                    <span class='attention'>@Model.Data[i].status_list[j].status_name  от  @Model.Data[i].status_list[j].status_date</span>
+                                }
+                                else
+                                { 
+                                    <p class='attention'>@Model.Data[i].status_list[j].status_name  от  @Model.Data[i].status_list[j].status_date</p>
+                                }
+                            }
+                        }
+                        else 
+                        {
+                            <text>Действующее*</text>
+                        }
+                        </p>
+                    }
+
+                </div>
+            </div>
+            <div class="code_block">
+                @if(Model.Data[i].ogrn != null)
+                { 
+                    <p><span class="code_title">ОГРН:</span>@Model.Data[i].ogrn</p>
+                 }
+                @if (Model.Data[i].inn != null)
+                {
+                    <p><span class="code_title">ИНН:</span>@Model.Data[i].inn</p>
+                }
+                @if (Model.Data[i].okpo != null)
+                {
+                    <p><span class="code_title">ОКПО:</span>@Model.Data[i].okpo</p>
+                }                                 
+            </div>
+
+            <div class="command_block">
+                @if (ViewBag.userId > 0 && !string.IsNullOrWhiteSpace(Model.Data[i].ogrn) && Model.Data[i].uniq)
+                {
+                    <text>
+                        <div class="sl_info_block">
+                            <div id="aslb_@Model.Data[i].ogrn" inn="@Model.Data[i].inn" grn="@Model.Data[i].ogrn" class="actionstoplight_block">
+                                <div>Индекс активности</div>
+                                <div class="sl_chart" id="asl_@Model.Data[i].ogrn"></div>
+                            </div>
+                            <div id="slb_@Model.Data[i].ogrn" inn="@Model.Data[i].inn" grn="@Model.Data[i].ogrn" class="stoplight_block">
+                                <div>Уровень надежности</div>
+                                <div class="sl_chart" id="sl_@Model.Data[i].ogrn"></div>
+                            </div>
+                        </div>
+                    </text>
+                }
+
+            </div>            
+        </div>
+
+    }
+}
+
+
+
+
+
+

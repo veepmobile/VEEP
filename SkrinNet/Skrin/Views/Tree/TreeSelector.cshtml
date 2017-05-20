@@ -1,0 +1,336 @@
+﻿@{
+    Layout = null;
+    int src = ViewBag.src;
+    string nodes = ViewBag.nodes;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width" />
+    <title>TreeSelector</title>
+    <link href="~/Content/tree.css" rel="stylesheet" />
+    <link href="~/Content/main.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery144.js"></script>
+    <script src="~/Scripts/tree.js"></script>
+    <script src="~/Scripts/progs2.js"></script>
+    <script src="~/Scripts/lib.js"></script>
+    <script>
+        var clear_pressed=false;
+        var node;
+        var src=@src
+        var nodes='@nodes';
+        //var tree_table=src;
+        var selected;
+
+        $(document).ready(function(){
+            getNodes(src,0,0);
+            $(document).ready(function(){
+                if(nodes.length>0){
+                    expand(nodes);
+                }
+            })
+        }
+    );
+        function getNodes(src,nodes,action){
+            var i=0;
+            $.post("/Tree/GetNodes",{"src": src, "id": + nodes,"act":action},
+                   function(data){
+                       parent.hideClock();
+                       var checked
+                       if (document.getElementById("chb" + nodes)){
+                           checked=document.getElementById("chb" + nodes).checked;
+                       }else{
+                           checked=false;
+                       }
+                       drawNodes(data,checked);
+
+                   },
+           "json");
+        }
+        function expand(val){
+            selected=new Array()
+            var aNodes=String(val).split(",");
+            //for(var i=0; i<aNodes.length; i++){
+            $.post("/Tree/GetNodes",{"src": src, "id": val,"act":1},
+                    function(data){
+                        $(document).ready(function(){
+                            ExpanNodes(data,false);
+                        });
+                    },
+            "json");
+            //}
+        }
+        function ExpanNodes(data,expandonly){
+            var node2expand;
+            var parentNode;
+            var checked=false;
+            var re =  /(^|\s)(ExpandClosed)(\s|$)/;
+            for(var i=0; i<data.length; i++){
+                var child = data[i];
+                if($.isArray(child)){
+                    if (!document.getElementById(child[0].parent)){
+                        ExpanNodes(child,true);
+                    }else{
+                        if (!document.getElementById(child[0].parent).getElementsByTagName('LI').length){
+                            alert(child[0].parent + "|" + child[0].id)
+                            ExpanNodes(child,false);
+                        }else{
+                            //alert(child[0].parent + "|" + child[0].id)
+                            ExpanNodes(child,true);
+                        }
+                    }
+                }else{
+                    if (document.getElementById(child.parent)){
+                        document.getElementById(child.parent).className = document.getElementById(child.parent).className.replace(re, '$1ExpandOpen$3')
+                    }
+                    if(!expandonly && child.parent>0 && document.getElementById(child.parent) && !document.getElementById(child.id)){
+
+                        parentNode=child.parent;
+
+                        checked=(document.getElementById("chb" + parentNode).checked && !document.getElementById("chb" + parentNode).disabled);
+
+                        var li = document.createElement('LI')
+
+                        li.id = child.id
+
+                        li.className = "Node Expand" + ((child.isFolder)? (child.expanded>0)? 'Open':'Closed' : 'Leaf')
+
+                        if (i == data.length-1) li.className += ' IsLast'
+
+                        li.innerHTML = '<div class="Expand" ></div><div class="Content"><span onclick=\"EnableChB(this); this.style.display=\'none\'\" id=\"sp' + child.id + '\" class=\"div_chb\">&nbsp;</span><input type=\"checkbox\" onclick=\"checkCheckbox(this)\" id=\"chb' + child.id + '\" class=\"chbox\" name=\"sec\" value=\"' + child.id + '\"' + ((checked)?' checked':'') + '/>'+setSpanText(child)+'</div>'
+
+                        if (child.isFolder) {
+                            li.innerHTML += '<ul class="Container" id="ul' + child.id + '"></ul>'
+                        }
+                        document.getElementById("ul"+parentNode).appendChild(li);
+                    }
+                    if (child.selected>0){
+                        if(document.getElementById("chb" + child.id)){
+                            document.getElementById("chb" + child.id).focus();
+                            document.getElementById("chb" + child.id).checked=true;
+                        }
+                        selected[selected.length]=child.id;
+                    }
+                }
+            }
+            if (selected.length>0){
+                for(var i=0; i<selected.length; i++){
+                    checkCheckbox(document.getElementById("chb" + selected[i]))
+                }
+            }
+        }
+
+        function  chbClick(){//это просто заглушка, но удалять ее нельзя!
+            void(0);
+            clear_pressed=false;
+        }
+        function drawNodes(data,checked){
+            for(var i=0; i<data.length; i++){
+                var child = data[i]
+                if($.isArray(child)){
+                    drawNodes(child,checked);
+                }else{
+                    var parentNode=child.parent
+                    var li = document.createElement('LI')
+                    li.id = child.id
+                    li.className = "Node Expand" + ((child.isFolder)? ((parentNode==0 && src!=1 && src!=2 && src!=17 && src!=24 )? 'Open':'Closed') : 'Leaf')
+                    if (i == data.length-1 || (data[(i<data.length-1)? i+1:i].parent!=data[i].parent)) li.className += ' IsLast'
+                    li.innerHTML = '<div class="Expand" id="d'+ child.id + '"></div><div class="Content"><span onclick=\"EnableChB(this); this.style.display=\'none\'\" id=\"sp' + child.id + '\" class=\"div_chb\">&nbsp;</span><input type=\"checkbox\" onclick=\"checkCheckbox(this)\" id=\"chb' + child.id + '\" class=\"chbox\" name=\"sec\" value=\"' + child.id + '\"' + ((checked)?' checked':'') + '/>'+setSpanText(child)+'</div>'
+                    if (child.isFolder) {
+                        li.innerHTML += '<ul class="Container" id="ul' + child.id + '"></ul>'
+                    }
+                    var cc=$("#maintree").closest('UL');
+                    if (!node){
+                        if (parentNode>"0"){
+                            document.getElementById("ul"+parentNode).appendChild(li);
+                        }else{
+                            document.getElementById("maintree").getElementsByTagName('UL')[0].appendChild(li);
+                        }
+                    }else{
+                        node.getElementsByTagName('UL')[0].appendChild(li);
+                    }
+                }
+            }
+        }
+
+
+        function treeSearchDown(){
+            if (window.tree_count==undefined) {
+                window.tree_count = 0
+            } else {
+                window.tree_count = window.tree_count + 1;
+            }
+            setTimeout(function () {
+                if (window.tree_count === 0){
+                    treeSearch();
+                    window.tree_count = undefined;
+                } else {
+                    window.tree_count = window.tree_count - 1;
+                }
+            },500);
+        }
+
+        function treeSearch(){
+            var ds;
+            if ($("#txtsrch").val().length>1){
+                if (!getObj("ts_result")){
+                    ds=document.createElement("DIV");
+                    ds.id="ts_result";
+                    var pos=getBounds(getObj("txtsrch"));
+                    ds.className="tree_search";
+                    ds.style.top=(pos.top+pos.height)  + "px";
+                    ds.style.left=(pos.left+1)  + "px";
+                    ds.style.width=(pos.width-12)  + "px";
+                    ds.style.height="220px";
+                    document.body.appendChild(ds);
+                }else{
+                    ds=getObj("ts_result");
+                }
+                ds.innerHTML="<span class=\"span_tree_search\">Поиск...</span>";
+                $.post("/Tree/TreeSearch",{"src":src, "st": getObj("txtsrch").value },
+                        function(data){
+                            var htm="<br/><table class=\"outer_search_code\" cellpading=\"0\" cellspacing=\"0\" width=\"100%\">"
+                            if(data.length>0){
+                                var table_inner=[];
+                                for(var i=0; i<data.length; i++){
+                                    if(data[i].type==1){
+                                        table_inner.push("<tr class=\"tree_search_item\"><td style=\"width:80px;\">" + data[i].kod + "</td><td style=\"cursor:pointer;\" onclick=\"expand(" + data[i].id + ");treeSearchClose();\">" + data[i].name + "</td></tr>");
+                                    }else{
+                                        var codes=JSON.parse(data[i].name);
+                                        var inner='<tr class=\"tree_search_item\"><td><table class=\"inner_search_code\" cellpading=\"0\" cellspacing=\"0\" width=\"100%\">';
+                                        for (var j = 0; j < codes.length; j++) {
+                                            var year="";
+                                            if(codes[j].year){
+                                                year+="<br/><span class=\"year\">"+codes[j].year+"</span>";
+                                            }
+                                            inner+="<tr><td style=\"width:80px;\">"+codes[j].okved+year+"</td><td style=\"cursor:pointer;\" onclick=\"expand(" + data[i].id + ");treeSearchClose();\">"+codes[j].name+"</td></tr>";
+                                        }
+                                        table_inner.push(inner + '</table></td></tr>');
+                                    }
+                                }
+                                htm+=table_inner.join('<tr><td colspan=2 class="divider"><hr/></td></tr>');
+                                htm += "</table>"
+                                ds.innerHTML=htm;
+                            }else{
+                                ds.innerHTML="<span class=\"span_tree_search\">Не найдено.</span>";
+                            }
+
+                        },"json"
+                )
+            }
+        }
+        function treeSearchClose(){
+            if (getObj("ts_result")){
+                document.body.removeChild(getObj("ts_result"));
+            }
+        }
+        function treeClearSelection(){
+            $("input:checkbox").each(function(i){
+                if(String(this.id).substr(0,3)=="chb"){
+                    this.checked=false;
+                    this.disabled=false;
+                    document.getElementById("sp" + this.id.substring(3,10)).style.display="none";
+                }
+            });
+        }
+        function treeSelect(is_excl){
+            var retval="";
+            $("input:checkbox:checked").each(function(i){
+                if(String(this.id).substr(0,3)=="chb"){
+                    if (this.checked && !this.disabled){
+                        if (getObj("chb" + this.parentNode.parentNode.parentNode.parentNode.id)){
+                            if(getObj("chb" + this.parentNode.parentNode.parentNode.parentNode.id).disabled){
+                                retval += this.value + ",";
+                            }
+                        }else{
+                            retval += this.value + ",";
+                        }
+
+                    }
+                }
+            })
+            if(retval.length>0){
+                retval=retval.substring(0,retval.length-1);
+            }
+            parent.Write_TS(retval,is_excl);
+        }
+        function setSpanText(code_line){
+            var output=[];
+            var parsed_info;
+            if(code_line.extra_info==null){
+                return '<span class=\"tree_txt\">'+code_line.title+'</span>';
+            }else{
+                parsed_info=JSON.parse(code_line.extra_info);
+                switch (code_line.src) {
+                    case 1:
+                        for (var i = 0; i < parsed_info.length; i++) {
+                            if(!parsed_info[i].year){
+                                return '<span class=\"tree_txt\">'+code_line.title+'</span>'; //Для корневых элементов подсказки не будет
+                            } 
+                            output.push(parsed_info[i].okved+" - "+parsed_info[i].name+" ("+parsed_info[i].year+")");
+                        }
+                        return '<span class="title"><em>'+output.join('<br/>')+'</em><span class=\"tree_txt\">'+code_line.title+'</span></span>';
+                    case 24:
+                        for (var i = 0; i < parsed_info.length; i++) {
+                            if(!parsed_info[i].year){
+                                return '<span class=\"tree_txt\">'+code_line.title+'</span>'; //Для корневых элементов подсказки не будет
+                            } 
+                            output.push(parsed_info[i].okved+" - "+parsed_info[i].name+" ("+parsed_info[i].year+")");
+                        }
+                        return '<span class="title"><em>'+output.join('<br/>')+'</em><span class=\"tree_txt\">'+code_line.title+'</span></span>';
+
+                    default:
+                        return '<span class=\"tree_txt\">'+code_line.title+'</span>';
+                }
+            }
+        }
+    </script>
+</head>
+<body style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;">
+    <div id="treeselector" class="treeselector">
+        @if (src < 3 || src == 9 || src == 17 || src == 24 || src == 5 || src == 1)
+        {
+            <div id="searcher" style="width: 742px;  position: absolute; top: 0px;">Искать:&nbsp;<input type="text" id="txtsrch" value="" class="search_input" style="width:655px" onkeydown="treeSearchDown()" /></div>
+            <div onclick="tree_toggle(event);treeSearchClose();" style="position:absolute;width:742px; height:405px; overflow:auto; padding:3px 2px 0px 2px; background-color:#fff;border: 1px solid #ccc;top:45px;" id="maintree">
+                <ul class="Container" id="ul0"></ul>
+            </div>
+            <div style="position:absolute; top:460px; width:742px; height:25px; padding:3px 2px 3px 2px; text-align:center; text-align:right;">
+                <table style="width:100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td align="left">
+                            <input type="button" class="btns grey" onclick="treeClearSelection()" value="Очистить" />
+                        </td>
+                        <td align="right">
+                            <input type="button" class="btns darkblue" onclick="treeSelect(-1)"  value="Исключить выбранные" />&nbsp;
+                            <input type="button" class="btns darkblue" onclick="treeSelect(0)" value="Применить" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            }
+            else
+            {
+            <div onclick="tree_toggle(event);treeSearchClose();" style="position:absolute;width:742px; height:452px; overflow:auto; padding:3px 2px 0px 2px; background-color:#fff;border: 1px solid #ccc;" id="maintree">
+                <ul class="Container" id="ul0"></ul>
+            </div>
+            <div style="position:absolute; top:460px; width:742px; height:25px; padding:3px 2px 3px 2px; text-align:center; text-align:right;">
+                <table style="width:100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td align="left">
+                            <input type="button" class="btns grey" onclick="treeClearSelection()" value="Очистить" />
+                        </td>
+                        <td align="right">
+                            <input type="button" class="btns darkblue" onclick="treeSelect(-1)" value="Исключить выбранные" />&nbsp;
+                            <input type="button" class="btns darkblue" onclick="treeSelect(0)" value="Применить" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        }
+
+    </div>
+</body>
+</html>

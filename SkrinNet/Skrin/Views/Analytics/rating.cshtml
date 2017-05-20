@@ -1,0 +1,41 @@
+﻿
+@model List<Skrin.Models.Analytics.rating>
+
+    @section Css{
+        <link href="~/Content/search.css" rel="stylesheet" />
+        <link href="~/Content/tree.css" rel="stylesheet" />
+        <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.css" rel="stylesheet" />
+        <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" rel="stylesheet" />
+        <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery.ui.datepicker.css" rel="stylesheet" />
+    }
+
+
+
+    <div id="result_block">
+        <div class="content">
+            <div id="search_result">
+                <img src="/images/NRA_LOGO_WEB.gif" alt="Национальное рейтинговое агентство" />
+                <table class="data_table rating" border="0" cellpadding="0" cellspacing="0" style="float:none;margin-top:20px;">
+                    <tr>
+                        <th>Позиция</th>
+                        <th>Наименование компании/банка	</th>
+                        <th>Внутренний рейтинг</th>
+                        <th>Международный рейтинг</th>
+                        <th>Прогноз</th>
+                        <th>Дата последнего изменения</th>
+                    </tr>
+                    @foreach (var row in Model)
+                    {
+                        <tr>
+                            <td>@row.position</td>
+                            <td><a href="/issuers/@row.ticker/" target="_blank">@row.short_name</a></td>
+                            <td>@row.LocalRating</td>
+                            <td>@row.InternationalRating</td>
+                            <td>@row.ForeCast</td>
+                            <td>@row.rd</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>

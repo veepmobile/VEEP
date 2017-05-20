@@ -1,0 +1,283 @@
+﻿@using Skrin.BLL.Infrastructure
+
+@model Skrin.Models.ProfileFL.ProfileFLModel
+@{Layout = null;}
+
+<h1>@Model.fio</h1>
+<h2>ИНН: @Model.inn</h2>
+<a href="#founder" class="subcaption" style="display: inline">1. Учредитель(участник)</a>
+<br /><br />
+<span style="margin-left:20px">Количество юридических лиц по ИНН: @Model.founder_inn.Count , по ФИО: @Model.founder_fio.Count</span>
+<br /><br />
+<a href="#manager" class="subcaption" style="display: inline">2. Руководитель</a>
+<br /><br />
+<span style="margin-left: 20px">Количество юридических лиц по ИНН: @Model.manager_inn.Count по ФИО: @Model.manager_fio.Count</span>
+<br /><br />
+<a href="#ip" class="subcaption" style="display: inline">3. Индивидуальный предприниматель</a>
+<br /><br />
+<span style="margin-left: 20px">Количество записей по ИНН: @Model.ip_inn.Count по ФИО: @Model.ip_fio.Count</span>
+<br /><br /><br />
+<span class="subcaption">1. Учредитель(участник)</span>
+<span class="subcaption" id="founder">Сведения об участии физического лица в уставном (складочном) капитале юридических лиц</span>
+@if (Model.founder_inn.Count + Model.founder_fio.Count > 0)
+{
+    <table class="profile_table">
+        <tbody>
+            <tr>
+                <td class="table_caption">ФИО, ИНН учредителя (участника)</td>
+                <td class="table_caption">Доля в уставном капитале</td>
+                <td class="table_caption">Полное наименование, ОГРН, состояние учрежденного юр.лица</td>
+                <td class="table_caption">Дата внесения записи в ЕГРЮЛ</td>
+                <td class="table_caption">Примечание</td>
+            </tr>
+            @if (Model.founder_inn.Count > 0)
+            {
+                <tr><td colspan="5"><div align="center"><b>Юридическое лицо найдено по ИНН учредителя (участника)</b></div></td></tr>
+                for (var i = 0; i < Model.founder_inn.Count; i++)
+                {
+                    var fl = Model.founder_inn[i];
+                    <tr>
+                        <td>@fl.fio</td>
+                        <td style="text-align:right;padding-right:5px;">
+                            @fl.share@if (!string.IsNullOrWhiteSpace(fl.share_percent))
+                            {<text> (@fl.share_percent%)</text>}
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(fl.ticker))
+                            {
+                                <a href="/issuers/@fl.ticker/">@fl.ul_name</a>
+                            }
+                            else
+                            {
+                                @fl.ul_name
+                            }
+                            @if (fl.ogrn != "")
+                            {<text>,</text><br />@fl.ogrn}
+                            @if (fl.ul_status != "")
+                            {<text>,</text><br />
+                                if (fl.ul_status == "Действующее*")
+                                {<div class="status_green">@fl.ul_status</div>}
+                                else
+                                {<div class="status_red">@fl.ul_status</div>}
+                            }
+                        </td>
+                        <td>@fl.gd</td>
+                        <td>@fl.remark</td>
+                    </tr>
+                }
+            }
+            @if (Model.founder_fio.Count > 0)
+            {
+                <tr><td colspan="5"><div id="founder_fio" align="center"><b>Юридическое лицо найдено по ФИО учредителя (участника)</b></div></td></tr>
+                for (var i = 0; i < Model.founder_fio.Count; i++)
+                {
+                    var fl = Model.founder_fio[i];
+                    <tr>
+                        <td>@fl.fio</td>
+                        <td style="text-align:right;padding-right:5px;">
+                            @fl.share@if (!string.IsNullOrWhiteSpace(fl.share_percent))
+                            {<text> (@fl.share_percent%)</text>}
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(fl.ticker))
+                            {
+                                <a href="/issuers/@fl.ticker/">@fl.ul_name</a>
+                            }
+                            else
+                            {
+                                @fl.ul_name
+                            }
+                            @if (fl.ogrn != "")
+                            {<text>,</text><br />@fl.ogrn}
+                            @if (fl.ul_status != "")
+                            {<text>,</text><br />
+                                if (fl.ul_status == "Действующее*")
+                                {<div class="status_green">@fl.ul_status</div>}
+                                else
+                                {<div class="status_red">@fl.ul_status</div>}
+                            }
+                        </td>
+                        <td>@fl.gd</td>
+                        <td>@fl.remark</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    if (Model.manager_inn.Count + Model.manager_fio.Count == 0)
+    {
+        <div style="color:#666">*Сведения о прекращении деятельности (реорганизации, ликвидации ) отсутствуют</div>
+    }
+}
+else
+{
+    <div>Данные отсутствуют</div>
+    <br />
+}
+<br />
+<span class="subcaption">2. Руководитель</span>
+<span class="subcaption" id="manager">Сведения о юридических лицах, от имени которых физическое лицо имеет право действовать без доверенности</span>
+@if (Model.manager_inn.Count + Model.manager_fio.Count > 0)
+{
+    <table class="profile_table">
+        <tbody>
+            <tr>
+                <td class="table_caption">ФИО, ИНН руководителя</td>
+                <td class="table_caption">Должность</td>
+                <td class="table_caption">Полное наименование, ОГРН, состояние юр.лица</td>
+                <td class="table_caption">Дата внесения записи в ЕГРЮЛ</td>
+                <td class="table_caption">Примечание</td>
+            </tr>
+            @if (Model.manager_inn.Count > 0)
+            {
+                <tr><td colspan="5"><div align="center"><b>Юридическое лицо найдено по ИНН руководителя</b></div></td></tr>
+                for (var i = 0; i < Model.manager_inn.Count; i++)
+                {
+                    var fl = Model.manager_inn[i];
+                    <tr>
+                        <td>@fl.fio</td>
+                        <td>@fl.position</td>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(fl.ticker))
+                            {
+                                <a href="/issuers/@fl.ticker/">@fl.ul_name</a>
+                            }
+                            else
+                            {
+                                @fl.ul_name
+                            }
+                            @if (fl.ogrn != "")
+                            {<text>,</text><br />@fl.ogrn}
+                            @if (fl.ul_status != "")
+                            {<text>,</text><br />if (fl.ul_status == "Действующее*")
+                            {<div class="status_green">@fl.ul_status</div>}
+                            else
+                            {<div class="status_red">@fl.ul_status</div>}
+                            }
+                        </td>
+                        <td>@fl.gd</td>
+                        <td>@fl.remark</td>
+                    </tr>
+                }
+            }
+            @if (Model.manager_fio.Count > 0)
+            {
+                <tr><td colspan="5"><div id="manager_fio" align="center"><b>Юридическое лицо найдено по ФИО руководителя</b></div></td></tr>
+                for (var i = 0; i < Model.manager_fio.Count; i++)
+                {
+                    var fl = Model.manager_fio[i];
+                    <tr>
+                        <td>@fl.fio</td>
+                        <td>@fl.position</td>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(fl.ticker))
+                            {
+                                <a href="/issuers/@fl.ticker/">@fl.ul_name</a>
+                            }
+                            else
+                            {
+                                @fl.ul_name
+                            }
+                            @if (fl.ogrn != "")
+                            {<text>,</text><br />@fl.ogrn}
+                            @if (fl.ul_status != "")
+                            {<text>,</text><br />if (fl.ul_status == "Действующее*")
+                            {<div class="status_green">@fl.ul_status</div>}
+                            else
+                            {<div class="status_red">@fl.ul_status</div>}
+                            }
+                        </td>
+                        <td>@fl.gd</td>
+                        <td>@fl.remark</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <div style="color:#666">*Сведения о прекращении деятельности (реорганизации, ликвидации ) отсутствуют</div>
+}
+else
+{
+    <div>Данные отсутствуют</div>
+    <br />
+}
+<br />
+<span class="subcaption">3. Индивидуальный предприниматель</span>
+<span class="subcaption" id="ip">Сведения о физическом лице, содержащиеся в ЕГРИП</span>
+@if (Model.ip_inn.Count + Model.ip_fio.Count > 0)
+{
+    <table class="profile_table">
+        <tbody>
+            <tr>
+                <td class="table_caption">ФИО</td>
+                <td class="table_caption">Субъект РФ</td>
+                <td class="table_caption">ОГРНИП</td>
+                <td class="table_caption">ИНН</td>
+                <td class="table_caption">Дата присвоения ОГРНИП</td>
+                <td class="table_caption">Дата внесения записи о прекращении деятельности</td>
+            </tr>
+            @if (Model.ip_inn.Count > 0)
+            {
+                <tr><td colspan="6"><div align="center"><b>Физическое лицо найдено по ИНН</b></div></td></tr>
+                for (var i = 0; i < Model.ip_inn.Count; i++)
+                {
+                    var ip = Model.ip_inn[i];
+                    <tr>
+                        <td>@ip.fio</td>
+                        <td>@ip.subrf</td>
+                        <td>
+                            @if (@ip.ogrnip != "*****")
+                            {
+                                <a href="/profileip/@ip.ogrnip/">@ip.ogrnip</a>
+                            }
+                            else
+                            {
+                                @ip.ogrnip
+                            }
+                        </td>
+                        <td>@ip.inn</td>
+                        <td>@ip.gd</td>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(ip.sd))
+                            {<div class="status_red">@ip.sd</div>}
+                        </td>
+                    </tr>
+                }
+            }
+            @if (Model.ip_fio.Count > 0)
+            {
+                <tr><td colspan="6"><div align="center"><b>Физическое лицо найдено по ФИО</b></div></td></tr>
+                for (var i = 0; i < Model.ip_fio.Count; i++)
+                {
+                    var ip = Model.ip_fio[i];
+                    <tr>
+                        <td>@ip.fio</td>
+                        <td>@ip.subrf</td>
+                        <td>
+                            @if (@ip.ogrnip != "*****")
+                            {
+                                <a href="/profileip/@ip.ogrnip/">@ip.ogrnip</a>
+                            }
+                            else
+                            {
+                                @ip.ogrnip
+                            }
+                        </td>
+                        <td>@ip.inn</td>
+                        <td>@ip.gd</td>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(ip.sd))
+                            {<div class="status_red">@ip.sd</div>}
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div>Данные отсутствуют</div>
+}
+<br />
+<br />

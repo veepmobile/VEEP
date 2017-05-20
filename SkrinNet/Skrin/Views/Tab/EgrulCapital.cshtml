@@ -1,0 +1,15 @@
+﻿@using Skrin.Models.Iss.Content
+@model CapitalModel
+@{
+    Layout = null;
+}
+Данные на @(DateTime.Now.ToRusString())
+@if (Model.CapitalTable != null && Model.CapitalTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.CapitalTable)
+    <br />
+}
+@if (Model.ReduceTable != null && Model.ReduceTable.RowCount > 0)
+{
+    @Html.Partial("~/Views/Tab/HorisontalTable.cshtml", @Model.ReduceTable)
+}

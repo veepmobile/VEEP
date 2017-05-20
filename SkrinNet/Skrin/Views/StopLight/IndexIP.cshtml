@@ -1,0 +1,98 @@
+﻿@model serch_contra_bll.StopLightFreeEgrul.StopLightIPData
+@using Skrin.BLL.Iss
+@{
+    Layout = null;
+}
+@{ int i = 1;}
+<input type="hidden" id="stoplight_data" value="@Model.Rating" factors_count="@ViewBag.factors_count" />
+<style>
+    #protocol_box .profile_table {
+        float: none;
+    }
+</style>
+<div id="protocol_box">
+    <h1>@StopLightUtilites.GetHeaderIP(Model)</h1>
+    <h2>Безусловный стоп-сигнал</h2>
+    <div style="width: 949px;" class="thead">
+        <div style="width: 350px; padding-left: 20px;" class="th">Параметр</div>
+        <div style="padding-left: 20px; border-right: none" class="th">Информация</div>
+    </div>
+    <div style="width: 951px;" class="tline"></div>
+    @foreach (var factor in Model.Factors.Where(p => p.Value.IsUnconditional))
+    {
+        <div id="tbla@(i)" class="srclist_tbl" onclick="StopLight.switch_rating_info(this);StopLight.show_rating_info('a@(i)');" style="">
+            <div class="tabtr" style="width: 350px; padding-left: 20px;">
+                @if (factor.Value.IsStoped)
+                {
+                    <span class="title">
+                        <em style="font-weight:normal;">@factor.Value.Info</em>
+                        <span class="icon-attention-circled red_attention"></span>
+                    </span>
+                }
+                @factor.Value.Name
+            </div>
+            <div class="tabtr" style="width: 400px; padding-left: 20px;">@factor.Value.Info</div>
+            <div class="tabtr">
+                @if (StopLightUtilites.HasIPInfo(Model, factor.Key))
+                {
+                    <div class="adown_v" style="cursor: pointer">Подробнее</div>
+                }
+            </div>
+        </div>
+        if (StopLightUtilites.HasIPInfo(Model, factor.Key))
+        {
+            <div id="tbla@(i)_info" class="sub_srclist_tbl" style="display: none;">
+                @Html.Action("ShowIPInfo", new
+                {
+                    data = Model,
+                    factor = factor.Key
+
+                })
+            </div>
+        }
+        i++;
+    }
+    <div style="clear: both;"></div>
+    <h2>Условный стоп-сигнал</h2>
+    <div style="width: 949px;" class="thead">
+        <div style="width: 350px; padding-left: 20px;" class="th">Параметр</div>
+        <div style="padding-left: 20px; border-right: none" class="th">Информация</div>
+    </div>
+    <div style="width: 951px;" class="tline"></div>
+    @foreach (var factor in Model.Factors.Where(p => p.Value.IsUnconditional == false))
+    {
+        <div id="tbla@(i)" class="srclist_tbl" onclick="StopLight.switch_rating_info(this);StopLight.show_rating_info('a@(i)');" style="">
+            <div class="tabtr" style="width: 350px; padding-left: 20px;">
+                @if (factor.Value.IsStoped)
+                {
+                    <span class="title">
+                        <em style="font-weight:normal;">@factor.Value.Info</em>
+                        <span class="icon-attention-circled yellow_attention"></span>
+                    </span>
+                }
+                @factor.Value.Name
+            </div>
+            <div class="tabtr" style="width: 400px; padding-left: 20px;">@factor.Value.Info</div>
+            <div class="tabtr">
+                @if (StopLightUtilites.HasIPInfo(Model, factor.Key))
+                {
+                    <div class="adown_v" style="cursor: pointer">Подробнее</div>
+                }
+            </div>
+        </div>
+        if (StopLightUtilites.HasIPInfo(Model, factor.Key))
+        {
+            <div id="tbla@(i)_info" class="sub_srclist_tbl" style="display: none;">
+                @Html.Action("ShowIPInfo", new
+                {
+                    data = Model,
+                    factor = factor.Key
+
+                })
+            </div>
+        }
+        i++;
+    }
+    <div class="explain" style="clear:both;padding-top:10px; ">ВНИМАНИЕ: в связи с особенностями функционирования и обновления указанного источника информации АО "СКРИН" не может гарантировать абсолютную актуальность и достоверность данных.</div>
+</div>
+

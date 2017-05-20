@@ -1,0 +1,286 @@
+﻿@{
+    ViewBag.Title = "BaseSkrin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Css{
+    <link href="~/Content/company.css" rel="stylesheet" />
+    <link href="~/Content/search.css" rel="stylesheet" />
+}
+<div class="sub_menu">
+    <!--<div class="content">
+        <ul class="search_tabs" style="margin-top:-15px;">
+            <li class="active"><span>Подписка</span></li>
+            <li><span><a href="/api/">API</a></span></li>
+        </ul>
+    </div>-->
+</div>
+<div class="content" style="min-height:1370px;">
+    <div id="tab_content">
+        <h1>Варианты доступа - Подписка</h1>
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <td class="table_caption_left" rowspan="2">Перечень информации и сервисов</td>
+                    <td class="table_caption" style="width:120px; align:center;" colspan="3">Варианты доступа</td>
+                </tr>
+                <tr>
+                    <td class="table_caption" style="width:120px; align:center;">Предприятия</td>
+                    <td class="table_caption" style="width:120px; align:center;">Эмитент (только ОАО)</td>
+                    <td class="table_caption" style="width:120px; align:center;">Сообщения</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="table_subcaption">Россия</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="table_subcaption">Юридические лица:</td>
+                </tr>
+                <tr>
+                    <td class="bolder">Деятельность<br /><span class="data_comment">Регистрационные данные, Сотрудники, Основная деятельность, Группы и холдинги, Государственные контракты, Реорганизация, Лицензии</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Сообщения<br /><span class="data_comment">Календарь корпоративных событий, Сообщения и существенные факты, Сообщения о банкротствах, Картотека арбитражных дел</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Органы управления<br /><span class="data_comment">Совет директоров, Исполнительный орган, Структура органов управления, Органы контроля</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Структура<br /><span class="data_comment">Участники, Списки аффилированных лиц, Дочерние и зависимые общества, Филиалы и представительства</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Ценные бумаги<br /><span class="data_comment">Акции, Облигации, Депозитарные расписки, Регистратор, Доход по акциям, Выплаты по облигациям, Эмиссионные документы</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Финансовая информация<br /><span class="data_comment">Основные финансовые показатели, Бухгалтерская отчетность по РСБУ, Финансовая отчетность по МСФО, Аудиторы</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Выписка ЕГРЮЛ</td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Связи<br /><span class="data_comment">Визуализация связей (участники/дочерние общества), Взаимосвязанные лица, Связи по списку, Списки аффилированных лиц</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="table_subcaption">Сервисы:</td>
+                </tr>
+                <tr>
+                    <td class="bolder">Поиск по реквизитам<br /><span class="data_comment">Наименование, Руководитель, Отрасль. Регион, ИНН, ОГРН</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Расширенный поиск<br /><span class="data_comment">Дата регистрации, Телефон, Адрес, Реестр недобросовестных поставщиков, Монополисты, Торгуемые компании</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Поиск по учредителям<br /><span class="data_comment">Российские юридические лица, Российские физические лица, Иностранные юридические лица</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Проверка адресов массовой регистрации</td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Визуализация структуры владения<br /><span class="data_comment">Участники, Дочерние общества</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Поиск/сравнение по финансовым показателям<br /><span class="data_comment">Годовая неконсолидированная отчетность по РСБУ, Квартальная неконсолидированная отчетность по РСБУ, Годовая отчетность по МСФО</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Работа с массивами данных<br /><span class="data_comment">Экспорт/импорт данных</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Группы предприятий</td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Мониторинг изменений в ЕГРЮЛ<br /><span class="data_comment">Регистрационные данные, Руководство, Учредители, Статус компании</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Мониторинг обновлений<br /><span class="data_comment">Регистрационные данные, Ценные бумаги, Органы управления, Структура, Финансовая информация</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-cancel cancel"></span></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Мониторинг сообщений<br /><span class="data_comment">Календарь корпоративных событий, Сообщения и существенные факты, Сообщения о банкротствах, Картотека арбитражных дел</span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center"><span class="icon-ok-2 ok"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <td colspan="4" class="table_subcaption">Индивидуальные предприниматели:</td>
+                </tr>
+                <tr>
+                    <td class="bolder"><span class="data_comment">Регистрационные данные, Сообщения о банкротствах, Картотека арбитражных дел, Государственные контракты, Выписка из ЕГРИП</span></td>
+                    <td class="table_item_center" style="width:120px;"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center" style="width:120px;"><span class="icon-cancel cancel"></span></td>
+                    <td class="table_item_center" style="width:120px;"><span class="icon-cancel cancel"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <td colspan="4" class="table_subcaption">Экономика регионов:</td>
+                </tr>
+                <tr>
+                    <td class="bolder"><span class="data_comment">Статистические паспорта городов</span></td>
+                    <td class="table_item_center" style="width:120px;"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center" style="width:120px;"><span class="icon-ok-2 ok"></span></td> 
+                    <td class="table_item_center" style="width:120px;"><span class="icon-cancel cancel"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <td colspan="4" class="table_subcaption">Украина</td>
+                </tr>
+                <tr>
+                    <td class="bolder"><span class="data_comment">Деятельность, События, Органы управления, Структура, Ценные бумаги, Финансовая информация</span></td>
+                    <td class="table_item_center" style="width:120px;"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center" style="width:120px;"><span class="icon-cancel cancel"></span></td>
+                    <td class="table_item_center" style="width:120px;"><span class="icon-cancel cancel"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <td colspan="4" class="table_subcaption">Казахстан</td>
+                </tr>
+                <tr>
+                    <td class="bolder"><span class="data_comment">Деятельность, Органы управления</span></td>
+                    <td class="table_item_center" style="width:120px;"><span class="icon-ok-2 ok"></span></td>
+                    <td class="table_item_center" style="width:120px;"><span class="icon-cancel cancel"></span></td>
+                    <td class="table_item_center" style="width:120px;"><span class="icon-cancel cancel"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <td class="bolder">Цена базовой лицензии на 12 мес., руб.</td>
+                    <td class="table_item_right" style="width:120px;">160 560</td>
+                    <td class="table_item_right" style="width:120px;">82 560</td>
+                    <td class="table_item_right" style="width:120px;">16 000</td>
+                </tr>
+                <tr>
+                    <td class="bolder">Цена дополнительной лицензии на 12 мес., руб.</td>
+                    <td class="table_item_right" style="width:120px;">27 000</td>
+                    <td class="table_item_right" style="width:120px;">13 200</td>
+                    <td class="table_item_right" style="width:120px;">10 000</td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <td class="bolder">Цена базовой лицензии на 6 мес., руб.</td>
+                    <td class="table_item_right" style="width:120px;">84 300</td>
+                    <td class="table_item_right" style="width:120px;">45 000</td>
+                    <td class="table_item_right" style="width:120px;">10 000</td>
+                </tr>
+                <tr>
+                    <td class="bolder">Цена дополнительной лицензии на 6 мес., руб.</td>
+                    <td class="table_item_right" style="width:120px;">13 500</td>
+                    <td class="table_item_right" style="width:120px;">6 600</td>
+                    <td class="table_item_right" style="width:120px;">6 600</td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <td class="bolder">Цена базовой лицензии на 3 мес., руб.</td>
+                    <td class="table_item_right" style="width:120px;">43 440</td>
+                    <td class="table_item_right" style="width:120px;">23 580</td>
+                    <td class="table_item_right" style="width:120px;"></td>
+                </tr>
+                <tr>
+                    <td class="bolder">Цена дополнительной лицензии на 3 мес., руб.</td>
+                    <td class="table_item_right" style="width:120px;">6 750</td>
+                    <td class="table_item_right" style="width:120px;">3 300</td>
+                    <td class="table_item_right" style="width:120px;"></td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <td colspan="4">
+                        <b>Примечания:</b><br/>
+                        НДС не облагается на основании пп.26 п.2 ст.149 НК РФ,<br />
+                        <br/>
+                        <a href="~/Docs/contract.pdf" target="_blank">Договор-оферта на передачу права пользования БД СКРИН</a>
+                        <br /><br />
+                        <a href="~/Docs/contract_order.pdf" target="_blank">Порядок заключения договора</a>
+                        <br/><br />
+                        <b>За подробной информацией просьба обращаться в Отдел продаж и маркетинга: (495) 787-17-67, e-mail:sales@skrin.ru, Skype:sales.skrin</b>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br/>
+        <img src="~/images/null.gif" height="50px" />
+
+    </div>
+</div>
+

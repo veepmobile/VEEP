@@ -1,0 +1,43 @@
+﻿@{
+    Layout = null;
+}
+<input type="hidden" id="issuer_id" value="@ViewBag.issuer_id" />
+<script src="~/Scripts/iss/events.js"></script>
+<script src="~/Scripts/progs2.js"></script>
+<h3 class="subcaption">Календарь корпоративных событий</h3>
+<div class="left_content">
+    <div style="float:left;width:100%;padding-top:20px;" id="bankruptcy_found">
+        <div id="search_count" style="margin-top:6px;"></div>
+        <div id="t_content"></div>
+        <div id="pager"></div>
+        <div id="link_details"></div>
+    </div>
+</div>
+
+<div class="right_content">
+    <h3>Уточнить параметры поиска</h3>
+    <div class="filter_form">
+        <div class="filter_block">
+            <h4>Период</h4>
+            <div class="form-inline">
+                <div class="form-group">
+                    <label>с</label>
+                    <input type="text" name="dfrom" id="dfrom" class="form-control" style="width:80px;" />
+                </div>
+                <div class="form-group">
+                    <label>по</label>
+                    <input type="text" name="dto" id="dto" class="form-control" style="width:80px;" />
+                </div>
+            </div>
+        </div>
+        <div class="filter_block">
+            <h4>Тип события</h4>
+            <div id="eventTypes"></div>
+        </div> 
+        <div class="filter_block button_block">
+            <div class="form-group">
+                <input type="button" value="Применить" class="btns darkblue large" id="btn_find">
+            </div>
+        </div>
+    </div>
+</div>
