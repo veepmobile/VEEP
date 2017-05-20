@@ -41,8 +41,8 @@ namespace RestService
                             item.OrderDate = (DateTime)reader["cdate"];
                         }
                         item.RestaurantID = (reader["restaurant_id"] != DBNull.Value) ? Convert.ToInt32(reader["restaurant_id"]) : 0;
-                        item.RestaurantName = !String.IsNullOrEmpty((string)reader["restaurant_name"]) ? reader["restaurant_name"].ToString() : "";
-                        item.TableID = !String.IsNullOrEmpty((string)reader["tableId"]) ? reader["tableId"].ToString() : "";
+                        item.RestaurantName = (reader["restaurant_name"] != DBNull.Value) ? reader["restaurant_name"].ToString() : "";
+                        item.TableID = (reader["tableId"] != DBNull.Value) ? reader["tableId"].ToString() : "";
                         item.OrderTotal = (reader["order_total"] != DBNull.Value) ? Convert.ToDecimal(reader["order_total"]) : 0;
                         item.DiscountSum = (reader["discount_sum"] != DBNull.Value) ? Convert.ToDecimal(reader["discount_sum"]) : 0;
                         item.OrderSum = (reader["order_rest_sum"] != DBNull.Value) ? Convert.ToDecimal(reader["order_rest_sum"]) : 0;
