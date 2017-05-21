@@ -1,0 +1,125 @@
+﻿@model List<RestService.Models.ReportAccountNew>
+@{
+    ViewBag.Title = "Отчеты";
+    ViewBag.PageID = 101;
+    Layout = "~/Views/Shared/_Layout_Lk.cshtml";
+}
+
+
+<!-- Меню -->
+@Html.Partial("_Menu_Lk")
+<br />
+<div class="row">
+    <div class="form-group">
+        <div class='col-sm-2'>
+            <b>Дата заказа с: с</b>
+            <div class='input-group date' id='datepicker1'>
+                <input type='text' class="form-control" id="beginDate" name="beginDate" size="10" value="@ViewBag.Filter.FilterBeginDate.ToShortDateString()" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+        <div class='col-sm-2'>
+            <b>по</b>
+            <div class='input-group date' id='datepicker2'>
+                <input type='text' class="form-control" id="endDate" name="endDate" size="10" value="@ViewBag.Filter.FilterEndDate.ToShortDateString()" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+        <div class='col-sm-1'>
+            <br />
+            <button id="dateselect" class="btn" type="button">Показать</button>
+        </div>
+        <div class='col-sm-1'>
+            <br />
+            <button id="dateclear" class="btn" type="button">Очистить</button>
+        </div>
+    <div class='col-sm-4'>
+        <br />
+        <a href=" #" onclick="exportexcel();" title="Экспорт в Excel"><img src="/images/excel.png" style="margin-right:10px;" width="32" border="0" />Экспорт в Excel</a>
+     </div>
+</div>
+</div>
+
+
+
+<br />
+<!-- loading -->
+<div class="row">
+    <div class="col-md-12">
+        <br />
+        <center>
+            <div id="LoadingImage" style="display: none">
+                <font color="green">Загрузка данных...</font>&nbsp;&nbsp;&nbsp;&nbsp;<img src="/images/ajax-loader.gif" />
+            </div>
+        </center>
+    </div>
+</div>
+<div id="placedata">
+
+</div>
+<br /><br />
+
+@section Scripts 
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#dateclear').click(function (e) {
+                clear_filter();
+            });
+
+            $('#dateselect').click(function (e) {
+                var filters = {
+                    FilterBeginDate: $('#beginDate').val(),
+                    FilterEndDate: $('#endDate').val()
+                };
+                $('#LoadingImage').show();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ReportLoad", "Lk")',
+                    data: filters,
+                    success: function (msg) {
+                        $('#LoadingImage').hide();
+                        $('#placedata').empty().html(msg);
+                    }
+                });
+
+            });
+        });
+
+        function clear_filter() {
+            $('#beginDate').val('');
+            $('#endDate').val('');
+
+        }
+
+        function exportexcel() {
+            var dfrom = $('#beginDate').val();
+            var dto = $('#endDate').val();
+            document.location.href = "/Lk/ReportExport?dfrom=" + dfrom + "&dto=" + dto;
+        }
+    </script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#datepicker1').datetimepicker({
+            language: 'ru',
+            pickTime: true
+        });
+    });
+
+    $(function () {
+        $('#datepicker2').datetimepicker({
+            language: 'ru',
+            pickTime: true
+        });
+    });
+
+</script>
+
+}
+

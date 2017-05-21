@@ -293,9 +293,11 @@
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\TipController.cs" />
+    <Compile Include="Controllers\LkController.cs" />
     <Compile Include="Data\AccoundData\AccountData.cs" />
     <Compile Include="Data\AdminData\AdminData.cs" />
     <Compile Include="Data\DiscountCardData\DiscountCardData.cs" />
+    <Compile Include="Data\Lk\LkData.cs" />
     <Compile Include="Data\MerchantData\MerchantData.cs" />
     <Compile Include="Data\Order\OrderData.cs" />
     <Compile Include="Data\PaymentData\PaymentData.cs" />
@@ -424,6 +426,12 @@
     <Content Include="veeppay.crt" />
     <Content Include="Views\Reports\MainReport.cshtml" />
     <Content Include="Views\Reports\MainReportLoad.cshtml" />
+    <Content Include="Views\Lk\Index.cshtml" />
+    <Content Include="Views\Shared\_Layout_Lk.cshtml" />
+    <Content Include="Views\Shared\_Menu_Lk.cshtml" />
+    <Content Include="Views\Lk\Tips.cshtml" />
+    <Content Include="Views\Lk\TipsLoad.cshtml" />
+    <Content Include="Views\Lk\Report.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
