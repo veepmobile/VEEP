@@ -1,0 +1,6 @@
+D:\Projects\RestaurantService\Git\VEEP\TipsReport\bin\Debug\TipsReport.exe.config
+D:\Projects\RestaurantService\Git\VEEP\TipsReport\bin\Debug\TipsReport.exe
+D:\Projects\RestaurantService\Git\VEEP\TipsReport\bin\Debug\TipsReport.pdb
+D:\Projects\RestaurantService\Git\VEEP\TipsReport\obj\Debug\TipsReport.csprojResolveAssemblyReference.cache
+D:\Projects\RestaurantService\Git\VEEP\TipsReport\obj\Debug\TipsReport.exe
+D:\Projects\RestaurantService\Git\VEEP\TipsReport\obj\Debug\TipsReport.pdb
