@@ -41,6 +41,7 @@ namespace RestService
                         tip.OrderSum = (reader["order_sum"] != DBNull.Value) ? Convert.ToString(reader["order_sum"]) : "";
                         tip.TippingProcent = (reader["tipping_procent"] != DBNull.Value) ? Convert.ToDecimal(reader["tipping_procent"]) : 0;
                         tip.TippingSum = (reader["tipping_sum"] != DBNull.Value) ? Convert.ToDecimal(reader["tipping_sum"]) : 0;
+                        tip.TippingResult = Decimal.Round(tip.TippingSum * 0,9);
                         tip.WaiterID = (reader["waiter_id"] != DBNull.Value) ? Convert.ToInt32(reader["waiter_id"]) : 0;
                         tip.WaiterName = (reader["waiter_name"] != DBNull.Value) ? Convert.ToString(reader["waiter_name"]) : "";
                         if (tip != null)

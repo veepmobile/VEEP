@@ -12,6 +12,7 @@
             <th align="center" valign="middle">Сумма заказа, руб.</th>
             <th align="center" valign="middle">Чаевые, %</th>
             <th align="center" valign="middle">Чаевые, руб.</th>
+            <th align="center" valign="middle">Чаевые к выдаче, руб.</th>
             <th align="center" valign="middle">Официант</th>
             </thead>
             @{
@@ -25,6 +26,7 @@
                     <td align="center" valign="top">@item.OrderSum</td>  
                     <td align="center" valign="top">@item.TippingProcent</td>  
                     <td align="center" valign="top">@item.TippingSum</td> 
+                    <td align="center" valign="top">@item.TippingResult</td> 
                     <td align="center" valign="top">@item.WaiterName</td> 
                 </tr>
                 </text>
