@@ -269,9 +269,9 @@ namespace RestService
         }
 
         //Привязка дисконтной карты в Системе
-        public string InsertDiscountCard(string phoneNumber, long cardNumber, string cardName, string user_key, string phoneCode = "7", int language = 0)
+        public int InsertDiscountCard(string phoneNumber, long cardNumber, string cardName, string user_key, string phoneCode = "7", int language = 0)
         {
-            string ret = "Карта не привязана";
+            int ret = 0; // "Карта не привязана";
             int ID = 0;
             if (!String.IsNullOrWhiteSpace(phoneNumber) && cardNumber != 0 && CheckUserKey(user_key) != "")
             {
@@ -282,11 +282,11 @@ namespace RestService
                     ID = DiscountCardData.SqlInsertDiscountCard(accountID, cardNumber, cardName, user_key);
                     if (ID < 0)
                     {
-                        ret = "Карта уже привязана другим пользователем";
+                        ret = 1; // "Карта уже привязана другим пользователем";
                     }
                     if (ID > 0)
                     {
-                        ret = "Для подтверждения привязки при посещении ресторана авторизуйтесь в заказе и предъявите дисконтную карту официанту. Обратите внимание карту можно привязать только к одному профилю!";
+                        ret = 2; // "Для подтверждения привязки при посещении ресторана авторизуйтесь в заказе и предъявите дисконтную карту официанту. Обратите внимание карту можно привязать только к одному профилю!";
                     }
                 }
             }
@@ -324,7 +324,7 @@ namespace RestService
         }
 
         //Применение/проверка дисконтной карты
-        public string CheckDiscountCard(string phoneNumber, int restaurantID, string orderNumber, string user_key, long? discountCard = null, string phoneCode = "7", int language = 0)
+        public int CheckDiscountCard(string phoneNumber, int restaurantID, string orderNumber, string user_key, long? discountCard = null, string phoneCode = "7", int language = 0)
         {
             List<Order> list = new List<Order>();
             list = GetOrder(restaurantID, orderNumber, user_key, discountCard, phoneCode, language);
@@ -335,12 +335,12 @@ namespace RestService
                     if (item.DiscountCard.CardStatus == 1)
                     {
                         long? result_status = UpdateDiscountCard(phoneNumber, discountCard, 1,user_key, phoneCode, language);
-                        return "Скидка применена";
+                        return 0; // "Скидка применена";
                     }
                 }
             }
 
-            return "Скидка не применилась. Повторите попытку или обратитесь к официанту";
+            return 1; // "Скидка не применилась. Повторите попытку или обратитесь к официанту";
         }
 
 

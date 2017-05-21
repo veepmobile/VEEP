@@ -115,7 +115,7 @@ namespace RestService
         ResponseFormat = WebMessageFormat.Xml,
         RequestFormat = WebMessageFormat.Xml,
         UriTemplate = "get")]
-        string InsertDiscountCard(string phoneNumber, long cardNumber, string cardName, string user_key, string phoneCode = "7", int language = 0);
+        int InsertDiscountCard(string phoneNumber, long cardNumber, string cardName, string user_key, string phoneCode = "7", int language = 0);
 
         //Изменение статуса (удаление) дисконтной карты в Системе
         [OperationContract]
@@ -139,7 +139,7 @@ namespace RestService
         ResponseFormat = WebMessageFormat.Xml,
         RequestFormat = WebMessageFormat.Xml,
         UriTemplate = "get")]
-        string CheckDiscountCard(string phoneNumber, int restaurantID, string orderNumber, string user_key, long? discountCard = null, string phoneCode = "7", int language = 0);
+        int CheckDiscountCard(string phoneNumber, int restaurantID, string orderNumber, string user_key, long? discountCard = null, string phoneCode = "7", int language = 0);
 
         #endregion
 
