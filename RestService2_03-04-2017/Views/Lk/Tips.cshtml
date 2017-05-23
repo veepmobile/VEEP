@@ -101,7 +101,7 @@
         function exportexcel() {
             var dfrom = $('#beginDate').val();
             var dto = $('#endDate').val();
-            document.location.href = "/Lk/TipsExport?dfrom=" + dfrom + "&dto=" + dto;
+            document.location.href = "/Lk/TipsExport?dfrom=" + dfrom + "&dto=" + dto + "&restaurant_id=" + @ViewBag.FilterRestaurantID;
         }
     </script>
 
