@@ -59,5 +59,30 @@ namespace RestService
 
             return list;
         }
+
+
+        public static List<Prize> GetPrizeList(DateTime dfrom, DateTime dto, int restaurantID)
+        {
+            List<Prize> list = new List<Prize>();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(BLL.Configs.ConnectionString))
+                {
+
+
+
+
+
+                }
+            }
+            catch (Exception e)
+            {
+                string except = e.Message;
+            }
+
+            return list;
+        }
+
+
     }
 }

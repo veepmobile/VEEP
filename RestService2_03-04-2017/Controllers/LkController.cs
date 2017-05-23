@@ -171,20 +171,21 @@ namespace RestService.Controllers
            return null;
        }
 
-
-
-
-
        [HttpGet]
-       public ActionResult Report()
+       public ActionResult Prize()
        {
-           // if (Session["user_id"] == null)
-           // {
-           //     return RedirectToAction("Index", "Lk");
-           // }
+           if (Session["user_id"] == null)
+           {
+               return RedirectToAction("Index", "Lk");
+           }
 
            // Фильтр
            Filters filter = new Filters();
+
+           if (Session["restaurant_id"] != null)
+           {
+               filter.FilterRestaurantID = ViewBag.FilterRestaurantID = (int)Session["restaurant_id"];
+           }
 
            //Начальный диапазон дат
            DateTime dfrom = DateTime.Now;
@@ -198,11 +199,52 @@ namespace RestService.Controllers
            ViewBag.Filter = filter;
            Session["Filters"] = filter;
 
-           ViewBag.Title = "Отчеты";
+           ViewBag.Title = "Премия";
            ViewBag.PageID = 101;
 
            return View();
        }
+
+       [HttpPost]
+       public ActionResult PrizeLoad(Filters filter)
+       {
+           ViewBag.Filter = filter;
+           Session["Filters"] = filter;
+           ViewBag.Title = "Премия";
+           ViewBag.PageID = 101;
+           if (Session["restaurant_id"] != null)
+           {
+               filter.FilterRestaurantID = ViewBag.FilterRestaurantID = (int)Session["restaurant_id"];
+           }
+
+           DateTime begindate = (filter.FilterBeginDate.Year == 1) ? new DateTime(1900, 1, 1) : filter.FilterBeginDate;
+           DateTime enddate = (filter.FilterEndDate.Year == 1) ? DateTime.Today : filter.FilterEndDate;
+           TimeSpan time = new TimeSpan(23, 59, 59);
+           enddate = enddate.Add(time);
+           try
+           {
+               List<Prize> prize = new List<Prize>();
+               prize = LkData.GetPrizeList(begindate, enddate, filter.FilterRestaurantID);
+               if (prize != null)
+               {
+                   return PartialView(prize);
+               }
+               else
+               {
+                   return null;
+               }
+           }
+           catch (Exception ex)
+           {
+               string error = ex.Message;
+           }
+
+           return null;
+       }
+
+
+
+
 
         #region Login
 

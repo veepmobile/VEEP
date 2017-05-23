@@ -310,6 +310,7 @@
     <Compile Include="Models\Accountcs.cs" />
     <Compile Include="Models\DiscountCard.cs" />
     <Compile Include="Models\Filters.cs" />
+    <Compile Include="Models\Lk.cs" />
     <Compile Include="Models\Merchant.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Payments.cs" />
@@ -432,6 +433,7 @@
     <Content Include="Views\Lk\Tips.cshtml" />
     <Content Include="Views\Lk\TipsLoad.cshtml" />
     <Content Include="Views\Lk\Report.cshtml" />
+    <Content Include="Views\Lk\Prize.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
