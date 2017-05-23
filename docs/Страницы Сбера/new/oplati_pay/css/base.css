@@ -1,0 +1,161 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+* {
+  box-sizing: border-box;
+}
+.hidden {
+  display: none;
+}
+body {
+  background: #ebebeb;
+  font-family: Helvetica, Arial, sans-serif;
+  color: #FFFFFF;
+}
+form {
+  margin: 0;
+  padding: 0;
+}
+hr {
+  border: 0;
+  height: 1px;
+  background: #535658;
+}
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
+.txt-left {
+  text-align: left;
+}
+.txt-right {
+  text-align: right;
+}
+.row {
+  background: #454d51;
+  height: 90px;
+  position: relative;
+}
+.row input {
+  display: block;
+  background: none;
+  border: none;
+  width: 100%;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 36px;
+  line-height: 90px;
+  padding: 0 30px;
+  margin: 0;
+  color: #FFFFFF;
+}
+.row .abs {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  padding: 0 30px;
+}
+.row .abs select {
+  display: block;
+  background: none;
+  border: none;
+  width: 100%;
+  height: 90px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 36px;
+  line-height: 90px;
+  padding: 0;
+  margin: 0;
+  color: #FFFFFF;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  text-align: right;
+}
+.row .abs select option {
+  text-align: right;
+}
+.submit {
+  padding: 60px 30px;
+}
+.submit input {
+  background: #54585a;
+  border-radius: 7px;
+  display: block;
+  height: 115px;
+  color: #FFFFFF;
+  width: 100%;
+  text-align: center;
+  font-size: 50px;
+  line-height: 115px;
+  border: none;
+  cursor: pointer;
+}
+.logos {
+  text-align: center;
+  padding-bottom: 20px;
+}
+.logos img {
+  display: inline-block;
+  margin: 0 50px;
+}
+.rows {
+  background: #393c3d;
+  padding: 0 30px;
+}
+.rows .row {
+  background: none;
+  padding: 0;
+}
+.clearfix {
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-size: 0;
+  line-height: 0;
+  clear: both;
+}
+.wrap-page {
+  width: 750px;
+  margin: 0 auto;
+  background: #000000 url(../img/bg.jpg) repeat-x center top;
+  min-height: 1500px;
+}
+.caption,
+.value {
+  font-size: 36px;
+  line-height: 90px;
+}
+.label {
+  font-size: 25px;
+  line-height: 90px;
+  color: #6d7275;
+  text-transform: uppercase;
+}
+label {
+  display: block;
+  text-transform: uppercase;
+  color: #6d7275;
+  font-size: 25px;
+  padding: 70px 30px 20px 30px;
+}
+.info {
+  margin: 30px;
+  font-size: 25px;
+}
+.loader {
+  position: absolute;
+  top: 300px;
+  left: 50%;
+  margin: 0 0 0 -72px;
+  z-index: 100;
+}
