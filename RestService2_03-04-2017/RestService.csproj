@@ -435,6 +435,8 @@
     <Content Include="Views\Lk\Report.cshtml" />
     <Content Include="Views\Lk\Prize.cshtml" />
     <Content Include="Views\Lk\PrizeLoad.cshtml" />
+    <Content Include="Views\Lk\PrizeOther.cshtml" />
+    <Content Include="Views\Lk\PrizeOtherLoad.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
