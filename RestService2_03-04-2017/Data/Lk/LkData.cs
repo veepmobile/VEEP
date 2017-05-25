@@ -68,11 +68,31 @@ namespace RestService
             {
                 using (SqlConnection con = new SqlConnection(BLL.Configs.ConnectionString))
                 {
-
-
-
-
-
+                    SqlCommand cmd = new SqlCommand("Rest.dbo.GetLkPrize", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@dfrom", SqlDbType.DateTime).Value = dfrom;
+                    cmd.Parameters.Add("@dto", SqlDbType.DateTime).Value = dto;
+                    cmd.Parameters.Add("@restaurant_id", SqlDbType.Int).Value = restaurantID;
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Prize prize = new Prize();
+                        prize.PhoneNumber = (string)reader["phone_number"];
+                        if (reader["payment_date"] != DBNull.Value)
+                        {
+                            prize.PaymentDate = (DateTime)reader["payment_date"];
+                        }
+                        prize.RestaurantID = (reader["restaurantID"] != DBNull.Value) ? Convert.ToInt32(reader["restaurantID"]) : 0;
+                        prize.RestaurantName = (reader["name"] != DBNull.Value) ? Convert.ToString(reader["name"]) : "";
+                        prize.TableID = (reader["tableID"] != DBNull.Value) ? Convert.ToString(reader["tableID"]) : "";
+                        prize.WaiterID = (reader["waiterId"] != DBNull.Value) ? Convert.ToInt32(reader["waiterId"]) : 0;
+                        prize.WaiterName = (reader["waiterName"] != DBNull.Value) ? Convert.ToString(reader["waiterName"]) : "";
+                        if (prize != null)
+                        {
+                            list.Add(prize);
+                        }
+                    }
                 }
             }
             catch (Exception e)
