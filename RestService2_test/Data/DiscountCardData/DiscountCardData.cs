@@ -141,7 +141,7 @@ namespace RestService
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@account_id", SqlDbType.Int).Value = accountID;
                     cmd.Parameters.Add("@card_number", SqlDbType.BigInt).Value = cardNumber;
-                    cmd.Parameters.Add("@card_name", SqlDbType.Int).Value = cardName;
+                    cmd.Parameters.Add("@card_name", SqlDbType.VarChar).Value = cardName;
                     con.Open();
                     cmd.ExecuteNonQuery();
                     Helper.saveToLog(0, user_key, "SqlUpdateDiscountCardName", "accountID: " + accountID + ", cardNumber: " + cardNumber + ", cardName: " + cardName, "", 0);
