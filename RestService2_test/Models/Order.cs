@@ -48,6 +48,8 @@ namespace RestService.Models
         public string ItemsHtml { get; set; }               // Состав заказа в Html
         public decimal TippingProcent { get; set; }         //Чаевые в процентах
         public decimal TippingSum { get; set; }             //Чаевые в рублях
+        public decimal MainDiscountProc { get; set; }         //Скидка в процентах
+        public decimal MainDiscountSum { get; set; }             //Скидка в рублях
     }
 
     public class OrderItem
