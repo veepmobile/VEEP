@@ -9,6 +9,7 @@ namespace RestService.Models
 {
     public class Prize
     {
+        public string PhoneNumber { get; set; }      //Номер телефона
         public DateTime PaymentDate { get; set; }       // Дата платежа
         public int RestaurantID { get; set; }           // ID ресторана
         public string RestaurantName { get; set; }      //Наименование ресторана
