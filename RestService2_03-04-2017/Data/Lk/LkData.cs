@@ -78,16 +78,56 @@ namespace RestService
                     while (reader.Read())
                     {
                         Prize prize = new Prize();
+                        prize.PhoneNumber = (string)reader["phone_number"];
                         if (reader["payment_date"] != DBNull.Value)
                         {
                             prize.PaymentDate = (DateTime)reader["payment_date"];
                         }
-                        prize.PhoneNumber = (reader["phone_number"] != DBNull.Value) ? Convert.ToString(reader["phone_number"]) : "";
                         prize.RestaurantID = (reader["restaurantID"] != DBNull.Value) ? Convert.ToInt32(reader["restaurantID"]) : 0;
                         prize.RestaurantName = (reader["name"] != DBNull.Value) ? Convert.ToString(reader["name"]) : "";
                         prize.TableID = (reader["tableID"] != DBNull.Value) ? Convert.ToString(reader["tableID"]) : "";
-                        prize.WaiterID = (reader["waiter_id"] != DBNull.Value) ? Convert.ToInt32(reader["waiter_id"]) : 0;
-                        prize.WaiterName = (reader["waiter_name"] != DBNull.Value) ? Convert.ToString(reader["waiter_name"]) : "";
+                        prize.WaiterID = (reader["waiterId"] != DBNull.Value) ? Convert.ToInt32(reader["waiterId"]) : 0;
+                        prize.WaiterName = (reader["waiterName"] != DBNull.Value) ? Convert.ToString(reader["waiterName"]) : "";
+                        if (prize != null)
+                        {
+                            list.Add(prize);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string except = e.Message;
+            }
+            return list;
+        }
+        public static List<Prize> GetPrizeOtherList(DateTime dfrom, DateTime dto, int restaurantID)
+        {
+            List<Prize> list = new List<Prize>();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(BLL.Configs.ConnectionString))
+                {
+                    SqlCommand cmd = new SqlCommand("Rest.dbo.GetLkOtherPrize", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@dfrom", SqlDbType.DateTime).Value = dfrom;
+                    cmd.Parameters.Add("@dto", SqlDbType.DateTime).Value = dto;
+                    cmd.Parameters.Add("@restaurant_id", SqlDbType.Int).Value = restaurantID;
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Prize prize = new Prize();
+                        prize.PhoneNumber = (string)reader["phone_number"];
+                        if (reader["payment_date"] != DBNull.Value)
+                        {
+                            prize.PaymentDate = (DateTime)reader["payment_date"];
+                        }
+                        prize.RestaurantID = (reader["restaurantID"] != DBNull.Value) ? Convert.ToInt32(reader["restaurantID"]) : 0;
+                        prize.RestaurantName = (reader["name"] != DBNull.Value) ? Convert.ToString(reader["name"]) : "";
+                        prize.TableID = (reader["tableID"] != DBNull.Value) ? Convert.ToString(reader["tableID"]) : "";
+                        prize.WaiterID = (reader["waiterId"] != DBNull.Value) ? Convert.ToInt32(reader["waiterId"]) : 0;
+                        prize.WaiterName = (reader["waiterName"] != DBNull.Value) ? Convert.ToString(reader["waiterName"]) : "";
                         if (prize != null)
                         {
                             list.Add(prize);
