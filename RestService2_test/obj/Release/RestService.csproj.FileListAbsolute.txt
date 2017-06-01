@@ -30,7 +30,6 @@ C:\inetpub\wwwroot\RestService2_test\bin\System.Web.Http.WebHost.dll
 C:\inetpub\wwwroot\RestService2_test\bin\System.Net.Http.Formatting.xml
 C:\inetpub\wwwroot\RestService2_test\bin\System.Web.Http.xml
 C:\inetpub\wwwroot\RestService2_test\bin\System.Web.Http.WebHost.xml
-C:\inetpub\wwwroot\RestService2_test\obj\Release\RestService.csprojResolveAssemblyReference.cache
 C:\inetpub\wwwroot\RestService2_test\obj\Release\RestService.dll
 C:\inetpub\wwwroot\RestService2_test\obj\Release\RestService.pdb
 F:\2\Git\VEEP\RestService2_test\bin\RestService.dll.config
@@ -58,3 +57,4 @@ D:\Projects\RestaurantService\Git\VEEP\RestService2_test\bin\System.Web.Http.Web
 D:\Projects\RestaurantService\Git\VEEP\RestService2_test\obj\Release\RestService.csprojResolveAssemblyReference.cache
 D:\Projects\RestaurantService\Git\VEEP\RestService2_test\obj\Release\RestService.dll
 D:\Projects\RestaurantService\Git\VEEP\RestService2_test\obj\Release\RestService.pdb
+C:\inetpub\wwwroot\RestService2_test\obj\Release\RestService.csprojResolveAssemblyReference.cache

@@ -65,8 +65,11 @@ namespace RestService.Controllers
 
            DateTime begindate = (filter.FilterBeginDate.Year == 1) ? new DateTime(1900, 1, 1) : filter.FilterBeginDate;
            DateTime enddate = (filter.FilterEndDate.Year == 1) ? DateTime.Today : filter.FilterEndDate;
-           TimeSpan time = new TimeSpan(23, 59, 59);
-           enddate = enddate.Add(time);
+           if (begindate == enddate)
+           {
+               TimeSpan time = new TimeSpan(23, 59, 59);
+               enddate = enddate.Add(time);
+           }
            try
            {
                List<Tip> tips = new List<Tip>();
@@ -219,8 +222,11 @@ namespace RestService.Controllers
 
            DateTime begindate = (filter.FilterBeginDate.Year == 1) ? new DateTime(1900, 1, 1) : filter.FilterBeginDate;
            DateTime enddate = (filter.FilterEndDate.Year == 1) ? DateTime.Today : filter.FilterEndDate;
-           TimeSpan time = new TimeSpan(23, 59, 59);
-           enddate = enddate.Add(time);
+           if (begindate == enddate)
+           {
+               TimeSpan time = new TimeSpan(23, 59, 59);
+               enddate = enddate.Add(time);
+           }
            try
            {
                List<Prize> prize = new List<Prize>();
@@ -363,8 +369,11 @@ namespace RestService.Controllers
 
            DateTime begindate = (filter.FilterBeginDate.Year == 1) ? new DateTime(1900, 1, 1) : filter.FilterBeginDate;
            DateTime enddate = (filter.FilterEndDate.Year == 1) ? DateTime.Today : filter.FilterEndDate;
-           TimeSpan time = new TimeSpan(23, 59, 59);
-           enddate = enddate.Add(time);
+           if (begindate == enddate)
+           {
+               TimeSpan time = new TimeSpan(23, 59, 59);
+               enddate = enddate.Add(time);
+           }
            try
            {
                List<Prize> prize = new List<Prize>();

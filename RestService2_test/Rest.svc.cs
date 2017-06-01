@@ -324,15 +324,16 @@ namespace RestService
         }
 
         //Применение/проверка дисконтной карты
-        public int CheckDiscountCard(string phoneNumber, int restaurantID, string orderNumber, string user_key, long? discountCard = null, string phoneCode = "7", int language = 0)
+        public int CheckDiscountCard(string phoneNumber, int restaurantID, string orderNumber, string user_key, long? discountCard, string phoneCode = "7", int language = 0)
         {
+            Helper.saveToLog(0, user_key, " CheckDiscountCard", "restaurant_id: " + restaurantID.ToString() + ", discountCard: " + discountCard.ToString(), "", 0);
             List<Order> list = new List<Order>();
             list = GetOrder(restaurantID, orderNumber, user_key, discountCard, phoneCode, language);
             if (list != null)
             {
                 foreach (var item in list)
                 {
-                    if (item.DiscountCard.CardStatus == 1)
+                    if (item.DiscountCard != null && item.DiscountCard.CardStatus == 1)
                     {
                         long? result_status = UpdateDiscountCard(phoneNumber, discountCard, 1,user_key, phoneCode, language);
                         return 0; // "Скидка применена";
@@ -524,6 +525,9 @@ namespace RestService
         {
             if (CheckUserKey(user_key) != "")
             {
+                //Для теста
+                //qr = "1111111229534";
+
                 //Проверка QR кода
                  if (OrderData.SqlCheckQR(qr))
                  {
@@ -539,16 +543,17 @@ namespace RestService
                      OrderData.SqlSaveQR(qr);
                  }
 
+
                 //Парсим QR код
                 int rest = Int32.Parse(qr.Substring(0, 6));
                 int techItem = Int32.Parse(qr.Substring(9, 3));
 
                 int restaurantID = RestaurantData.GetRestaurantID(rest);
                 //Заглушка
-                //techItem = 2;
+                techItem = 657;
                 //restaurantID = 202930001; --боевой
                 //для теста 
-               // restaurantID = 720920001; //тестовый
+                restaurantID = 730410002; //тестовый
 
 
                 /* При первоначальном поиске заказа дисконтной карты еще нет
@@ -680,6 +685,16 @@ namespace RestService
 
                         //Запись заказа в БД
                         OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order);
+
+                        //Для теста
+                        foreach (var o in list)
+                        {
+                            o.MainDiscountProc = 5;
+                            decimal main_discount = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
+                            o.MainDiscountSum = main_discount;
+                            o.OrderPayment.OrderSum = o.OrderPayment.OrderSum - o.MainDiscountSum;
+                        }
+
                     }
 
                     XMLGenerator<List<Order>> listXML = new XMLGenerator<List<Order>>(list);
@@ -704,7 +719,7 @@ namespace RestService
         }
 
         //Получение информации о заказе по его номеру
-        public List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, long? discountCard = null, string phoneCode = "7", int language = 0)
+        public List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, long? discountCard, string phoneCode = "7", int language = 0)
         {
             string phoneNumber = CheckUserKey(user_key);
             if (phoneNumber != "")
@@ -732,6 +747,7 @@ namespace RestService
                 IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
                 //IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, card.CardNumber);
                 IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, discountCard);
+
                 if (orders != null)
                 {
                     List<Order> list = new List<Order>();
@@ -777,11 +793,13 @@ namespace RestService
                             op.OrderBank = 0;
                             order.OrderPayment = op;
                         }
+                        
                         if (item.DiscountCard != null)
                         {
                             DiscountCard discount_card = new DiscountCard();
                             discount_card.CardNumber = item.DiscountCard.CardNumber;
                             discount_card.CardStatus = item.DiscountCard.CardStatus;
+                            order.DiscountCard = discount_card;
                         }
                         order.Message = item.Message;
                         order.Error = item.Error;
@@ -832,9 +850,17 @@ namespace RestService
                         //Запись заказа в БД
                         OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order, phoneCode);
 
+                        //Для теста
+                        foreach (var o in list)
+                        {
+                            o.MainDiscountProc = 5;
+                            decimal main_discount = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
+                            o.MainDiscountSum = main_discount;
+                            o.OrderPayment.OrderSum = o.OrderPayment.OrderSum - o.MainDiscountSum;
+                        }
                     }
                     XMLGenerator<List<Order>> listXML = new XMLGenerator<List<Order>>(list);
-                    Helper.saveToLog(0, user_key, "GetOrder", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Найдены заказы: " + listXML.GetStringXML(), 0);
+                    Helper.saveToLog(0, user_key, "GetOrder", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard, "Найдены заказы: " + listXML.GetStringXML(), 0);
                     return list;
                 }
                 else

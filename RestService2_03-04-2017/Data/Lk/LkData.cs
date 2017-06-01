@@ -99,8 +99,11 @@ namespace RestService
             {
                 string except = e.Message;
             }
+
             return list;
         }
+
+
         public static List<Prize> GetPrizeOtherList(DateTime dfrom, DateTime dto, int restaurantID)
         {
             List<Prize> list = new List<Prize>();

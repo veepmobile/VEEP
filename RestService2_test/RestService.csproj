@@ -248,7 +248,7 @@
     </Content>
     <None Include="Service References\IntegrationCMD\configuration91.svcinfo" />
     <None Include="Service References\IntegrationCMD\configuration.svcinfo" />
-    <Content Include="Service References\IntegrationCMD\IntegrationCMD.wsdl" />
+    <None Include="Service References\IntegrationCMD\IntegrationCMD.wsdl" />
     <None Include="Service References\IntegrationCMD\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
