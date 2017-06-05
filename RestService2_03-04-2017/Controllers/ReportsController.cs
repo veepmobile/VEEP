@@ -367,7 +367,7 @@ namespace RestService.Controllers
         {
             if (Session["user_id"] == null)
             {
-                return RedirectToAction("Index", "Lk");
+                return RedirectToAction("Index", "Admin");
             }
 
             // Фильтр
@@ -514,7 +514,7 @@ namespace RestService.Controllers
         {
             if (Session["user_id"] == null)
             {
-                return RedirectToAction("Index", "Lk");
+                return RedirectToAction("Index", "Admin");
             }
 
             // Фильтр
