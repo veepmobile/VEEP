@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Премия (повторная оплата)";
     ViewBag.PageID = 102;
-    Layout = "~/Views/Shared/_Layout_Lk.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
@@ -84,7 +84,7 @@
                 $('#LoadingImage').show();
                 $.ajax({
                     type: "POST",
-                    url: '@Url.Action("PrizeOtherLoad", "Lk")',
+                    url: '@Url.Action("PrizeOtherLoad", "Reports")',
                     data: filters,
                     success: function (msg) {
                         $('#LoadingImage').hide();
@@ -104,7 +104,7 @@
         function exportexcel() {
             var dfrom = $('#beginDate').val();
             var dto = $('#endDate').val();
-            document.location.href = "/Lk/PrizeOtherExport?dfrom=" + dfrom + "&dto=" + dto + "&restaurant_id=" + @ViewBag.FilterRestaurantID;
+            document.location.href = "/Reports/PrizeOtherExport?dfrom=" + dfrom + "&dto=" + dto + "&restaurant_id=" + @ViewBag.FilterRestaurantID;
         }
     </script>
 

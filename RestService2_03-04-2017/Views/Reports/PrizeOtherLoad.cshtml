@@ -43,7 +43,7 @@
             $('#LoadingImage').show();
             $.ajax({
                 type: "POST",
-                url: '@Url.Action("PrizeOtherLoad", "Lk")',
+                url: '@Url.Action("PrizeOtherLoad", "Reports")',
                 data: filters,
                 success: function (msg) {
                     $('#LoadingImage').hide();
