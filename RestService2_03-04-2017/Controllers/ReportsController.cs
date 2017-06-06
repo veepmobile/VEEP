@@ -373,10 +373,15 @@ namespace RestService.Controllers
             // Фильтр
             Filters filter = new Filters();
 
+            /*
             if (Session["restaurant_id"] != null)
             {
                 filter.FilterRestaurantID = ViewBag.FilterRestaurantID = (int)Session["restaurant_id"];
-            }
+            }*/
+            //Список ресторанов
+            List<Restaurant> restlist = RestaurantData.GetRestaurants();
+            filter.FilterRestaurantID = ViewBag.FilterRestaurantID = 0; //по умолчанию все
+            ViewBag.RestList = restlist;
 
             //Начальный диапазон дат
             DateTime dfrom = DateTime.Now;
@@ -403,10 +408,11 @@ namespace RestService.Controllers
             Session["Filters"] = filter;
             ViewBag.Title = "Премия";
             ViewBag.PageID = 101;
+            /*
             if (Session["restaurant_id"] != null)
             {
                 filter.FilterRestaurantID = ViewBag.FilterRestaurantID = (int)Session["restaurant_id"];
-            }
+            }*/
 
             DateTime begindate = (filter.FilterBeginDate.Year == 1) ? new DateTime(1900, 1, 1) : filter.FilterBeginDate;
             DateTime enddate = (filter.FilterEndDate.Year == 1) ? DateTime.Today : filter.FilterEndDate;
@@ -520,10 +526,15 @@ namespace RestService.Controllers
             // Фильтр
             Filters filter = new Filters();
 
+            /*
             if (Session["restaurant_id"] != null)
             {
                 filter.FilterRestaurantID = ViewBag.FilterRestaurantID = (int)Session["restaurant_id"];
-            }
+            }*/
+            //Список ресторанов
+            List<Restaurant> restlist = RestaurantData.GetRestaurants();
+            filter.FilterRestaurantID = ViewBag.FilterRestaurantID = 0; //по умолчанию все
+            ViewBag.RestList = restlist;
 
             //Начальный диапазон дат
             DateTime dfrom = DateTime.Now;
@@ -550,10 +561,10 @@ namespace RestService.Controllers
             Session["Filters"] = filter;
             ViewBag.Title = "Премия (повторная оплата)";
             ViewBag.PageID = 102;
-            if (Session["restaurant_id"] != null)
+           /* if (Session["restaurant_id"] != null)
             {
                 filter.FilterRestaurantID = ViewBag.FilterRestaurantID = (int)Session["restaurant_id"];
-            }
+            }*/
 
             DateTime begindate = (filter.FilterBeginDate.Year == 1) ? new DateTime(1900, 1, 1) : filter.FilterBeginDate;
             DateTime enddate = (filter.FilterEndDate.Year == 1) ? DateTime.Today : filter.FilterEndDate;

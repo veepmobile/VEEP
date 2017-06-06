@@ -38,7 +38,7 @@
             var filters = {
                 FilterBeginDate: $('#beginDate').val(),
                 FilterEndDate: $('#endDate').val(),
-                FilterRestaurantID: @ViewBag.FilterRestaurantID
+                FilterRestaurantID: $('#restaurant_id').val()
             };
             $('#LoadingImage').show();
             $.ajax({

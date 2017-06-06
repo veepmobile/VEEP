@@ -17,6 +17,11 @@
         <div class='col-sm-2'>
             <b>Ресторан:</b>&nbsp;&nbsp;
             <select name="restaurant_id" id="restaurant_id" class="form-control" style="width:180px">
+                <option value="0">Все</option>
+                @foreach(var item in ViewBag.RestList)
+                {
+                    <option value="@item.ID">item.Name</option>
+                }
             </select>
         </div>
         <div class='col-sm-2'>
@@ -84,7 +89,7 @@
                 var filters = {
                     FilterBeginDate: $('#beginDate').val(),
                     FilterEndDate: $('#endDate').val(),
-                    FilterRestaurantID: @ViewBag.FilterRestaurantID
+                    FilterRestaurantID: $('#restaurant_id').val()
                 };
                 $('#LoadingImage').show();
                 $.ajax({
@@ -103,13 +108,14 @@
         function clear_filter() {
             $('#beginDate').val('');
             $('#endDate').val('');
-
+            $('#restaurant_id').val(0)
         }
 
         function exportexcel() {
             var dfrom = $('#beginDate').val();
             var dto = $('#endDate').val();
-            document.location.href = "/Reports/PrizeExport?dfrom=" + dfrom + "&dto=" + dto + "&restaurant_id=" + @ViewBag.FilterRestaurantID;
+            var rest = $('#restaurant_id').val();
+            document.location.href = "/Reports/PrizeExport?dfrom=" + dfrom + "&dto=" + dto + "&restaurant_id=" + rest;
         }
     </script>
 

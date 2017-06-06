@@ -1470,6 +1470,13 @@ namespace RestService
             return restaurant;
         }
 
+        //Список ресторанов для селекта
+        public List<Restaurant> RestaurantList()
+        {
+            List<Restaurant> list = RestaurantData.GetRestaurants();
+            return list;
+        }
+
     #endregion
 
         #region Personal
