@@ -589,9 +589,14 @@ namespace RestService
                             op.OrderBank = 0;
                             order.OrderPayment = op;
                         }
+                        //Скидка veep
+                        order.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID);
+                        order.MainDiscountSum = order.OrderPayment.OrderSum * order.MainDiscountProc / 100;
+
                         order.Message = item.Message;
                         order.ErrorCode = item.ErrorCode;
                         order.Error = item.Error;
+
                         list.Add(order);
                         //для теста
                         //if (order.OrderNumber == "00045C98") { order.ErrorCode = 31; }
@@ -631,19 +636,11 @@ namespace RestService
                             return list;
                         }
 
-
-
                         //Запись заказа в БД
                         OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order);
 
                         //Скидка Veep
-                        foreach (var o in list)
-                        {
-                            o.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID);
-                            decimal main_discount = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
-                            o.MainDiscountSum = main_discount;
-                            o.OrderPayment.OrderSum = o.OrderPayment.OrderSum - o.MainDiscountSum;
-                        }
+                        order.OrderPayment.OrderSum = order.OrderPayment.OrderSum - order.MainDiscountSum;
 
                     }
 
@@ -756,6 +753,10 @@ namespace RestService
                             op.OrderBank = 0;
                             order.OrderPayment = op;
                         }
+                        //Скидка veep
+                        order.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID);
+                        order.MainDiscountSum = order.OrderPayment.OrderSum * order.MainDiscountProc / 100;
+
                         order.Message = item.Message;
                         order.Error = item.Error;
                         order.ErrorCode = item.ErrorCode;
@@ -806,13 +807,8 @@ namespace RestService
                         OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order, phoneCode);
 
                         //Скидка Veep
-                        foreach (var o in list)
-                        {
-                            o.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID);
-                            decimal main_discount = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
-                            o.MainDiscountSum = main_discount;
-                            o.OrderPayment.OrderSum = o.OrderPayment.OrderSum - o.MainDiscountSum;
-                        }
+                        order.OrderPayment.OrderSum = order.OrderPayment.OrderSum - order.MainDiscountSum;
+
                     }
                     XMLGenerator<List<Order>> listXML = new XMLGenerator<List<Order>>(list);
                     Helper.saveToLog(0, user_key, "GetOrder", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Найдены заказы: " + listXML.GetStringXML(), 0);
@@ -826,7 +822,6 @@ namespace RestService
             Helper.saveToLog(0, user_key, "GetOrder", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Заказ не найден.", 1);
             return null;
         }
-
 
         //Вызов официанта
         public int CallWaiter(int restaurantID, string tableID, string orderNumber, int code, string user_key, string phoneCode = "7", int language = 0)
@@ -1261,6 +1256,14 @@ namespace RestService
                             Helper.saveToLog(0, user_key, "GetPaymentBinding", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + item.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "Заказ уже оплачен", 1);
                             return list;
                         }
+
+                        //Для проверки суммы убираем из нее скидку veep и добавляем скидку в копейках в платеж банку
+                        if (item.MainDiscountSum != 0)
+                        {
+                            item.OrderPayment.OrderSum = item.OrderPayment.OrderSum + item.MainDiscountSum;
+                            paymentBank = paymentBank - Convert.ToInt64(item.MainDiscountSum * 100);
+                        }
+
                         if (item.OrderPayment.OrderSum != paymentSum)
                         {
                             item.ErrorCode = 20;
@@ -1285,6 +1288,8 @@ namespace RestService
                     {
                         orderNum = new_number;
                     }
+
+
 
                     if (!String.IsNullOrWhiteSpace(bindingId))
                     {

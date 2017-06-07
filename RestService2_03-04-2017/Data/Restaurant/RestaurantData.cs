@@ -193,6 +193,7 @@ namespace RestService
                 return null;
             }
         }
+
         //Информация о ресторане
         public static Restaurant RestaurantInfo(int restaurantID, string user_key, int language = 0)
         {
@@ -299,7 +300,7 @@ namespace RestService
         //Скидка Veep для ресторана
         public static decimal GetVeepDiscount(int restaurantID)
         {
-            int veep = 0;
+            int veep_proc = 0;
             try
             {
                 using (SqlConnection con = new SqlConnection(BLL.Configs.ConnectionString))
@@ -311,12 +312,12 @@ namespace RestService
                     SqlDataReader reader = cmd.ExecuteReader();
                     if (reader.Read())
                     {
-                        if (reader["veep"] != DBNull.Value)
+                        if (reader["veep_proc"] != DBNull.Value)
                         {
-                            veep = (int)reader["veep"];
+                            veep_proc = (int)reader["veep_proc"];
                         }
                     }
-                    return veep;
+                    return veep_proc;
                 }
             }
             catch

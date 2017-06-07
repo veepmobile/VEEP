@@ -82,6 +82,8 @@ namespace RestService
                     cmd.Parameters.Add("@waiterID", SqlDbType.Int).Value = order.Waiter.ID;
                     cmd.Parameters.Add("@waiterName", SqlDbType.VarChar).Value = order.Waiter.Name;
                     cmd.Parameters.Add("@tableID", SqlDbType.VarChar).Value = order.TableID;
+                    cmd.Parameters.Add("@veep_procent", SqlDbType.Decimal).Value = order.MainDiscountProc;
+                    cmd.Parameters.Add("@veep_sum", SqlDbType.Decimal).Value = order.MainDiscountSum;
 
                     //конвертить list в xml
                     XMLGenerator<Order> orderXML = new XMLGenerator<Order>(order);
@@ -188,7 +190,9 @@ namespace RestService
                         op.OrderBank = (long)reader["order_bank_sum"];
                         order.OrderPayment = op;
                         order.TippingProcent = (reader["tipping_procent"]!=DBNull.Value)?(decimal)reader["tipping_procent"]:0;
-                        order.TippingSum = (reader["tipping_sum"]!=DBNull.Value)?(decimal)reader["tipping_sum"]:0;
+                        order.TippingSum = (reader["tipping_sum"] != DBNull.Value) ? (decimal)reader["tipping_sum"] : 0;
+                        order.MainDiscountProc = (reader["veep_procent"] != DBNull.Value) ? (decimal)reader["veep_procent"] : 0;
+                        order.MainDiscountSum = (reader["veep_sum"] != DBNull.Value) ? (decimal)reader["veep_sum"] : 0;
                         Waiter waiter = new Waiter();
                         waiter.ID = (int)reader["waiterID"];
                         waiter.Name = (string)reader["waiterName"];
