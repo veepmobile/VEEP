@@ -635,6 +635,16 @@ namespace RestService
 
                         //Запись заказа в БД
                         OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order);
+
+                        //Скидка Veep
+                        foreach (var o in list)
+                        {
+                            o.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID);
+                            decimal main_discount = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
+                            o.MainDiscountSum = main_discount;
+                            o.OrderPayment.OrderSum = o.OrderPayment.OrderSum - o.MainDiscountSum;
+                        }
+
                     }
 
 
@@ -795,6 +805,14 @@ namespace RestService
                         //Запись заказа в БД
                         OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order, phoneCode);
 
+                        //Скидка Veep
+                        foreach (var o in list)
+                        {
+                            o.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID);
+                            decimal main_discount = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
+                            o.MainDiscountSum = main_discount;
+                            o.OrderPayment.OrderSum = o.OrderPayment.OrderSum - o.MainDiscountSum;
+                        }
                     }
                     XMLGenerator<List<Order>> listXML = new XMLGenerator<List<Order>>(list);
                     Helper.saveToLog(0, user_key, "GetOrder", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Найдены заказы: " + listXML.GetStringXML(), 0);

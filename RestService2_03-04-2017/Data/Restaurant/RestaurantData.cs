@@ -234,7 +234,7 @@ namespace RestService
             }
         }
 
-        //Рейстинг ресторана
+        //Рейтинг ресторана
         protected static int GetRating(int restaurantID)
         {
             int ret = 0;
@@ -288,6 +288,35 @@ namespace RestService
                         }
                     }
                     return ret;
+                }
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        //Скидка Veep для ресторана
+        public static decimal GetVeepDiscount(int restaurantID)
+        {
+            int veep = 0;
+            try
+            {
+                using (SqlConnection con = new SqlConnection(BLL.Configs.ConnectionString))
+                {
+                    SqlCommand cmd = new SqlCommand("Rest.dbo.GetRestaurantVeep", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@restaurantID", SqlDbType.Int).Value = restaurantID;
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        if (reader["veep"] != DBNull.Value)
+                        {
+                            veep = (int)reader["veep"];
+                        }
+                    }
+                    return veep;
                 }
             }
             catch
