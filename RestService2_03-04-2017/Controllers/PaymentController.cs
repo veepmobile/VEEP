@@ -31,7 +31,7 @@ namespace RestService.Controllers
                 /*
                 switch (restaurantID)
                 {
-                    case 720920001: /*test
+                    case 730410002: /*test
                         mode = 0;
                         break;
                     case 202930001: /*Luce
@@ -108,7 +108,7 @@ namespace RestService.Controllers
                                 /*
                                 switch (restaurantID)
                                 {
-                                    case 720920001: /*Luce
+                                    case 730410002: /*Luce
                                         endpointName = "BasicHttpBinding_IIntegrationCMD";
                                         address = "http://95.84.168.113:9090/";
                                         break;
@@ -127,7 +127,7 @@ namespace RestService.Controllers
                                 }
                             */
 
-                            IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
+                                IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
                             IntegrationCMD.Order[] orders = cmd.GetPayment(order.RestaurantID, order.OrderNumber, order.OrderPayment.OrderSum, DateTime.Now);
                             int error = 0;
                             string error_msg = "";

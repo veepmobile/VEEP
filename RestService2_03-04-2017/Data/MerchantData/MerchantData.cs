@@ -111,7 +111,7 @@ namespace RestService
             /*
             switch (restaurantID)
             {
-                case 720920001: /*test
+                case 730410002: /*test
                     user_name = Configs.MerchantUser2;
                     psw = Configs.MerchantPsw2;
                     break;
@@ -261,7 +261,7 @@ namespace RestService
             /*
             switch (restaurantID)
             {
-                case 720920001: /*test
+                case 730410002: /*test
                     user_name = Configs.MerchantUser2;
                     psw = Configs.MerchantPsw2;
                     break;

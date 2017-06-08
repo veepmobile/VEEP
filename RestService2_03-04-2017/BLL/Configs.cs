@@ -133,7 +133,7 @@ namespace RestService.BLL
         {
             switch (restaurantID)
             {
-                case 720920001: /*test*/
+                case 730410002: /*test*/
                     return "BasicHttpBinding_IIntegrationCMD0";
                 case 202930001: /*Luce*/
                     return "BasicHttpBinding_IIntegrationCMD";
@@ -176,7 +176,7 @@ namespace RestService.BLL
         {
             switch (restaurantID)
             {
-                case 720920001: /*test*/
+                case 730410002: /*test*/
                     return "http://95.84.168.113:9090/";
                 case 202930001: /*Luce*/
                     return "http://92.38.32.63:9090/";
@@ -220,7 +220,7 @@ namespace RestService.BLL
         {
             switch (restaurantID)
             {
-                case 720920001: /*test*/
+                case 730410002: /*test*/
                     return WebConfigurationManager.AppSettings["merchantUser2"].ToString();
                 case 202930001: /*Luce*/
                     return WebConfigurationManager.AppSettings["merchantUser2"].ToString();
@@ -317,7 +317,7 @@ namespace RestService.BLL
         {
             switch (restaurantID)
             {
-                case 720920001: /*test*/
+                case 730410002: /*test*/
                     return WebConfigurationManager.AppSettings["merchantPsw2"].ToString();
                 case 202930001: /*Luce*/
                     return WebConfigurationManager.AppSettings["merchantPsw2"].ToString();
@@ -404,7 +404,7 @@ namespace RestService.BLL
         {
             switch (restaurantID)
             {
-                case 720920001: /*test*/
+                case 730410002: /*test*/
                     return 0;
                 case 202930001: /*Luce*/
                     return 2;

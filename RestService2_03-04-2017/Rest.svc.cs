@@ -495,7 +495,7 @@ namespace RestService
                 //techItem = 2;
                 //restaurantID = 202930001; --боевой
                 //для теста 
-               // restaurantID = 720920001; //тестовый
+                // restaurantID = 730410002; //тестовый
 
                 //Получение номера привязанной дисконтной карты
                 DiscountCard card = new DiscountCard();
@@ -686,7 +686,7 @@ namespace RestService
                 /*
                 switch (restaurantID)
                 {
-                    case 720920001: /*test
+                    case 730410002: /*test
                         endpointName = "BasicHttpBinding_IIntegrationCMD";
                         address = "http://95.84.168.113:9090/";
                         break;
@@ -848,7 +848,7 @@ namespace RestService
                         /*
                         switch (restaurantID)
                         {
-                            case 720920001: /*test
+                            case 730410002: /*test
                                 endpointName = "BasicHttpBinding_IIntegrationCMD";
                                 address = "http://95.84.168.113:9090/";
                                 break;
@@ -932,7 +932,7 @@ namespace RestService
                     /*
                     switch (restaurantID)
                     {
-                        case 720920001: /*test
+                        case 730410002: /*test
                             endpointName = "BasicHttpBinding_IIntegrationCMD";
                             address = "http://95.84.168.113:9090/";
                             break;
@@ -1133,7 +1133,7 @@ namespace RestService
                     /*
                     switch (restaurantID)
                     {
-                        case 720920001: /*test
+                        case 730410002: /*test
                             endpointName = "BasicHttpBinding_IIntegrationCMD";
                             address = "http://95.84.168.113:9090/";
                             break;
