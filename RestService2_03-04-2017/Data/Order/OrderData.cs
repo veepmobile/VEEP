@@ -687,7 +687,7 @@ namespace RestService
                         order.OrderPayment = new OrderPayment { OrderTotal = (reader["order_total"] != DBNull.Value) ? Convert.ToDecimal(reader["order_total"]) : 0, DiscountSum = (reader["discount_sum"] != DBNull.Value) ? Convert.ToDecimal(reader["discount_sum"]) : 0, OrderSum = (reader["order_rest_sum"] != DBNull.Value) ? Convert.ToDecimal(reader["order_rest_sum"]) : 0 };
                         order.MainDiscountProc = (reader["veep_procent"] != DBNull.Value) ? Convert.ToDecimal(reader["veep_procent"]) : 0;
                         order.MainDiscountSum = (reader["veep_sum"] != DBNull.Value) ? Convert.ToDecimal(reader["veep_sum"]) : 0;
-                        order.OrderPayment.OrderSum = order.OrderPayment.OrderSum - order.MainDiscountSum;
+                        //order.OrderPayment.OrderSum = order.OrderPayment.OrderSum - order.MainDiscountSum;
                         if (reader["cdate"] != DBNull.Value)
                         {
                             order.OrderDate = (DateTime)reader["cdate"];
