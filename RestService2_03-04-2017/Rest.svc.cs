@@ -592,6 +592,7 @@ namespace RestService
                         //Скидка veep
                         order.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID);
                         order.MainDiscountSum = order.OrderPayment.OrderSum * order.MainDiscountProc / 100;
+                        order.OrderPayment.OrderSum = order.OrderPayment.OrderSum - order.MainDiscountSum;
 
                         order.Message = item.Message;
                         order.ErrorCode = item.ErrorCode;
@@ -639,8 +640,6 @@ namespace RestService
                         //Запись заказа в БД
                         OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order);
 
-                        //Скидка Veep
-                        order.OrderPayment.OrderSum = order.OrderPayment.OrderSum - order.MainDiscountSum;
 
                     }
 
@@ -756,6 +755,7 @@ namespace RestService
                         //Скидка veep
                         order.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID);
                         order.MainDiscountSum = order.OrderPayment.OrderSum * order.MainDiscountProc / 100;
+                        order.OrderPayment.OrderSum = order.OrderPayment.OrderSum - order.MainDiscountSum;
 
                         order.Message = item.Message;
                         order.Error = item.Error;
@@ -805,10 +805,7 @@ namespace RestService
                         }
                         //Запись заказа в БД
                         OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order, phoneCode);
-
-                        //Скидка Veep
-                        order.OrderPayment.OrderSum = order.OrderPayment.OrderSum - order.MainDiscountSum;
-
+                        
                     }
                     XMLGenerator<List<Order>> listXML = new XMLGenerator<List<Order>>(list);
                     Helper.saveToLog(0, user_key, "GetOrder", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Найдены заказы: " + listXML.GetStringXML(), 0);
