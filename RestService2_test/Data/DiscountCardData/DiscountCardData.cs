@@ -40,12 +40,14 @@ namespace RestService
                             card.LastDate = (DateTime)reader["last_date"];
                         }
                         card.CardStatus = (int)reader["status"];
+                        Helper.saveToLog(0, user_key, "SqlFindDiscountCard", "accountID=" + accountID + ", cardStatus=" + card.CardStatus.ToString(), "", 0);
                         if (card != null)
                         {
                             list.Add(card);
                         }
                     }
                 }
+
                 return list;
             }
             catch (Exception e)

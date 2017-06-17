@@ -529,7 +529,7 @@ namespace RestService
                 //qr = "1111111229534";
 
                 //Проверка QR кода
-                 if (OrderData.SqlCheckQR(qr))
+               /*  if (OrderData.SqlCheckQR(qr))
                  {
                      List<Order> list = new List<Order>();
                      Order order = new Order();
@@ -542,7 +542,7 @@ namespace RestService
                  {
                      OrderData.SqlSaveQR(qr);
                  }
-
+                */
 
                 //Парсим QR код
                 int rest = Int32.Parse(qr.Substring(0, 6));
@@ -734,7 +734,7 @@ namespace RestService
                 //Проверка подтверждения дисконтной карты
                 if (discountCard != null)
                 {
-
+                    Helper.saveToLog(0, user_key, "GetOrderDiscount-пришло", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard, "", 0);
                 }
 
                 //Запрос к Интеграционному модулю
@@ -746,7 +746,17 @@ namespace RestService
 
                 IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
                 //IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, card.CardNumber);
+
+
+
                 IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, discountCard);
+                //test
+                string otvet = "";
+                if(orders != null)
+                {
+                    otvet = "ok";
+                }
+                Helper.saveToLog(0, user_key, "IntegrationCMD.GetOrder-запрос", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard + ",otvet=" + otvet, "", 0);
 
                 if (orders != null)
                 {
@@ -860,7 +870,7 @@ namespace RestService
                         }
                     }
                     XMLGenerator<List<Order>> listXML = new XMLGenerator<List<Order>>(list);
-                    Helper.saveToLog(0, user_key, "GetOrder", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard, "Найдены заказы: " + listXML.GetStringXML(), 0);
+                    Helper.saveToLog(0, user_key, "GetOrderDiscount - ответ", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard, "Найдены заказы: " + listXML.GetStringXML(), 0);
                     return list;
                 }
                 else
@@ -882,6 +892,9 @@ namespace RestService
                 DiscountCard card = new DiscountCard();
                 card.CardNumber = DiscountCardData.SqlGetDiscountCard(phoneNumber, user_key, restaurantID, phoneCode);
                 */
+                long? discountCard = 1001;
+                    Helper.saveToLog(0, user_key, "GetOrderDiscount-пришло", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard, "", 0);
+
                 //Запрос к Интеграционному модулю
                 string endpointName = "";
                 string address = "";
@@ -890,7 +903,16 @@ namespace RestService
                 address = Configs.GetAddress(restaurantID);
 
                 IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
-                IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, null);
+                IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, discountCard);
+
+                //test
+                string otvet = "";
+                if (orders != null)
+                {
+                    otvet = "ok";
+                }
+                Helper.saveToLog(0, user_key, "IntegrationCMD.GetOrder-запрос", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard + ",otvet=" + otvet, "", 0);
+
                 if (orders != null)
                 {
                     List<Order> list = new List<Order>();
