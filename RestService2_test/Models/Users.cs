@@ -11,6 +11,7 @@ namespace RestService.Models
     {
         public int UserID { get; set; }
         public int Roles { get; set; }
+        public int RestaurantID { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
     }

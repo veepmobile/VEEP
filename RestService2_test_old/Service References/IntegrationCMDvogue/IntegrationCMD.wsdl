@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="IntegrationCMD" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import namespace="http://schemas.datacontract.org/2004/07/POSServer.External" />
+      <xs:element name="FindOrders">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="restaurantID" type="xs:int" />
+            <xs:element minOccurs="0" name="techItem" type="xs:int" />
+            <xs:element minOccurs="0" name="discountCardNumber" nillable="true" type="xs:long" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="FindOrdersResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/POSServer.External" minOccurs="0" name="FindOrdersResult" nillable="true" type="q1:ArrayOfOrder" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="FindOrdersFull">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="restaurantID" type="xs:int" />
+            <xs:element minOccurs="0" name="techItem" type="xs:int" />
+            <xs:element minOccurs="0" name="discountCardNumber" nillable="true" type="xs:long" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="FindOrdersFullResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/POSServer.External" minOccurs="0" name="FindOrdersFullResult" nillable="true" type="q2:ArrayOfOrder" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetOrder">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="restaurantID" type="xs:int" />
+            <xs:element minOccurs="0" name="orderNumber" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="discountCardNumber" nillable="true" type="xs:long" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetOrderResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/POSServer.External" minOccurs="0" name="GetOrderResult" nillable="true" type="q3:ArrayOfOrder" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CallWaiter">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="restaurantID" type="xs:int" />
+            <xs:element minOccurs="0" name="tableID" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="orderNumber" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="code" type="xs:int" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CallWaiterResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="CallWaiterResult" type="xs:int" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CallAdmin">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="restaurantID" type="xs:int" />
+            <xs:element minOccurs="0" name="tableID" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="orderNumber" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="code" type="xs:int" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CallAdminResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="CallAdminResult" type="xs:int" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="OrderPrecheck">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="restaurantID" type="xs:int" />
+            <xs:element minOccurs="0" name="orderNumber" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="discountCardNumber" nillable="true" type="xs:long" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="OrderPrecheckResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/POSServer.External" minOccurs="0" name="OrderPrecheckResult" nillable="true" type="q4:ArrayOfOrder" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CancelPrecheck">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="restaurantID" type="xs:int" />
+            <xs:element minOccurs="0" name="orderNumber" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="discountCardNumber" nillable="true" type="xs:long" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CancelPrecheckResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/POSServer.External" minOccurs="0" name="CancelPrecheckResult" nillable="true" type="q5:ArrayOfOrder" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetPayment">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="restaurantID" type="xs:int" />
+            <xs:element minOccurs="0" name="orderNumber" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="paymentSum" type="xs:decimal" />
+            <xs:element minOccurs="0" name="paymentDate" type="xs:dateTime" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetPaymentResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/POSServer.External" minOccurs="0" name="GetPaymentResult" nillable="true" type="q6:ArrayOfOrder" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CheckRestaurant">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="restaurantID" type="xs:int" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CheckRestaurantResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="CheckRestaurantResult" type="xs:int" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+    <xs:schema xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="anyType" nillable="true" type="xs:anyType" />
+      <xs:element name="anyURI" nillable="true" type="xs:anyURI" />
+      <xs:element name="base64Binary" nillable="true" type="xs:base64Binary" />
+      <xs:element name="boolean" nillable="true" type="xs:boolean" />
+      <xs:element name="byte" nillable="true" type="xs:byte" />
+      <xs:element name="dateTime" nillable="true" type="xs:dateTime" />
+      <xs:element name="decimal" nillable="true" type="xs:decimal" />
+      <xs:element name="double" nillable="true" type="xs:double" />
+      <xs:element name="float" nillable="true" type="xs:float" />
+      <xs:element name="int" nillable="true" type="xs:int" />
+      <xs:element name="long" nillable="true" type="xs:long" />
+      <xs:element name="QName" nillable="true" type="xs:QName" />
+      <xs:element name="short" nillable="true" type="xs:short" />
+      <xs:element name="string" nillable="true" type="xs:string" />
+      <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte" />
+      <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt" />
+      <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong" />
+      <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort" />
+      <xs:element name="char" nillable="true" type="tns:char" />
+      <xs:simpleType name="char">
+        <xs:restriction base="xs:int" />
+      </xs:simpleType>
+      <xs:element name="duration" nillable="true" type="tns:duration" />
+      <xs:simpleType name="duration">
+        <xs:restriction base="xs:duration">
+          <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?" />
+          <xs:minInclusive value="-P10675199DT2H48M5.4775808S" />
+          <xs:maxInclusive value="P10675199DT2H48M5.4775807S" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="guid" nillable="true" type="tns:guid" />
+      <xs:simpleType name="guid">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:attribute name="FactoryType" type="xs:QName" />
+      <xs:attribute name="Id" type="xs:ID" />
+      <xs:attribute name="Ref" type="xs:IDREF" />
+    </xs:schema>
+    <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/POSServer.External" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/POSServer.External" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:complexType name="ArrayOfOrder">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Order" nillable="true" type="tns:Order" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ArrayOfOrder" nillable="true" type="tns:ArrayOfOrder" />
+      <xs:complexType name="Order">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DiscountCard" nillable="true" type="tns:DiscountCard" />
+          <xs:element minOccurs="0" name="Error" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ErrorCode" type="xs:int" />
+          <xs:element minOccurs="0" name="Items" nillable="true" type="tns:ArrayOfOrderItem" />
+          <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderNumber" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OrderPayment" nillable="true" type="tns:OrderPayment" />
+          <xs:element minOccurs="0" name="OrderStatus" nillable="true" type="tns:OrderStatus" />
+          <xs:element minOccurs="0" name="RestaurantID" type="xs:int" />
+          <xs:element minOccurs="0" name="TableID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Waiter" nillable="true" type="tns:Waiter" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="Order" nillable="true" type="tns:Order" />
+      <xs:complexType name="DiscountCard">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CardNumber" type="xs:long" />
+          <xs:element minOccurs="0" name="CardStatus" type="xs:int" />
+          <xs:element minOccurs="0" name="LastDate" type="xs:dateTime" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="DiscountCard" nillable="true" type="tns:DiscountCard" />
+      <xs:complexType name="ArrayOfOrderItem">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="OrderItem" nillable="true" type="tns:OrderItem" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ArrayOfOrderItem" nillable="true" type="tns:ArrayOfOrderItem" />
+      <xs:complexType name="OrderItem">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Price" type="xs:decimal" />
+          <xs:element minOccurs="0" name="Qty" type="xs:decimal" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="OrderItem" nillable="true" type="tns:OrderItem" />
+      <xs:complexType name="OrderPayment">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DiscountSum" type="xs:decimal" />
+          <xs:element minOccurs="0" name="OrderSum" type="xs:decimal" />
+          <xs:element minOccurs="0" name="OrderTotal" type="xs:decimal" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="OrderPayment" nillable="true" type="tns:OrderPayment" />
+      <xs:complexType name="OrderStatus">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="StatusDate" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="StatusID" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="OrderStatus" nillable="true" type="tns:OrderStatus" />
+      <xs:complexType name="Waiter">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ID" type="xs:int" />
+          <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="Waiter" nillable="true" type="tns:Waiter" />
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="IIntegrationCMD_FindOrders_InputMessage">
+    <wsdl:part name="parameters" element="tns:FindOrders" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_FindOrders_OutputMessage">
+    <wsdl:part name="parameters" element="tns:FindOrdersResponse" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_FindOrdersFull_InputMessage">
+    <wsdl:part name="parameters" element="tns:FindOrdersFull" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_FindOrdersFull_OutputMessage">
+    <wsdl:part name="parameters" element="tns:FindOrdersFullResponse" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_GetOrder_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetOrder" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_GetOrder_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetOrderResponse" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_CallWaiter_InputMessage">
+    <wsdl:part name="parameters" element="tns:CallWaiter" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_CallWaiter_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CallWaiterResponse" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_CallAdmin_InputMessage">
+    <wsdl:part name="parameters" element="tns:CallAdmin" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_CallAdmin_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CallAdminResponse" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_OrderPrecheck_InputMessage">
+    <wsdl:part name="parameters" element="tns:OrderPrecheck" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_OrderPrecheck_OutputMessage">
+    <wsdl:part name="parameters" element="tns:OrderPrecheckResponse" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_CancelPrecheck_InputMessage">
+    <wsdl:part name="parameters" element="tns:CancelPrecheck" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_CancelPrecheck_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CancelPrecheckResponse" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_GetPayment_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetPayment" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_GetPayment_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetPaymentResponse" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_CheckRestaurant_InputMessage">
+    <wsdl:part name="parameters" element="tns:CheckRestaurant" />
+  </wsdl:message>
+  <wsdl:message name="IIntegrationCMD_CheckRestaurant_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CheckRestaurantResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IIntegrationCMD">
+    <wsdl:operation name="FindOrders">
+      <wsdl:input wsaw:Action="http://tempuri.org/IIntegrationCMD/FindOrders" message="tns:IIntegrationCMD_FindOrders_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IIntegrationCMD/FindOrdersResponse" message="tns:IIntegrationCMD_FindOrders_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="FindOrdersFull">
+      <wsdl:input wsaw:Action="http://tempuri.org/IIntegrationCMD/FindOrdersFull" message="tns:IIntegrationCMD_FindOrdersFull_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IIntegrationCMD/FindOrdersFullResponse" message="tns:IIntegrationCMD_FindOrdersFull_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrder">
+      <wsdl:input wsaw:Action="http://tempuri.org/IIntegrationCMD/GetOrder" message="tns:IIntegrationCMD_GetOrder_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IIntegrationCMD/GetOrderResponse" message="tns:IIntegrationCMD_GetOrder_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CallWaiter">
+      <wsdl:input wsaw:Action="http://tempuri.org/IIntegrationCMD/CallWaiter" message="tns:IIntegrationCMD_CallWaiter_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IIntegrationCMD/CallWaiterResponse" message="tns:IIntegrationCMD_CallWaiter_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CallAdmin">
+      <wsdl:input wsaw:Action="http://tempuri.org/IIntegrationCMD/CallAdmin" message="tns:IIntegrationCMD_CallAdmin_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IIntegrationCMD/CallAdminResponse" message="tns:IIntegrationCMD_CallAdmin_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="OrderPrecheck">
+      <wsdl:input wsaw:Action="http://tempuri.org/IIntegrationCMD/OrderPrecheck" message="tns:IIntegrationCMD_OrderPrecheck_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IIntegrationCMD/OrderPrecheckResponse" message="tns:IIntegrationCMD_OrderPrecheck_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelPrecheck">
+      <wsdl:input wsaw:Action="http://tempuri.org/IIntegrationCMD/CancelPrecheck" message="tns:IIntegrationCMD_CancelPrecheck_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IIntegrationCMD/CancelPrecheckResponse" message="tns:IIntegrationCMD_CancelPrecheck_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPayment">
+      <wsdl:input wsaw:Action="http://tempuri.org/IIntegrationCMD/GetPayment" message="tns:IIntegrationCMD_GetPayment_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IIntegrationCMD/GetPaymentResponse" message="tns:IIntegrationCMD_GetPayment_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckRestaurant">
+      <wsdl:input wsaw:Action="http://tempuri.org/IIntegrationCMD/CheckRestaurant" message="tns:IIntegrationCMD_CheckRestaurant_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IIntegrationCMD/CheckRestaurantResponse" message="tns:IIntegrationCMD_CheckRestaurant_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IIntegrationCMD" type="tns:IIntegrationCMD">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="FindOrders">
+      <soap:operation soapAction="http://tempuri.org/IIntegrationCMD/FindOrders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindOrdersFull">
+      <soap:operation soapAction="http://tempuri.org/IIntegrationCMD/FindOrdersFull" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrder">
+      <soap:operation soapAction="http://tempuri.org/IIntegrationCMD/GetOrder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CallWaiter">
+      <soap:operation soapAction="http://tempuri.org/IIntegrationCMD/CallWaiter" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CallAdmin">
+      <soap:operation soapAction="http://tempuri.org/IIntegrationCMD/CallAdmin" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderPrecheck">
+      <soap:operation soapAction="http://tempuri.org/IIntegrationCMD/OrderPrecheck" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelPrecheck">
+      <soap:operation soapAction="http://tempuri.org/IIntegrationCMD/CancelPrecheck" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPayment">
+      <soap:operation soapAction="http://tempuri.org/IIntegrationCMD/GetPayment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckRestaurant">
+      <soap:operation soapAction="http://tempuri.org/IIntegrationCMD/CheckRestaurant" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="IntegrationCMD">
+    <wsdl:port name="BasicHttpBinding_IIntegrationCMD" binding="tns:BasicHttpBinding_IIntegrationCMD">
+      <soap:address location="http://185.26.193.5:9090/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

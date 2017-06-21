@@ -30,7 +30,8 @@ namespace RestService
                     if (reader.Read())
                     {
                         user.UserID = (reader["id"] != DBNull.Value) ? Convert.ToInt32(reader["id"]) : 0;
-                        user.Roles = (reader["roles_id"] != DBNull.Value) ? Convert.ToInt32(reader["roles_id"]) : 0;
+                        //user.Roles = (reader["roles_id"] != DBNull.Value) ? Convert.ToInt32(reader["roles_id"]) : 0;
+                        user.RestaurantID = (reader["restaurant_id"] != DBNull.Value) ? Convert.ToInt32(reader["restaurant_id"]) : 0;
                         return user;
                     }
                 }

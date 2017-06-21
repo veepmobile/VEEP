@@ -38,9 +38,7 @@ namespace RestService.Models
         [DataMember]
         public Int64? CardNumber { get; set; }                // Номер карты
         [DataMember]
-        public string CardName { get; set; }                // Наименование карты, привоенное клиентом
-        [DataMember]
-        public Account Account { get; set; }                // Аккаунт клиента
+        public Account Account { get; set; }                // Аккаунт пользователя
         [DataMember]
         public DateTime InsertDate { get; set; }            // Дата привязки карты
         [DataMember]

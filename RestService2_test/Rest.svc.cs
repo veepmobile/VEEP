@@ -254,7 +254,7 @@ namespace RestService
         #region DiscountCard
 
         //Загрузка привязанных карт в Приложение
-        public List<DiscountCard> FindDiscountCard(string phoneNumber, string user_key, string phoneCode = "7", int language = 0)
+        public List<Models.DiscountCard> FindDiscountCard(string phoneNumber, string user_key, string phoneCode = "7")
         {
             if (!String.IsNullOrWhiteSpace(phoneNumber) && CheckUserKey(user_key) != "")
             {
@@ -263,6 +263,7 @@ namespace RestService
                 {
                     int accountID = Convert.ToInt32(AccountData.SqlFindClientId(phoneNumber, phoneCode));
                     return DiscountCardData.SqlFindDiscountCard(accountID, check);
+                    //return DiscountCardData.SqlFindDiscountCard(phoneNumber,check);
                 }
             }
             return null;
@@ -292,6 +293,7 @@ namespace RestService
             }
             return ret;
         }
+
 
         //Изменение статуса (удаление) дисконтной карты в Системе
         public long? UpdateDiscountCard(string phoneNumber, long? cardNumber, int cardStatus, string user_key, string phoneCode = "7", int language = 0)
@@ -335,7 +337,7 @@ namespace RestService
                 {
                     if (item.DiscountCard != null && item.DiscountCard.CardStatus == 1)
                     {
-                        long? result_status = UpdateDiscountCard(phoneNumber, discountCard, 1,user_key, phoneCode, language);
+                        long? result_status = UpdateDiscountCard(phoneNumber, discountCard, 1, user_key, phoneCode, language);
                         return 0; // "Скидка применена";
                     }
                 }
@@ -343,7 +345,6 @@ namespace RestService
 
             return 1; // "Скидка не применилась. Повторите попытку или обратитесь к официанту";
         }
-
 
         #endregion
 
@@ -525,11 +526,8 @@ namespace RestService
         {
             if (CheckUserKey(user_key) != "")
             {
-                //Для теста
-                //qr = "1111111229534";
-
                 //Проверка QR кода
-               /*  if (OrderData.SqlCheckQR(qr))
+                 if (OrderData.SqlCheckQR(qr))
                  {
                      List<Order> list = new List<Order>();
                      Order order = new Order();
@@ -542,35 +540,30 @@ namespace RestService
                  {
                      OrderData.SqlSaveQR(qr);
                  }
-                */
 
                 //Парсим QR код
                 int rest = Int32.Parse(qr.Substring(0, 6));
                 int techItem = Int32.Parse(qr.Substring(9, 3));
 
                 int restaurantID = RestaurantData.GetRestaurantID(rest);
+
                 //Заглушка
-                techItem = 695;
+                //techItem = 695;
                 //restaurantID = 202930001; --боевой
                 //для теста 
-                restaurantID = 730410002; //тестовый
-
+                //restaurantID = 730410002; //тестовый
 
                 /* При первоначальном поиске заказа дисконтной карты еще нет
-                 
                 //Получение номера привязанной дисконтной карты
-                //DiscountCard card = new DiscountCard();
-                //card.CardNumber = DiscountCardData.SqlGetDiscountCard(phoneNumber, user_key, restaurantID);
-
+                DiscountCard card = new DiscountCard();
+                card.CardNumber = DiscountCardData.SqlGetDiscountCard(phoneNumber, user_key, restaurantID);
                 //Запрос к Интеграционному модулю
-                //Helper.saveToLog(0, user_key, " IntegrationCMD.FindOrders", "restaurant_id: " + restaurantID.ToString() + ", techItem: " + techItem.ToString() + ", card_number: " + card.CardNumber.ToString(),"", 0);
-
-                */
+                Helper.saveToLog(0, user_key, " IntegrationCMD.FindOrders", "restaurant_id: " + restaurantID.ToString() + ", techItem: " + techItem.ToString() + ", card_number: " + card.CardNumber.ToString(),"", 0);
+                 */
 
                 string endpointName = "";
                 string address = "";
                 endpointName = Configs.GetEndpoint(restaurantID);
-                address = Configs.GetAddress(restaurantID);
 
                 IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
                 //IntegrationCMD.Order[] orders = cmd.FindOrders(restaurantID, techItem, card.CardNumber);
@@ -639,12 +632,21 @@ namespace RestService
                             op.OrderBank = 0;
                             order.OrderPayment = op;
                         }
+
+                        //Скидка по дисконтной карте
+                        if(item.DiscountCard != null)
+                        {
+                            DiscountCard discard = new DiscountCard();
+                            discard.CardNumber = item.DiscountCard.CardNumber;
+                            discard.CardStatus = item.DiscountCard.CardStatus;
+                            discard.LastDate = item.DiscountCard.LastDate;
+                        }
+
                         order.Message = item.Message;
                         order.ErrorCode = item.ErrorCode;
                         order.Error = item.Error;
+
                         list.Add(order);
-                        //для теста
-                        //if (order.OrderNumber == "00045C98") { order.ErrorCode = 31; }
 
                         if (order.ErrorCode == 31)
                         {
@@ -681,21 +683,17 @@ namespace RestService
                             return list;
                         }
 
-
-
                         //Запись заказа в БД
                         OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order);
 
-                        //Для теста
-                        
+                        //Скидка veep
                         foreach (var o in list)
                         {
-                            o.MainDiscountProc = 5;
-                            decimal main_discount = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
-                            o.MainDiscountSum = main_discount;
+                            o.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID); ;
+                            o.MainDiscountSum = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
                             o.OrderPayment.OrderSum = o.OrderPayment.OrderSum - o.MainDiscountSum;
                         }
-                        
+
                     }
 
                     XMLGenerator<List<Order>> listXML = new XMLGenerator<List<Order>>(list);
@@ -720,18 +718,11 @@ namespace RestService
         }
 
         //Получение информации о заказе по его номеру
-        public List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, Int64? discountCard, string phoneCode = "7", int language = 0)
+        public List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, long? discountCard, string phoneCode = "7", int language = 0)
         {
             string phoneNumber = CheckUserKey(user_key);
             if (phoneNumber != "")
             {
-
-                /*
-                //Получение номера привязанной дисконтной карты
-                DiscountCard card = new DiscountCard();
-                card.CardNumber = DiscountCardData.SqlGetDiscountCard(phoneNumber, user_key, restaurantID, phoneCode);
-                */
-
                 //Проверка подтверждения дисконтной карты
                 if (discountCard != null)
                 {
@@ -746,30 +737,25 @@ namespace RestService
                 address = Configs.GetAddress(restaurantID);
 
                 IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
-                //IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, card.CardNumber);
-
-                //discountCard = -1;
-                discountCard = 1001;
                 IntegrationCMD.Order[] orders;
                 if (discountCard != null)
                 {
                     Helper.saveToLog(0, user_key, "GetOrderDiscount-отправлено", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard, "", 0);
-                    //IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, discountCard);
                     orders = cmd.GetOrder(restaurantID, orderNumber, discountCard);
                 }
                 else
                 {
-                    //IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, (long?)null);
                     orders = cmd.GetOrder(restaurantID, orderNumber, (long?)null);
                 }
 
-                //test
+                //Для теста
                 string otvet = "";
-                if(orders != null)
+                if (orders != null)
                 {
                     otvet = "ok";
                 }
                 Helper.saveToLog(0, user_key, "IntegrationCMD.GetOrder-запрос", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard + ",otvet=" + otvet, "", 0);
+
 
                 if (orders != null)
                 {
@@ -816,7 +802,8 @@ namespace RestService
                             op.OrderBank = 0;
                             order.OrderPayment = op;
                         }
-                        
+
+                        //Скидка по дисконтной карте
                         if (item.DiscountCard != null)
                         {
                             DiscountCard discount_card = new DiscountCard();
@@ -824,14 +811,13 @@ namespace RestService
                             discount_card.CardStatus = item.DiscountCard.CardStatus;
                             order.DiscountCard = discount_card;
                         }
+
                         order.Message = item.Message;
                         order.Error = item.Error;
                         order.ErrorCode = item.ErrorCode;
                         list.Add(order);
 
-                        //для теста
-                        //if (order.OrderNumber == "00045C98") { order.ErrorCode = 31; }
-                        Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "", 1);
+                        Helper.saveToLog(0, user_key, "GetOrdersDiscount", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "", 1);
 
                         //Проверка ошибки 31 - официант работает с заказом
                         if (item.ErrorCode == 31)
@@ -839,7 +825,7 @@ namespace RestService
                             order.ErrorCode = 31;
                             //order.Error = "Официант редактирует заказ. Повторите запрос через минуту.";
                             order.Error = Helper.GetError(31, language);
-                            Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "Официант работает с заказом", 1);
+                            Helper.saveToLog(0, user_key, "GetOrdersDiscount", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "Официант работает с заказом", 1);
                             return list;
                         }
                         //Проверка оплаты заказа в БД
@@ -848,7 +834,7 @@ namespace RestService
                             order.ErrorCode = 5;
                             //order.Error = "Вы уже оплатили данный заказ. Для открытия нового заказа обратитесь к официанту.";
                             order.Error = Helper.GetError(5, language);
-                            Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: ", "Заказ уже оплачен", 1);
+                            Helper.saveToLog(0, user_key, "GetOrdersDiscount", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: ", "Заказ уже оплачен", 1);
                             return list;
                         }
                         //Проверка закрытия заказа на кассе
@@ -859,7 +845,7 @@ namespace RestService
                                 order.ErrorCode = 6;
                                 //order.Error = "Ваш заказ закрыт. Для открытия нового заказа обратитесь к официанту.";
                                 order.Error = Helper.GetError(6, language);
-                                Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID.ToString() + ", StatusID: " + order.OrderStatus.StatusID.ToString(), "Заказ закрыт", 1);
+                                Helper.saveToLog(0, user_key, "GetOrdersDiscount", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID.ToString() + ", StatusID: " + order.OrderStatus.StatusID.ToString(), "Заказ закрыт", 1);
                                 return list;
                             }
                         }
@@ -873,14 +859,14 @@ namespace RestService
                         //Запись заказа в БД
                         OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order, phoneCode);
 
-                        //Для теста
+                        //Скидка veep
                         foreach (var o in list)
                         {
-                            o.MainDiscountProc = 5;
-                            decimal main_discount = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
-                            o.MainDiscountSum = main_discount;
+                            o.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID); ;
+                            o.MainDiscountSum = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
                             o.OrderPayment.OrderSum = o.OrderPayment.OrderSum - o.MainDiscountSum;
                         }
+
                     }
                     XMLGenerator<List<Order>> listXML = new XMLGenerator<List<Order>>(list);
                     Helper.saveToLog(0, user_key, "GetOrderDiscount - ответ", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard, "Найдены заказы: " + listXML.GetStringXML(), 0);
@@ -895,19 +881,18 @@ namespace RestService
             return null;
         }
 
+
         public List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0)
         {
             string phoneNumber = CheckUserKey(user_key);
             if (phoneNumber != "")
             {
-                /*
+/*
+                //GetOrder без дисконтной карты  
                 //Получение номера привязанной дисконтной карты
                 DiscountCard card = new DiscountCard();
                 card.CardNumber = DiscountCardData.SqlGetDiscountCard(phoneNumber, user_key, restaurantID, phoneCode);
-                */
-                long? discountCard = 1001;
-                    Helper.saveToLog(0, user_key, "GetOrderDiscount-пришло", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard, "", 0);
-
+*/
                 //Запрос к Интеграционному модулю
                 string endpointName = "";
                 string address = "";
@@ -916,18 +901,8 @@ namespace RestService
                 address = Configs.GetAddress(restaurantID);
 
                 IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
-                Helper.saveToLog(0, user_key, "GetOrderDiscount-отправлено", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard, "", 0);
-                IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, discountCard);
-                //IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, (long?)null);
-
-                //test
-                string otvet = "";
-                if (orders != null)
-                {
-                    otvet = "ok";
-                }
-                Helper.saveToLog(0, user_key, "IntegrationCMD.GetOrder-запрос", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard + ",otvet=" + otvet, "", 0);
-
+                //IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, card.CardNumber);
+                IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, null);
                 if (orders != null)
                 {
                     List<Order> list = new List<Order>();
@@ -973,20 +948,21 @@ namespace RestService
                             op.OrderBank = 0;
                             order.OrderPayment = op;
                         }
+
+                        //Скидка по дисконтной карте
                         if (item.DiscountCard != null)
                         {
-                            DiscountCard card = new DiscountCard();
-                            card.CardNumber = (long?)item.DiscountCard.CardNumber;
-                            card.CardStatus = item.DiscountCard.CardStatus;
-                            card.LastDate = item.DiscountCard.LastDate;
+                            DiscountCard discard = new DiscountCard();
+                            discard.CardNumber = item.DiscountCard.CardNumber;
+                            discard.CardStatus = item.DiscountCard.CardStatus;
+                            discard.LastDate = item.DiscountCard.LastDate;
                         }
+
                         order.Message = item.Message;
                         order.Error = item.Error;
                         order.ErrorCode = item.ErrorCode;
                         list.Add(order);
 
-                        //для теста
-                        //if (order.OrderNumber == "00045C98") { order.ErrorCode = 31; }
                         Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "", 1);
 
                         //Проверка ошибки 31 - официант работает с заказом
@@ -1029,14 +1005,15 @@ namespace RestService
                         //Запись заказа в БД
                         OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order, phoneCode);
 
-                        //Для теста
+
+                        //Скидка veep
                         foreach (var o in list)
                         {
-                            o.MainDiscountProc = 5;
-                            decimal main_discount = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
-                            o.MainDiscountSum = main_discount;
+                            o.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID); ;
+                            o.MainDiscountSum = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
                             o.OrderPayment.OrderSum = o.OrderPayment.OrderSum - o.MainDiscountSum;
                         }
+                        
                     }
                     XMLGenerator<List<Order>> listXML = new XMLGenerator<List<Order>>(list);
                     Helper.saveToLog(0, user_key, "GetOrder", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Найдены заказы: " + listXML.GetStringXML(), 0);
@@ -1062,7 +1039,7 @@ namespace RestService
                         
                         //Получаем заказ по номеру
                         List<Order> list = new List<Order>();
-                        list = GetOrder(restaurantID, orderNumber, user_key, phoneCode, language);
+                        list = GetOrder(restaurantID, orderNumber, user_key);
                         //Проверяем номер стола
                         if (list != null)
                         {
@@ -1076,7 +1053,27 @@ namespace RestService
 
                         endpointName = Configs.GetEndpoint(restaurantID);
                         address = Configs.GetAddress(restaurantID);
-
+                        /*
+                        switch (restaurantID)
+                        {
+                            case 730410002: /*test
+                                endpointName = "BasicHttpBinding_IIntegrationCMD";
+                                address = "http://95.84.168.113:9090/";
+                                break;
+                            case 202930001: /*Luce
+                                endpointName = "BasicHttpBinding_IIntegrationCMD";
+                                address = "http://92.38.32.63:9090/";
+                                break;
+                            case 209631111: /*Vogue
+                                endpointName = "BasicHttpBinding_IIntegrationCMD1";
+                                address = "http://185.26.193.5:9090/";
+                                break;
+                            case 880540002: /*Хлеб и вино - Улица 1905 года
+                                endpointName = "BasicHttpBinding_IIntegrationCMD2";
+                                address = "http://95.84.146.191:9090/";
+                                break;
+                        }
+                */
 
                         IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
                         int call = cmd.CallWaiter(restaurantID, tableID, orderNumber, code);
@@ -1126,7 +1123,7 @@ namespace RestService
                 {
                     //Получаем заказ по номеру
                     List<Order> list = new List<Order>();
-                    list = GetOrder(restaurantID, orderNumber, user_key,"7",0);
+                    list = GetOrder(restaurantID, orderNumber, user_key);
                     //Проверяем номер стола
                     if (list != null)
                     {
@@ -1140,6 +1137,27 @@ namespace RestService
 
                     endpointName = Configs.GetEndpoint(restaurantID);
                     address = Configs.GetAddress(restaurantID);
+                    /*
+                    switch (restaurantID)
+                    {
+                        case 730410002: /*test
+                            endpointName = "BasicHttpBinding_IIntegrationCMD";
+                            address = "http://95.84.168.113:9090/";
+                            break;
+                        case 202930001: /*Luce
+                            endpointName = "BasicHttpBinding_IIntegrationCMD";
+                            address = "http://92.38.32.63:9090/";
+                            break;
+                        case 209631111: /*Vogue
+                            endpointName = "BasicHttpBinding_IIntegrationCMD1";
+                            address = "http://185.26.193.5:9090/";
+                            break;
+                        case 880540002: /*Хлеб и вино - Улица 1905 года
+                            endpointName = "BasicHttpBinding_IIntegrationCMD2";
+                            address = "http://95.84.146.191:9090/";
+                            break;
+                    }
+            */
 
                     IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
                     int call = cmd.CallAdmin(restaurantID, tableID, orderNumber, code);
@@ -1168,7 +1186,7 @@ namespace RestService
             if (phoneNumber != "")
                 {
                     //Получаем заказ по номеру
-                    list = GetOrder(restaurantID, orderNumber, user_key, phoneCode, language);
+                    list = GetOrder(restaurantID, orderNumber, user_key);
                     //Проверка суммы заказа
                     foreach (var item in list)
                     {
@@ -1306,7 +1324,7 @@ namespace RestService
             List<Order> list = new List<Order>();
             //костыль
             //Получаем заказ по номеру
-            list = GetOrder(restaurantID, orderNumber, user_key, phoneCode, language);
+            list = GetOrder(restaurantID, orderNumber, user_key);
             return list;
             //конец костыля
 
@@ -1323,7 +1341,7 @@ namespace RestService
                     /*
                     switch (restaurantID)
                     {
-                        case 720920001: /*test
+                        case 730410002: /*test
                             endpointName = "BasicHttpBinding_IIntegrationCMD";
                             address = "http://95.84.168.113:9090/";
                             break;
@@ -1406,163 +1424,6 @@ namespace RestService
         }
 
         //Оплата заказа
-        public List<Order> GetPaymentBinding(int restaurantID, string orderNumber, decimal paymentSum, long paymentBank, string user_key, string bindingId, decimal tippingProcent, long?  discountCardNumber, string phoneCode = "7", int language = 0)
-        {
-            List<Order> list = new List<Order>();
-            string phoneNumber = CheckUserKey(user_key);
-
-            if (phoneNumber != "")
-            {
-                if (phoneCode == "") { phoneCode = "7"; }
-                string clientId = GetClientId(phoneNumber, phoneCode);
-                //Поиск заказа в БД
-                string orderNum = OrderData.SqlFindOrders(phoneNumber, user_key, orderNumber, restaurantID);
-                if (!String.IsNullOrWhiteSpace(orderNum))
-                {
-                    //Получаем заказ по номеру
-                    list = GetOrder(restaurantID, orderNumber, user_key, discountCardNumber, phoneCode, language);
-                    //Проверка суммы заказа
-                    foreach (var item in list)
-                    {
-                        //для теста
-                        // if (item.OrderNumber == "00045C98") { item.ErrorCode = 31; }
-
-                        if (item.ErrorCode == 31)
-                        {
-                            //item.Error = "Подождите минуту. Официант работает с заказом";
-                            item.Error = Helper.GetError(31, language);
-                            Helper.saveToLog(0, user_key, "GetPaymentBinding", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + item.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "Официант работает с заказом", 1);
-                            return list;
-                        }
-                        //проверка оплаты заказа
-                        if (OrderData.GetStatus(item.OrderNumber) == 2)
-                        {
-                            item.ErrorCode = 5;
-                            //item.Error = "Вы уже оплатили данный заказ. Для открытия нового заказа обратитесь к официанту.";
-                            item.Error = Helper.GetError(5, language);
-                            Helper.saveToLog(0, user_key, "GetPaymentBinding", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + item.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "Заказ уже оплачен", 1);
-                            return list;
-                        }
-                        if (item.OrderPayment.OrderSum != paymentSum)
-                        {
-                            item.ErrorCode = 20;
-                            //item.Error = "В заказ внесены изменения. Сумма изменена.";
-                            item.Error = Helper.GetError(20, language);
-                            Helper.saveToLog(0, user_key, "GetPaymentBinding", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + item.TableID + ", paymentSum=" + paymentSum.ToString() + ",item.OrderPayment.OrderSum=" + item.OrderPayment.OrderSum.ToString() + "paymentBank=" + paymentBank.ToString() + ", ErrorCode: " + item.ErrorCode.ToString(), "В заказ внесены изменения. Сумма изменена.", 1);
-                            //list = OrderCancelPrecheck(restaurantID, orderNumber, null, user_key);
-                            return list;
-                        }
-                        if (item.ErrorCode != 0)
-                        {
-                            item.ErrorCode = 100;
-                            item.Error = Helper.GetError(100, language);
-                            return list;
-                        }
-                    }
-
-                    //Замена номера заказа для повторной оплаты
-                    string new_number = Helper.getNewGUID();
-                    int ret = OrderData.SqlChangeNumberOrder(orderNum, new_number);
-                    if (ret > 0)
-                    {
-                        orderNum = new_number;
-                    }
-
-                    if (!String.IsNullOrWhiteSpace(bindingId))
-                    {
-                        //Оплата заказа с использованием связок
-
-                        //Регистрация заказа в платежной системе
-                        registerResponse response = new registerResponse();
-                        string returnUrl = "http://185.26.113.204/Payment/Result";
-                        //string returnUrl = "http://test.veep.su/Payment/Result";
-                        response = MerchantData.registerOrder(restaurantID, orderNum, paymentBank, returnUrl, clientId, bindingId);
-                        if (response != null)
-                        {
-                            DateTime paymentDate = DateTime.Now;
-                            XMLGenerator<registerResponse> respon = new XMLGenerator<registerResponse>(response);
-                            Helper.saveToLog(0, user_key, "GetPaymentBinding/registerOrder", "restaurantID=" + restaurantID.ToString() + ", phoneNumber=" + phoneNumber + ", orderNumber=" + orderNum + ", paymentSum=" + paymentSum.ToString() + ", paymentBank=" + paymentBank.ToString() + ", clientId=" + clientId + ", bindingId=" + bindingId, "Регистрация заказа в платежной системе: orderId=" + response.orderId + ", formUrl=" + response.formUrl + ", errorCode=" + response.errorCode.ToString() + ", errorMessage=" + response.errorMessage + ", response = " + respon.GetStringXML(), 0);
-                            //Вставка платежа в БД
-                            string insert_result = OrderData.SqlInsertPayment(user_key, restaurantID, phoneNumber, orderNumber, orderNum, paymentBank, DateTime.Now, response.orderId, response.formUrl, response.errorCode, response.errorMessage, clientId, bindingId, tippingProcent, phoneCode);
-
-                            paymentOrderBindingResponse paymentResponse = new paymentOrderBindingResponse();
-                            paymentResponse = MerchantData.paymentOrderBinding(restaurantID, response.orderId, bindingId);
-                            if (paymentResponse != null)
-                            {
-                                if (paymentResponse.redirect != null && paymentResponse.redirect != "")
-                                {
-                                    list[0].FormUrl = paymentResponse.redirect;
-                                }
-                                else
-                                {
-                                    list[0].FormUrl = paymentResponse.acsUrl + "&MD=" + response.orderId + "&PaReq=" + paymentResponse.pareq + "&TermUrl=" + paymentResponse.termUrl;
-                                }
-                            }
-
-                            if (tippingProcent > 0)
-                            {
-                                //расчет чаевых в рубл с округлением
-                                //decimal tippingSum = Decimal.Round((tippingProcent * paymentSum) / 100);
-
-                                OrderData.SqlInsertTipping(restaurantID, orderNum, tippingProcent, phoneNumber, phoneCode);
-                            }
-
-                            return list;
-                        }
-                    }
-                    else
-                    {
-                        //Оплата заказа без использования связок
-                        //Регистрация заказа в платежной системе
-                        registerResponse response = new registerResponse();
-                        string returnUrl = "http://185.26.113.204/Payment/Result";
-                        //string returnUrl = "http://test.veep.su/Payment/Result";
-                        response = MerchantData.registerOrder(restaurantID, orderNum, paymentBank, returnUrl, clientId, "");
-                        if (response != null)
-                        {
-                            DateTime paymentDate = DateTime.Now;
-                            Helper.saveToLog(0, user_key, "registerOrder", "restaurantID=" + restaurantID.ToString() + ", phoneNumber=" + phoneNumber + ", orderNumber=" + orderNum + ", paymentSum=" + paymentSum.ToString() + ", paymentBank=" + paymentBank.ToString() + ", clientId=" + clientId.ToString(), "Регистрация заказа в платежной системе: orderId=" + response.orderId + ", formUrl=" + response.formUrl + ", errorCode=" + response.errorCode.ToString() + ", errorMessage=" + response.errorMessage, 0);
-                            //Вставка платежа в БД
-                            string insert_result = OrderData.SqlInsertPayment(user_key, restaurantID, phoneNumber, orderNumber, orderNum, paymentBank, DateTime.Now, response.orderId, response.formUrl, response.errorCode, response.errorMessage, clientId, null, 0);
-                            if (!String.IsNullOrWhiteSpace(response.formUrl))
-                            {
-                                list[0].FormUrl = response.formUrl;
-                            }
-                            else
-                            {
-                                list[0].Error = response.errorMessage;
-                            }
-
-                            //return (!String.IsNullOrWhiteSpace(response.formUrl)) ? response.formUrl : response.errorMessage;
-                            return list;
-                        }
-                    }
-                }
-                else
-                {
-                    if (list == null || list.Count == 0)
-                    {
-                        return new List<Order>(){
-                           new Order(){
-                               //ErrorCode = 1,
-                               //Error = "Заказ не найден или оплачен. Для открытия нового заказа обратитесь к официанту."}
-                               ErrorCode = 100,
-                               Error = Helper.GetError(100,language)}
-                       };
-                    }
-                    else
-                    {
-                        //list[0].Error = "Заказ не найден или оплачен. Для открытия нового заказа обратитесь к официанту.";
-                        list[0].ErrorCode = 100;
-                        list[0].Error = Helper.GetError(100, language);
-                        return list;
-                    }
-                }
-            }
-
-            return null;
-        }
-
         public List<Order> GetPaymentBinding(int restaurantID, string orderNumber, decimal paymentSum, long paymentBank, string user_key, string bindingId, decimal tippingProcent, string phoneCode = "7", int language = 0)
         {
             List<Order> list = new List<Order>();
@@ -1600,6 +1461,14 @@ namespace RestService
                             Helper.saveToLog(0, user_key, "GetPaymentBinding", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + item.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "Заказ уже оплачен", 1);
                             return list;
                         }
+
+                        //Для проверки суммы убираем из нее скидку veep и добавляем скидку в копейках в платеж банку
+                        if (item.MainDiscountSum != 0)
+                        {
+                            item.OrderPayment.OrderSum = item.OrderPayment.OrderSum + item.MainDiscountSum;
+                            paymentBank = paymentBank - Convert.ToInt64(item.MainDiscountSum * 100);
+                        }
+
                         if (item.OrderPayment.OrderSum != paymentSum)
                         {
                             item.ErrorCode = 20;
@@ -1624,6 +1493,8 @@ namespace RestService
                     {
                         orderNum = new_number;
                     }
+
+
 
                     if (!String.IsNullOrWhiteSpace(bindingId))
                     {
@@ -1719,7 +1590,6 @@ namespace RestService
 
             return null;
         }
-
 
         //Оплата заказа без связок
         public string GetPayment(int restaurantID, string orderNumber, decimal paymentSum, long paymentBank, string user_key, int language = 0)
@@ -1808,6 +1678,7 @@ namespace RestService
         //Список ресторанов, подключенных к сети
         public List<RestNetwork> FindRestaurant(string user_key, int language = 0)
         {
+            //language = 1;
             List<RestNetwork> list = new List<RestNetwork>();
             if (CheckUserKey(user_key) != "")
             {
@@ -1825,6 +1696,13 @@ namespace RestService
                 restaurant = RestaurantData.RestaurantInfo(restaurantID, user_key, language);
             }
             return restaurant;
+        }
+
+        //Список ресторанов для селекта
+        public List<Restaurant> RestaurantList()
+        {
+            List<Restaurant> list = RestaurantData.GetRestaurants();
+            return list;
         }
 
     #endregion

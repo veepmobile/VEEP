@@ -34,7 +34,7 @@ namespace RestService.Controllers
             ViewBag.PageID = 1;
 
             List<RestNetwork> rest_network = new List<RestNetwork>();
-            rest_network = RestaurantData.GetRestNetwork("admin");
+            rest_network = RestaurantData.GetRestNetwork("admin",0);
 
             return View(rest_network);
         }

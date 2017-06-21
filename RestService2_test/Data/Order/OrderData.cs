@@ -82,10 +82,8 @@ namespace RestService
                     cmd.Parameters.Add("@waiterID", SqlDbType.Int).Value = order.Waiter.ID;
                     cmd.Parameters.Add("@waiterName", SqlDbType.VarChar).Value = order.Waiter.Name;
                     cmd.Parameters.Add("@tableID", SqlDbType.VarChar).Value = order.TableID;
-
-                    long? dicsoung_card = (order.DiscountCard.CardStatus == 1) ? order.DiscountCard.CardNumber : null;
-
-                    cmd.Parameters.Add("@discount_card", SqlDbType.BigInt).Value = dicsoung_card;
+                    cmd.Parameters.Add("@veep_procent", SqlDbType.Decimal).Value = order.MainDiscountProc;
+                    cmd.Parameters.Add("@veep_sum", SqlDbType.Decimal).Value = order.MainDiscountSum;
 
                     //конвертить list в xml
                     XMLGenerator<Order> orderXML = new XMLGenerator<Order>(order);
@@ -192,7 +190,9 @@ namespace RestService
                         op.OrderBank = (long)reader["order_bank_sum"];
                         order.OrderPayment = op;
                         order.TippingProcent = (reader["tipping_procent"]!=DBNull.Value)?(decimal)reader["tipping_procent"]:0;
-                        order.TippingSum = (reader["tipping_sum"]!=DBNull.Value)?(decimal)reader["tipping_sum"]:0;
+                        order.TippingSum = (reader["tipping_sum"] != DBNull.Value) ? (decimal)reader["tipping_sum"] : 0;
+                        order.MainDiscountProc = (reader["veep_procent"] != DBNull.Value) ? (decimal)reader["veep_procent"] : 0;
+                        order.MainDiscountSum = (reader["veep_sum"] != DBNull.Value) ? (decimal)reader["veep_sum"] : 0;
                         Waiter waiter = new Waiter();
                         waiter.ID = (int)reader["waiterID"];
                         waiter.Name = (string)reader["waiterName"];
@@ -308,7 +308,7 @@ namespace RestService
         }
 
         //Запись данных запроса статуса заказа в БД (табл. Payment)
-        public static string SqlInsertStatus(string orderNumber, string orderId, int orderStatus, int errorCode, string errorMessage, string pan, string expiration, string cardholderName, Int64 amount, string ip, string clientId, string bindingId, decimal order_rest_sum)
+        public static string SqlInsertStatus(string orderId, int orderStatus, int errorCode, string errorMessage, string orderNumber, string pan, string expiration, string cardholderName, Int64 amount, string ip, string clientId, string bindingId)
         {
             string result = "";
             try
@@ -330,12 +330,11 @@ namespace RestService
                     cmd.Parameters.Add("@reg_date", SqlDbType.DateTime).Value = DateTime.Now;
                     cmd.Parameters.Add("@clientId", SqlDbType.VarChar).Value = clientId;
                     cmd.Parameters.Add("@bindingId", SqlDbType.VarChar).Value = bindingId;
-                    cmd.Parameters.Add("@order_rest_sum", SqlDbType.Decimal).Value = order_rest_sum;
                     con.Open();
                     cmd.ExecuteNonQuery();
                     result = "1";
                 }
-                Helper.saveToLog(0, "", "SqlInsertStatus", "orderId=" + orderId + ". Запись статуса заказа: orderStatus=" + orderStatus.ToString() + ", errorCode=" + errorCode.ToString() + ", errorMessage=" + errorMessage + ", pan=" + pan + ", expiration=" + expiration + ", cardholderName=" + cardholderName + ", amount=" + amount.ToString() + ", ip=" + ip + ", reg_date=" + DateTime.Now.ToString() + ", clientId=" + clientId + ", bindingId=" + bindingId, "", 0);
+                Helper.saveToLog(0, "", "SqlInsertStatus", "orderNumber=" + orderNumber + ", orderId=" + orderId + ". Запись статуса заказа: orderStatus=" + orderStatus.ToString() + ", errorCode=" + errorCode.ToString() + ", errorMessage=" + errorMessage + ", pan=" + pan + ", expiration=" + expiration + ", cardholderName=" + cardholderName + ", amount=" + amount.ToString() + ", ip=" + ip + ", reg_date=" + DateTime.Now.ToString() + ", clientId=" + clientId + ", bindingId=" + bindingId, "", 0);
             }
             catch (Exception e)
             {
@@ -686,6 +685,9 @@ namespace RestService
                         order.OrderNumberService = (reader["order_number"] != DBNull.Value) ? Convert.ToString(reader["order_number"]) : "";
                         order.OrderNumberBank = (reader["order_system"] != DBNull.Value) ? Convert.ToString(reader["order_system"]) : "";
                         order.OrderPayment = new OrderPayment { OrderTotal = (reader["order_total"] != DBNull.Value) ? Convert.ToDecimal(reader["order_total"]) : 0, DiscountSum = (reader["discount_sum"] != DBNull.Value) ? Convert.ToDecimal(reader["discount_sum"]) : 0, OrderSum = (reader["order_rest_sum"] != DBNull.Value) ? Convert.ToDecimal(reader["order_rest_sum"]) : 0 };
+                        order.MainDiscountProc = (reader["veep_procent"] != DBNull.Value) ? Convert.ToDecimal(reader["veep_procent"]) : 0;
+                        order.MainDiscountSum = (reader["veep_sum"] != DBNull.Value) ? Convert.ToDecimal(reader["veep_sum"]) : 0;
+                        //order.OrderPayment.OrderSum = order.OrderPayment.OrderSum - order.MainDiscountSum;
                         if (reader["cdate"] != DBNull.Value)
                         {
                             order.OrderDate = (DateTime)reader["cdate"];

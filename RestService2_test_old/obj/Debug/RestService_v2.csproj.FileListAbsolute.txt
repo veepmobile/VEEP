@@ -1,0 +1,5 @@
+D:\Projects\RestaurantService\RestService_v2\RestService_v2\bin\RestService_v2.dll
+D:\Projects\RestaurantService\RestService_v2\RestService_v2\bin\RestService_v2.pdb
+D:\Projects\RestaurantService\RestService_v2\RestService_v2\obj\Debug\RestService_v2.csprojResolveAssemblyReference.cache
+D:\Projects\RestaurantService\RestService_v2\RestService_v2\obj\Debug\RestService_v2.dll
+D:\Projects\RestaurantService\RestService_v2\RestService_v2\obj\Debug\RestService_v2.pdb

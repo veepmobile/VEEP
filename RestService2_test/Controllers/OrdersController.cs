@@ -140,9 +140,11 @@ namespace RestService.Controllers
                ws.AddCell(0, 6, "Номер заказа в банке", 0);
                ws.AddCell(0, 7, "Сумма без скидки, руб.", 0);
                ws.AddCell(0, 8, "Скидка, руб.", 0);
-               ws.AddCell(0, 9, "Сумма с учетом скидки, руб.", 0);
-               ws.AddCell(0, 10, "Статус заказа", 0);
-               ws.AddCell(0, 11, "Официант", 0);
+               ws.AddCell(0, 9, "Скидка Veep, %", 0);
+               ws.AddCell(0, 10, "Скидка Veep, руб.", 0);
+               ws.AddCell(0, 11, "Сумма с учетом скидки, руб.", 0);
+               ws.AddCell(0, 12, "Статус заказа", 0);
+               ws.AddCell(0, 13, "Официант", 0);
 
                // get data
                List<Order> list = OrderData.GetOrderList(begindate, enddate);
@@ -160,9 +162,11 @@ namespace RestService.Controllers
                        ws.AddCell(i + n + 1, 6, list[i].OrderNumberBank, 0);
                        ws.AddCell(i + n + 1, 7, list[i].OrderPayment.OrderTotal.ToString("0.00"), 0);
                        ws.AddCell(i + n + 1, 8, list[i].OrderPayment.DiscountSum.ToString("0.00"), 0);
-                       ws.AddCell(i + n + 1, 9, ((Convert.ToDecimal(list[i].OrderPayment.OrderSum)).ToString("0.00")), 0);
-                       ws.AddCell(i + n + 1, 10, list[i].OrderStatus.StatusName, 0);
-                       ws.AddCell(i + n + 1, 11, list[i].Waiter.Name, 0);                       
+                       ws.AddCell(i + n + 1, 9, list[i].MainDiscountProc.ToString("0.00"), 0);
+                       ws.AddCell(i + n + 1, 10, list[i].MainDiscountSum.ToString("0.00"), 0);
+                       ws.AddCell(i + n + 1, 11, ((Convert.ToDecimal(list[i].OrderPayment.OrderSum)).ToString("0.00")), 0);
+                       ws.AddCell(i + n + 1, 12, list[i].OrderStatus.StatusName, 0);
+                       ws.AddCell(i + n + 1, 13, list[i].Waiter.Name, 0);                       
                    }
                    wb.AddWorksheet(ws);
 

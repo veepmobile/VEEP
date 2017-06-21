@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>@ViewBag.Title</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+        <link rel="stylesheet" type="text/css" media="screen" href="~/Content/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="~/Content/bootstrap-datetimepicker.css" />
+    </head>
+<body>
+           <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("VEEP", "Index", "Admin")</li>
+                    </ul>
+                    <ul class="nav navbar-nav right" id="logout">
+                        <li>@Html.ActionLink("Выход", "Logout", "Admin")</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="container body-content">
+    @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year – VEEP</p>
+            </footer>
+        </div>
+
+
+
+
+    @Scripts.Render("~/bundles/jquery")
+            <script src="~/Scripts/bootstrap.js" type="text/javascript"></script>
+        <script src="~/Scripts/moment.js" type="text/javascript"></script>
+        <script src="~/Scripts/bootstrap-datetimepicker.js" type="text/javascript"></script>
+        <script src="~/Scripts/bootstrap-datetimepicker.ru.js" type="text/javascript"></script>
+        <script src="~/Scripts/bootstrap-dropdown.js" type="text/javascript"></script>
+    @RenderSection("scripts", required: false)
+
+       <div class="modal fade" name="AccountStatus" id="AccountStatus" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button class="close" type="button" data-dismiss="modal">x</button><br /><br />
+                        <center>
+                            <div id="account_id"></div>
+                            <div id="account_status"></div>
+                            <div id="status">
+                                <b>Новый статус аккаунта:</b>&nbsp;&nbsp;
+                                <select name="Status" id="Status" class="form-control" style="width:180px;">
+                                    <option value="1">Не активен</option>
+                                    <option value="2">Активен</option>
+                                    <option value="4">Заблокирован</option>
+                                    <option value="5">Заблокирован админом</option>
+                                </select>
+                            </div>
+                        </center>
+                        <br />
+                    </div>
+                    <div class="modal-footer">
+                        <button id="change_status" class="btn btn-primary" type="button" data-dismiss="modal">Сохранить</button>
+                        <button class="btn btn-default" type="button" data-dismiss="modal">Отмена</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" name="ConfirmDisable" id="ConfirmDisable" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button class="close" type="button" data-dismiss="modal">x</button><br /><br />
+                        <center><h4>Вы действительно хотите деактивировать аккаунт?</h4></center>
+                        <br />
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirmdisable" class="btn btn-primary" type="button" data-dismiss="modal">Да</button>
+                        <button class="btn btn-default" type="button" data-dismiss="modal">Нет</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+ 
+    
+        <div class="modal fade" name="ConfirmRedo" id="ConfirmRedo" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button class="close" type="button" data-dismiss="modal">x</button><br /><br />
+                        <center><h4>Вы действительно хотите сбросить пароль у аккаунта?</h4></center>
+                        <br />
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirmredo" class="btn btn-primary" type="button" data-dismiss="modal">Да</button>
+                        <button class="btn btn-default" type="button" data-dismiss="modal">Нет</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</body>
+</html>

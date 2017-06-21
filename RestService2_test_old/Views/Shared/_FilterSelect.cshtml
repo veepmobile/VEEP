@@ -1,0 +1,32 @@
+﻿<div class="row">
+    <div class="form-group">
+        <div class='col-sm-2'>
+            <b>Дата: с</b>
+            <div class='input-group date' id='datepicker1'>
+                <input type='text' class="form-control" id="beginDate" name="beginDate" size="10" value="@ViewBag.Filter.FilterBeginDate.ToShortDateString()" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+        <div class='col-sm-2'>
+            <b>по</b>
+            <div class='input-group date' id='datepicker2'>
+                <input type='text' class="form-control" id="endDate" name="endDate" size="10" value="@ViewBag.Filter.FilterEndDate.ToShortDateString()" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+        <div class='col-sm-1'>
+            <br />
+            <button id="dateselect" class="btn" type="button">Показать</button>
+        </div>
+        <div class='col-sm-1'>
+            <br />
+            <button id="dateclear" class="btn" type="button">Очистить</button>
+        </div>
+
+    </div>
+
+</div>

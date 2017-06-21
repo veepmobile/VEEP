@@ -1,0 +1,68 @@
+﻿@model List<RestService.Models.Tip>
+
+@{
+    int n = 0;
+    if (Model != null && Model.Count() > 0)
+    {
+       <table class="table table-striped" border="1" cellpadding="3" cellspacing="0" style="padding-left:-20px!important;">
+            <thead style="background-color:#1a4471; color:#ffffff;">
+            <th align="center" valign="middle" width="150px">Дата заказа</th>
+            <th align="center" valign="middle">Ресторан</th>
+            <th align="center" valign="middle">Стол</th>
+            <th align="center" valign="middle">Сумма заказа, руб.</th>
+            <th align="center" valign="middle">Чаевые, %</th>
+            <th align="center" valign="middle">Чаевые, руб.</th>
+            <th align="center" valign="middle">Чаевые к выдаче, руб.</th>
+            <th align="center" valign="middle">Официант</th>
+            </thead>
+            @{
+        foreach (var item in Model)
+        {
+                <text>
+                <tr id="@item.ID">
+                    <td align="center" valign="top">@((item.PaymentDate.Year > 1970) ? (item.PaymentDate.ToShortDateString() + " " + item.PaymentDate.ToShortTimeString()) : "")</td>  
+                    <td align="center" valign="top">@item.RestaurantName</td>     
+                    <td align="center" valign="top">@item.TableID</td>       
+                    <td align="center" valign="top">@item.OrderSum</td>  
+                    <td align="center" valign="top">@item.TippingProcent</td>  
+                    <td align="center" valign="top">@item.TippingSum</td> 
+                    <td align="center" valign="top">@item.TippingResult</td> 
+                    <td align="center" valign="top">@item.WaiterName</td> 
+                </tr>
+                </text>
+        }
+            }
+        </table>
+    }
+    else
+    {
+        <center><h5 style="color:red;">Ничего не найдено</h5></center>
+    }
+    
+    
+    <script type="text/javascript">
+
+        function search() {
+            var filters = {
+                FilterBeginDate: $('#beginDate').val(),
+                FilterEndDate: $('#endDate').val(),
+                FilterRestaurantID: @ViewBag.FilterRestaurantID
+            };
+            $('#LoadingImage').show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("TipLoads", "Lk")',
+                data: filters,
+                success: function (msg) {
+                    $('#LoadingImage').hide();
+                    $('#placedata').empty().html(msg);
+                }
+            });
+        }
+
+
+    </script>
+}
+
+
+    

@@ -16,6 +16,8 @@
             <th align="center" valign="middle">Номер заказа в банке</th>
             <th align="center" valign="middle">Сумма без скидки, руб.</th>
             <th align="center" valign="middle">Скидка, руб.</th>
+            <th align="center" valign="middle">Скидка Veep, %</th>
+            <th align="center" valign="middle">Скидка Veep, руб.</th>
             <th align="center" valign="middle">Сумма с учетом скидки, руб.</th>
             <th align="center" valign="middle">Состав заказа</th>
             <th align="center" valign="middle">Статус заказа</th>
@@ -36,6 +38,8 @@
                     <td align="center" valign="top">@item.OrderNumberBank</td>  
                     <td align="center" valign="top">@item.OrderPayment.OrderTotal</td> 
                     <td align="center" valign="top">@item.OrderPayment.DiscountSum</td> 
+                    <td align="center" valign="top">@item.MainDiscountProc</td> 
+                    <td align="center" valign="top">@item.MainDiscountSum</td> 
                     <td align="center" valign="top">@item.OrderPayment.OrderSum</td> 
                     <td align="center" valign="top" style="cursor: pointer;"><img src="/images/search.png" onclick="order_details(@item.ID);" width="16" />
                     </td> 

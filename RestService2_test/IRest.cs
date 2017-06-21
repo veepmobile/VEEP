@@ -107,7 +107,7 @@ namespace RestService
         ResponseFormat = WebMessageFormat.Xml,
         RequestFormat = WebMessageFormat.Xml,
         UriTemplate = "get")]
-        List<Models.DiscountCard> FindDiscountCard(string phoneNumber, string user_key, string phoneCode = "7", int language = 0);
+        List<Models.DiscountCard> FindDiscountCard(string phoneNumber, string user_key, string phoneCode = "7");
 
         //Привязка дисконтной карты в Системе
         [OperationContract]
@@ -252,13 +252,6 @@ namespace RestService
         RequestFormat = WebMessageFormat.Xml,
         UriTemplate = "get")]
         List<Order> GetPaymentBinding(int restaurantID, string orderNumber, decimal paymentSum, long paymentBank, string user_key, string bindingId, decimal tippingProcent, string phoneCode = "7", int language = 0);
-
-        [OperationContract(Name = "GetPaymentBindingDiscount")]
-        [WebInvoke(Method = "PUT",
-        ResponseFormat = WebMessageFormat.Xml,
-        RequestFormat = WebMessageFormat.Xml,
-        UriTemplate = "get")]
-        List<Order> GetPaymentBinding(int restaurantID, string orderNumber, decimal paymentSum, long paymentBank, string user_key, string bindingId, decimal tippingProcent, long? discountCardNumber, string phoneCode = "7", int language = 0);
 
         //Оплата заказа без связок
         [OperationContract]

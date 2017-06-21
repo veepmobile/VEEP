@@ -1,0 +1,116 @@
+﻿@model List<RestService.Models.Order>
+
+@{
+    int n = 0;
+    if (Model != null && Model.Count() > 0)
+    {
+       <table class="table table-striped" border="1" cellpadding="3" cellspacing="0" style="padding-left:-20px!important;">
+            <thead style="background-color:#1a4471; color:#ffffff;">
+            <th align="center" valign="middle" width="150px">Дата</th>
+            <th align="center" valign="middle">Ресторан</th>
+            <th align="center" valign="middle">Стол</th>
+            <th align="center" valign="middle">ФИО клиента</th>
+            <th align="center" valign="middle">Телефон клиента</th>
+            <th align="center" valign="middle">Номер заказа в ИМ</th>
+            <th align="center" valign="middle">Номер заказа в сервисе</th>
+            <th align="center" valign="middle">Номер заказа в банке</th>
+            <th align="center" valign="middle">Сумма без скидки, руб.</th>
+            <th align="center" valign="middle">Скидка, руб.</th>
+            <th align="center" valign="middle">Сумма с учетом скидки, руб.</th>
+            <th align="center" valign="middle">Состав заказа</th>
+            <th align="center" valign="middle">Статус заказа</th>
+            <th align="center" valign="middle">Официант</th>
+            </thead>
+            @{
+        foreach (var item in Model)
+        {
+                <text>
+                <tr id="@item.ID">
+                    <td align="center" valign="top">@((item.OrderDate.Year > 1970) ? (item.OrderDate.ToShortDateString() + " " + item.OrderDate.ToShortTimeString()) : "")</td>  
+                    <td align="center" valign="top">@item.RestaurantName</td>     
+                    <td align="center" valign="top">@item.TableID</td>     
+                    <td align="center" valign="top">@item.FIO</td>      
+                    <td align="center" valign="top">@item.PhoneNumber</td>      
+                    <td align="center" valign="top">@item.OrderNumber</td>         
+                    <td align="center" valign="top">@item.OrderNumberService</td>  
+                    <td align="center" valign="top">@item.OrderNumberBank</td>  
+                    <td align="center" valign="top">@item.OrderPayment.OrderTotal</td> 
+                    <td align="center" valign="top">@item.OrderPayment.DiscountSum</td> 
+                    <td align="center" valign="top">@item.OrderPayment.OrderSum</td> 
+                    <td align="center" valign="top" style="cursor: pointer;"><img src="/images/search.png" onclick="order_details(@item.ID);" width="16" />
+                    </td> 
+                    <!--<td align="center" valign="top" style="cursor: pointer;"><img src="/images/search.png" onclick="order_details('items_item.ID');" width="16" />
+                        <div class="modal_div" id="items_item.ID" style="display: none;">item.OrderItems</div>
+                    </td> -->
+                    <td align="center" valign="top">@item.OrderStatus.StatusName</td> 
+                    <td align="center" valign="top">@item.Waiter.Name</td>  
+                </tr>
+                </text>
+        }
+            }
+        </table>
+    }
+    else
+    {
+        <center><h5 style="color:red;">Ничего не найдено</h5></center>
+    }
+    
+            <div class="modal fade" name="OrderDetails" id="OrderDetails" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button class="close" type="button" data-dismiss="modal">x</button><br /><br />
+                        <center>
+                            <div id="order_title"></div>
+                            <div id="order_items" class="order_items"></div>
+                        </center>
+                        <br />
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    
+    <script type="text/javascript">
+        
+        function search() {
+            var filters = {
+                FilterBeginDate: $('#beginDate').val(),
+                FilterEndDate: $('#endDate').val(),
+                FilterRestNetworkID: $('#RestNetwork').val(),
+                FilterRestaurantID: $('#Restaurants').val(),
+            };
+            $('#LoadingImage').show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("OrdersLoad", "Orders")',
+                data: filters,
+                success: function (msg) {
+                    $('#LoadingImage').hide();
+                    $('#placedata').empty().html(msg);
+                }
+            });
+        }
+
+        function order_details(id) {
+            $.ajax({
+                type: "POST",
+                url: "/Orders/OrdersDetails?id=" + id,
+                success: function (data) {
+                    if (data != null && data != "") {
+                        var details = data;
+                        $("#order_title").html("<b><font color=\"navy\">Заказ № " + id + "</font></b><br/><br/>");
+                        $("#order_items").html(data);
+                        $("#OrderDetails").modal();
+                    }
+                }
+            });
+
+        }
+    </script>
+}
+
+
+    

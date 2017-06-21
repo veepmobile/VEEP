@@ -1,0 +1,8 @@
+﻿
+<div class="row">
+    <ul class="nav nav-tabs">
+        <li class="@(ViewBag.PageID == 100 ? "active" : "")">@Html.ActionLink("Чаевые", "Tips", "Lk")</li>
+        <li class="@(ViewBag.PageID == 101 ? "active" : "")">@Html.ActionLink("Премия", "Prize", "Lk")</li>
+        <li class="@(ViewBag.PageID == 102 ? "active" : "")">@Html.ActionLink("Премия (повторная оплата)", "PrizeOther", "Lk")</li>
+    </ul>
+</div>

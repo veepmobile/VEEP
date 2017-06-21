@@ -24,20 +24,34 @@ namespace RestService.Controllers
         {
             string ret = "";
             int mode = 1;
-            decimal order_rest_sum;
 
             if (!String.IsNullOrWhiteSpace(orderId))
             {
                 mode = Configs.GetMode(restaurantID);
-
+                /*
+                switch (restaurantID)
+                {
+                    case 730410002: /*test
+                        mode = 0;
+                        break;
+                    case 202930001: /*Luce
+                        mode = 2;
+                        break;
+                    case 209631111: /*Vogue
+                        mode = 3;
+                        break;
+                    case 880540002: /*Хлеб и вино - Улица 1905 года
+                        mode = 4;
+                        break;
+                }
+                */
                 //Запрашиваем статус заказа в платежной системе
                 orderStatusResponse response = new orderStatusResponse();
                 response = MerchantData.getOrderStatus(orderId,mode);
                 if (response != null)
                 {
-                    order_rest_sum = Convert.ToDecimal(response.Amount / 100);
                     //Вставка данных о платеже в БД
-                    string result = OrderData.SqlInsertStatus(response.OrderNumber, orderId, response.OrderStatus, response.ErrorCode, response.ErrorMessage, response.Pan, response.expiration, response.cardholderName, response.Amount, response.Ip, response.clientId, response.bindingId, order_rest_sum);
+                    string result = OrderData.SqlInsertStatus(orderId, response.OrderStatus, response.ErrorCode, response.ErrorMessage, response.OrderNumber, response.Pan, response.expiration, response.cardholderName, response.Amount, response.Ip, response.clientId, response.bindingId);
 
                     Helper.saveToLog(0, "", "getOrderStatus", "restaurantID=" + restaurantID.ToString() + "orderId=" + orderId + ", orderStatus=" + response.OrderStatus.ToString() + ", errorCode=" + response.ErrorCode.ToString() + ", errorMessagge=" + response.ErrorMessage + ", orderNumber=" + response.OrderNumber + ", pan=" + response.Pan + ", expiration=" + response.expiration + ", cardholderName=" + response.cardholderName + ", amount=" + response.Amount.ToString() + ", ip=" + response.Ip + ", clientId=" + response.clientId + ", bindingId=" + response.bindingId, "Результат платежа: errorCode=" + response.ErrorCode.ToString() + ", errorMessage=" + response.ErrorMessage, 0);
 
@@ -59,9 +73,7 @@ namespace RestService.Controllers
                             //Оплата чаевых
                             //расчет чаевых в рубл с округлением
 
-                            //decimal sum = (order.TippingProcent * order.OrderPayment.OrderSum) / 100;
-                            decimal sum = (order.TippingProcent * order_rest_sum) / 100;
-
+                            decimal sum = (order.TippingProcent * order.OrderPayment.OrderSum) / 100;
                             decimal tippingSum = Decimal.Round(sum);
                             //double tippingSum = Math.Round(((double)order.TippingProcent * order.OrderPayment.OrderBank) / 100);
                             tip = GetPaymentTipping(order.PhoneCode, order.PhoneNumber, restaurantID, order.TableID, order.OrderNumber, order.UserKey, response.clientId, response.bindingId, (order.OrderPayment.OrderBank/100).ToString(), tippingSum, order.TippingProcent, order.Waiter.ID, order.Waiter.Name);
@@ -93,9 +105,29 @@ namespace RestService.Controllers
 
                                 endpointName = Configs.GetEndpoint(restaurantID);
                                 address = Configs.GetAddress(restaurantID);
+                                /*
+                                switch (restaurantID)
+                                {
+                                    case 730410002: /*Luce
+                                        endpointName = "BasicHttpBinding_IIntegrationCMD";
+                                        address = "http://95.84.168.113:9090/";
+                                        break;
+                                    case 202930001: /*Luce
+                                        endpointName = "BasicHttpBinding_IIntegrationCMD";
+                                        address = "http://92.38.32.63:9090/";
+                                        break;
+                                    case 209631111: /*Vogue
+                                        endpointName = "BasicHttpBinding_IIntegrationCMD1";
+                                        address = "http://185.26.193.5:9090/";
+                                        break;
+                                    case 880540002: /*Хлеб и вино - Улица 1905 года
+                                        endpointName = "BasicHttpBinding_IIntegrationCMD2";
+                                        address = "http://95.84.146.191:9090/";
+                                        break;
+                                }
+                            */
 
-
-                            IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
+                                IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
                             IntegrationCMD.Order[] orders = cmd.GetPayment(order.RestaurantID, order.OrderNumber, order.OrderPayment.OrderSum, DateTime.Now);
                             int error = 0;
                             string error_msg = "";

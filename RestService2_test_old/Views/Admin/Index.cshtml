@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "Главная";
+    ViewBag.PageID = 0;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- Меню -->
+@Html.Partial("_Menu")
+<br />
+<!-- Фильтры 
+Html.Partial("_FilterSelect")-->
+<!-- loading -->
+<div class="row">
+    <div class="col-md-12">
+        <br />
+        <center>
+            <div id="LoadingImage" style="display: none">
+                <font color="green">Загрузка данных...</font>&nbsp;&nbsp;&nbsp;&nbsp;<img src="/images/ajax-loader.gif" />
+            </div>
+        </center>
+    </div>
+</div>
+<div id="placedata">
+    <div style="margin-top: 100px; margin-bottom: 200px; text-align:center;" id="loginForm">
+        <table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td align="right" valign="top"><b>Логин:</b>&nbsp;&nbsp;&nbsp;</td>
+                <td align="left" valign="middle"><input type="text" class="form-control" name="name" id="name" style="width:200px;" /><br /></td>
+            <tr>
+                <td align="right" valign="top"><b>Пароль:</b>&nbsp;&nbsp;&nbsp;</td>
+                <td align="left" valign="middle"><input type="password" class="form-control" name="psw" id="psw" style="width:200px;" /></td>
+            </tr>
+            <tr>
+                <td align="center" valign="middle" colspan="2">
+                    <br /><br />
+                    <button id="btn" class="btn" type="button">Войти</button>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" valign="middle" colspan="2">
+                    <br /><br />
+                    <div id="result"></div>
+                </td>
+            </tr>
+        </table>
+        
+    </div>
+</div>
+
+@section Scripts 
+{
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#logout').hide();
+        $('#btn').on('click', function (e) {
+            e.preventDefault();
+            var name = $('#name').val();
+            var psw = $('#psw').val();
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Login?name=" + name + "&psw=" + psw,
+                success: function (data) {
+                        if (data != null && data != "") {
+                            $('#loginForm').html('');
+                            $('#logout').show();
+                        }
+                        else {
+                            $('#result').html("<font color='red'><b>Неверный логин/пароль</b></font>");
+                        }
+                }
+            });
+        });
+    });
+</script>
+    }

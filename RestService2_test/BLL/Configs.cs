@@ -19,7 +19,7 @@ namespace RestService.BLL
             }
         }
 
-
+    
         /// <summary>
         /// Host платежного шлюза
         /// </summary>

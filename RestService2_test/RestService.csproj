@@ -248,7 +248,7 @@
     </Content>
     <None Include="Service References\IntegrationCMD\configuration91.svcinfo" />
     <None Include="Service References\IntegrationCMD\configuration.svcinfo" />
-    <None Include="Service References\IntegrationCMD\IntegrationCMD.wsdl" />
+    <Content Include="Service References\IntegrationCMD\IntegrationCMD.wsdl" />
     <None Include="Service References\IntegrationCMD\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -293,13 +293,16 @@
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\TipController.cs" />
+    <Compile Include="Controllers\LkController.cs" />
     <Compile Include="Data\AccoundData\AccountData.cs" />
     <Compile Include="Data\AdminData\AdminData.cs" />
     <Compile Include="Data\DiscountCardData\DiscountCardData.cs" />
+    <Compile Include="Data\Lk\LkData.cs" />
     <Compile Include="Data\MerchantData\MerchantData.cs" />
     <Compile Include="Data\Order\OrderData.cs" />
     <Compile Include="Data\PaymentData\PaymentData.cs" />
     <Compile Include="Data\Personal\PersonalData.cs" />
+    <Compile Include="Data\Report\ReportData.cs" />
     <Compile Include="Data\Restaurant\RestaurantData.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -307,6 +310,7 @@
     <Compile Include="Models\Accountcs.cs" />
     <Compile Include="Models\DiscountCard.cs" />
     <Compile Include="Models\Filters.cs" />
+    <Compile Include="Models\Lk.cs" />
     <Compile Include="Models\Merchant.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Payments.cs" />
@@ -421,6 +425,22 @@
     <Content Include="Views\Tip\TipLoad.cshtml" />
     <Content Include="Views\Accounts\AccountsLoad.cshtml" />
     <Content Include="veeppay.crt" />
+    <Content Include="Views\Reports\MainReport.cshtml" />
+    <Content Include="Views\Reports\MainReportLoad.cshtml" />
+    <Content Include="Views\Lk\Index.cshtml" />
+    <Content Include="Views\Shared\_Layout_Lk.cshtml" />
+    <Content Include="Views\Shared\_Menu_Lk.cshtml" />
+    <Content Include="Views\Lk\Tips.cshtml" />
+    <Content Include="Views\Lk\TipsLoad.cshtml" />
+    <Content Include="Views\Lk\Report.cshtml" />
+    <Content Include="Views\Lk\Prize.cshtml" />
+    <Content Include="Views\Lk\PrizeLoad.cshtml" />
+    <Content Include="Views\Lk\PrizeOther.cshtml" />
+    <Content Include="Views\Lk\PrizeOtherLoad.cshtml" />
+    <Content Include="Views\Reports\Prize.cshtml" />
+    <Content Include="Views\Reports\PrizeLoad.cshtml" />
+    <Content Include="Views\Reports\PrizeOther.cshtml" />
+    <Content Include="Views\Reports\PrizeOtherLoad.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -450,9 +470,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
-          <DevelopmentServerPort>49635</DevelopmentServerPort>
+          <DevelopmentServerPort>49630</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:49635/</IISUrl>
+          <IISUrl>http://localhost:49636/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

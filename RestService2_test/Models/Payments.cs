@@ -42,6 +42,7 @@ namespace RestService.Models
         public string OrderSum { get; set; }                 // Сумма заказа
         public decimal TippingProcent { get; set; }                 // Чаевые в процентах
         public decimal TippingSum { get; set; }                 // Чаевые в рублях
+        public decimal TippingResult { get; set; }                 // Чаевые к выдаче
         public DateTime PaymentDate { get; set; }                 // Дата платежа
         public int WaiterID { get; set; }          // ID официанта
         public string WaiterName { get; set; }          // ФИО официанта

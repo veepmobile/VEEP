@@ -1,0 +1,158 @@
+﻿@model List<RestService.Models.RestNetwork>
+@{
+    ViewBag.Title = "Рестораны";
+    ViewBag.PageID = 1;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- Меню -->
+@Html.Partial("_Menu")
+<br />
+
+<div id="placedata">
+    @{
+    int n = 0;
+    if (Model != null && Model.Count() > 0)
+    {
+        foreach (var item in Model)
+        {
+            if(item.ID != 0)
+            {
+            <h4>Сеть ресторанов @item.Name</h4>   
+            <span name="@item.ID" class="description" onclick="show_network(@item.ID)">Показать описание сети</span><br />
+            <table id="@item.ID" class="table table-striped off" border="0" cellpadding="3" cellspacing="0" style="padding-left:0px!important; display:none;">
+                <tr>
+                    <td align="left" width="300">ID сети ресторанов</td>
+                    <td align="left">@item.ID</td>
+                </tr>
+                <tr>
+                    <td align="left" width="300">Логотип</td>
+                    <td align="left"><img src="/images/logo_small/@item.Logo" border="0" /></td>
+                </tr>
+                <tr>
+                    <td align="left" width="300">WWW</td>
+                    <td align="left"><a href="@item.WWW" target="_blank">@item.WWW</a></td>
+                </tr>
+                <tr>
+                    <td align="left" width="300">Описание</td>
+                    <td align="left">@item.Notes</td>
+                </tr>
+                <tr>
+                    <td align="left" width="300">Фото</td>
+                    <td align="left"><img src="/images/img/@item.Image" border="0" width="500" /></td>
+                </tr>
+               <!-- <tr>
+                    <td align="left" colspan="2"><button id="editnet_item.ID" value="item.ID" class="btn" type="button">Редактировать сеть</button>&nbsp;&nbsp;&nbsp;&nbsp;<button id="delnet_item.ID" value="item.ID" class="btn" type="button">Удалить сеть</button></td>
+                </tr>-->
+            </table>
+        
+            <div style="padding-left: 30px; padding-top:10px;">
+            <!--<h5><b>Рестораны item.Name:</b></h5>-->
+                @{
+                    foreach (var rest in item.Restaurants)
+                    {
+                        <text>
+                        <span class="@((rest.IsActive == 1)? "is_active" : "no_active")"></span><b>Ресторан @rest.Name</b>, @rest.Address &nbsp;&nbsp;&nbsp;&nbsp;<span name="@rest.ID" class="description" onclick="show_table(@rest.ID)">Показать описание ресторана</span>
+                        <table id="@rest.ID" class="table table-striped off" width="500" border="0" cellpadding="3" cellspacing="0" style="padding-left:0px!important; display:none;">
+                            <tr>
+                                <td align="left" width="300">Наименование ресторана</td>
+                                <td align="left">@rest.Name</td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="300">ID ресторана</td>
+                                <td align="left">@rest.ID</td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="300">Логотип</td>
+                                <td align="left"><img src="/images/logo_small/@rest.Logo" border="0" /></td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="300">Описание ресторана</td>
+                                <td align="left">@rest.Notes</td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="300">Фото ресторана</td>
+                                <td align="left"><img src="/images/img/@rest.Image" border="0" width="500" /></td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="300">Время работы</td>
+                                <td align="left">@rest.WorkTime</td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="300">Телефон</td>
+                                <td align="left">@rest.Phone</td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="300">Адрес</td>
+                                <td align="left">@rest.Address</td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="300">Координаты для геолокации</td>
+                                <td align="left">@rest.Geocode</td>
+                            </tr>
+                             <tr>
+                                <td align="left" width="300">Рейтинг</td>
+                                <td align="left">@rest.Rating</td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="300">Возможность вызова официанта</td>
+                                <td align="left">@((rest.Call == true)? "Да" : "Нет")</td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="300">Возможность учета чаевых</td>
+                                <td align="left">@((rest.Tipping == 1)? "Да" : "Нет")</td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="300">Возможность закрытия стола online</td>
+                                <td align="left">@((rest.IsPay == 1)? "Да" : "Нет")</td>
+                            </tr>
+                            <!--<tr>
+                                <td align="left" colspan="2"><button id="edit_item.ID" value="item.ID" class="btn" type="button">Редактировать ресторан</button>&nbsp;&nbsp;&nbsp;&nbsp;<button id="del_item.ID" value="item.ID" class="btn" type="button">Удалить ресторан</button></td>
+                            </tr>-->
+                        </table>
+                        <hr width="100%" />
+                        </text>
+                    }
+                  }
+                </div>
+            }
+        }
+    }
+}
+
+</div>
+
+<script type="text/javascript">
+
+    function show_table(id) {
+        var c = $('table[id=' + id + ']').attr('class');
+        if (c == 'table table-striped off') {
+            $('table[id=' + id + ']').show().removeClass('table table-striped off').addClass('table table-striped on');
+            $('span[name=' + id + ']').html('Скрыть описание ресторана');
+        }
+        else {
+            $('table[id=' + id + ']').hide().removeClass('table table-striped on').addClass('table table-striped off');
+            $('span[name=' + id + ']').html('Показать описание ресторана');
+        }
+    }
+
+    function show_network(id) {
+        var c = $('table[id=' + id + ']').attr('class');
+        if (c == 'table table-striped off') {
+            $('table[id=' + id + ']').show().removeClass('table table-striped off').addClass('table table-striped on');
+            $('span[name=' + id + ']').html('Скрыть описание сети');
+        }
+        else {
+            $('table[id=' + id + ']').hide().removeClass('table table-striped on').addClass('table table-striped off');
+            $('span[name=' + id + ']').html('Показать описание сети');
+        }
+    }
+</script>
+
+@section Scripts 
+{
+
+
+
+}

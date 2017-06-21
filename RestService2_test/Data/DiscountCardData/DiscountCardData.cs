@@ -12,7 +12,7 @@ namespace RestService
     public class DiscountCardData
     {
         //Загрузка привязанных карт в Приложение
-        public static List<DiscountCard> SqlFindDiscountCard(int accountID, string user_key)
+        public static List<Models.DiscountCard> SqlFindDiscountCard(int accountID, string user_key)
         {
             List<Models.DiscountCard> list = new List<Models.DiscountCard>();
             try
@@ -28,9 +28,9 @@ namespace RestService
                     {
                         Models.DiscountCard card = new Models.DiscountCard();
                         card.ID = (int)reader["id"];
-                        //card.RestaurantID = (int)reader["restaurant_id"];
+                        card.RestaurantID = (int)reader["restaurant_id"];
                         card.CardNumber = (Int64)reader["card_number"];
-                        card.CardName = (String)reader["card_name"];
+                        //card.CardName = (String)reader["card_name"];
                         Models.Account account = new Models.Account();
                         account.ID = (int)reader["account_id"];
                         card.Account = account;
@@ -40,18 +40,17 @@ namespace RestService
                             card.LastDate = (DateTime)reader["last_date"];
                         }
                         card.CardStatus = (int)reader["status"];
-                        Helper.saveToLog(0, user_key, "SqlFindDiscountCard", "accountID=" + accountID + ", cardStatus=" + card.CardStatus.ToString(), "", 0);
                         if (card != null)
                         {
                             list.Add(card);
                         }
                     }
                 }
-
                 return list;
             }
             catch (Exception e)
             {
+                // Helper.saveToLog(0, user_key, "SqlFindDiscountCard", "phoneNumber=" + phoneNumber, "Внутренняя ошибка сервиса: " + e.Message, 1);Helper.saveToLog(0, user_key, "SqlFindDiscountCard", "accountID=" + accountID, "Внутренняя ошибка сервиса: " + e.Message, 1);
                 Helper.saveToLog(0, user_key, "SqlFindDiscountCard", "accountID=" + accountID, "Внутренняя ошибка сервиса: " + e.Message, 1);
                 return null;
             }
@@ -79,8 +78,8 @@ namespace RestService
                     oIdent = cmd.ExecuteScalar();
                     int pid = (oIdent != DBNull.Value) ? Convert.ToInt32(oIdent) : 0;
                     param = "@card_number=" + cardNumber + ", @card_name=" + cardName + ", @account_id=" + accountID;
-                    if(pid > 0)
-                    { 
+                    if (pid > 0)
+                    {
                         Helper.saveToLog(accountID, user_key, "SqlInsertDiscountCard", "param: " + param, "Дисконтная карта привязана: card.ID = " + pid.ToString(), 0);
                     }
                     if (pid < 0)
@@ -101,6 +100,7 @@ namespace RestService
                 return 0;
             }
         }
+
 
 
         //Изменение статуса / удаление дисконтной карты в Системе
@@ -132,32 +132,7 @@ namespace RestService
             }
         }
 
-        //Изменение клиентом названия карты
-        public static int SqlUpdateDiscountCardName(int accountID, string user_key, Int64 cardNumber, string cardName)
-        {
-            try
-            {
-                using (SqlConnection con = new SqlConnection(BLL.Configs.ConnectionString))
-                {
-                    SqlCommand cmd = new SqlCommand("Rest.dbo.UpdateDiscountCardName", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@account_id", SqlDbType.Int).Value = accountID;
-                    cmd.Parameters.Add("@card_number", SqlDbType.BigInt).Value = cardNumber;
-                    cmd.Parameters.Add("@card_name", SqlDbType.VarChar).Value = cardName;
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-                    Helper.saveToLog(0, user_key, "SqlUpdateDiscountCardName", "accountID: " + accountID + ", cardNumber: " + cardNumber + ", cardName: " + cardName, "", 0);
-                    return 1;
-                }
-            }
-            catch (Exception e)
-            {
-                Helper.saveToLog(0, user_key, "SqlUpdateDiscountCardName", "accountID: " + accountID + ", cardNumber: " + cardNumber + ", cardName: " + cardName, "Внутренняя ошибка сервиса: " + e.Message, 1);
-                return 0;
-            }
-        }
-
-        
+/*
         //Получение номер дисконтной карты, привязанной к ресторану
         public static Int64? SqlGetDiscountCard(string phoneNumber, string user_key, int restaurant_id, string phoneCode = "7")
         {
@@ -194,8 +169,63 @@ namespace RestService
                 return null;
             }
         }
-        
+*/
 
+        //Изменение клиентом названия карты
+        public static int SqlUpdateDiscountCardName(int accountID, string user_key, Int64 cardNumber, string cardName)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(BLL.Configs.ConnectionString))
+                {
+                    SqlCommand cmd = new SqlCommand("Rest.dbo.UpdateDiscountCardName", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@account_id", SqlDbType.Int).Value = accountID;
+                    cmd.Parameters.Add("@card_number", SqlDbType.BigInt).Value = cardNumber;
+                    cmd.Parameters.Add("@card_name", SqlDbType.VarChar).Value = cardName;
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    Helper.saveToLog(0, user_key, "SqlUpdateDiscountCardName", "accountID: " + accountID + ", cardNumber: " + cardNumber + ", cardName: " + cardName, "", 0);
+                    return 1;
+                }
+            }
+            catch (Exception e)
+            {
+                Helper.saveToLog(0, user_key, "SqlUpdateDiscountCardName", "accountID: " + accountID + ", cardNumber: " + cardNumber + ", cardName: " + cardName, "Внутренняя ошибка сервиса: " + e.Message, 1);
+                return 0;
+            }
+        }
+
+
+        //Список номеров дисконтных карт, привязанных к клиенту
+        public static List<string> SqlDiscountCardList(int accountID)
+        {
+            List<string> list = new List<string>();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(BLL.Configs.ConnectionString))
+                {
+                    SqlCommand cmd = new SqlCommand("Rest.dbo.FindDiscountCard", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@account_id", SqlDbType.Int).Value = accountID;
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        string num = reader["card_number"].ToString();
+                        if (!String.IsNullOrEmpty(num))
+                        {
+                            list.Add(num);
+                        }
+                    }
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                 return null;
+            }
+        }
 
     }
 }
