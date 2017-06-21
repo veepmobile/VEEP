@@ -115,7 +115,7 @@ namespace RestService
         ResponseFormat = WebMessageFormat.Xml,
         RequestFormat = WebMessageFormat.Xml,
         UriTemplate = "get")]
-        int InsertDiscountCard(string phoneNumber, int restaurantID, Int64 cardNumber, int cardStatus, string user_key, string phoneCode = "7");
+        int InsertDiscountCard(string phoneNumber, long cardNumber, string cardName, string user_key, string phoneCode = "7", int language = 0);
 
         //Изменение статуса (удаление) дисконтной карты в Системе
         [OperationContract]
@@ -123,7 +123,23 @@ namespace RestService
         ResponseFormat = WebMessageFormat.Xml,
         RequestFormat = WebMessageFormat.Xml,
         UriTemplate = "get")]
-        Int64 UpdateDiscountCard(string phoneNumber, Int64 cardNumber, int cardStatus, string user_key, string phoneCode = "7");
+        long? UpdateDiscountCard(string phoneNumber, long? cardNumber, int cardStatus, string user_key, string phoneCode = "7", int language = 0);
+
+        //Редактирование названия дисконтной карты
+        [OperationContract]
+        [WebInvoke(Method = "PUT",
+        ResponseFormat = WebMessageFormat.Xml,
+        RequestFormat = WebMessageFormat.Xml,
+        UriTemplate = "get")]
+        int UpdateDiscountCardName(string phoneNumber, long cardNumber, string cardName, string user_key, string phoneCode = "7", int language = 0);
+
+        //Применение/проверка дисконтной карты
+        [OperationContract]
+        [WebInvoke(Method = "PUT",
+        ResponseFormat = WebMessageFormat.Xml,
+        RequestFormat = WebMessageFormat.Xml,
+        UriTemplate = "get")]
+        int CheckDiscountCard(string phoneNumber, int restaurantID, string orderNumber, string user_key, long? discountCard = null, string phoneCode = "7", int language = 0);
 
         #endregion
 
@@ -189,6 +205,13 @@ namespace RestService
         RequestFormat = WebMessageFormat.Xml,
         UriTemplate = "get")]
         List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0);
+
+        [OperationContract(Name = "GetOrderDiscount")]
+        [WebInvoke(Method = "PUT",
+        ResponseFormat = WebMessageFormat.Xml,
+        RequestFormat = WebMessageFormat.Xml,
+        UriTemplate = "get")]
+        List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, long? discountCard = null, string phoneCode = "7", int language = 0);
 
         //Вызов официанта
         [OperationContract]

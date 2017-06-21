@@ -270,26 +270,81 @@ namespace RestService
         }
 
         //Привязка дисконтной карты в Системе
-        public int InsertDiscountCard(string phoneNumber, int restaurantID, Int64 cardNumber, int cardStatus, string user_key, string phoneCode = "7")
+        public int InsertDiscountCard(string phoneNumber, long cardNumber, string cardName, string user_key, string phoneCode = "7", int language = 0)
         {
+            int ret = 0; // "Карта не привязана";
             int ID = 0;
-            if (cardNumber != 0 && CheckUserKey(user_key) != "")
+            if (!String.IsNullOrWhiteSpace(phoneNumber) && cardNumber != 0 && CheckUserKey(user_key) != "")
             {
-                ID = DiscountCardData.SqlInsertDiscountCard(phoneNumber, restaurantID, cardNumber, cardStatus, user_key);
+                string check = CheckSession(phoneNumber); //проверка открытой сессии
+                if (check != "")
+                {
+                    int accountID = Convert.ToInt32(AccountData.SqlFindClientId(phoneNumber, phoneCode));
+                    ID = DiscountCardData.SqlInsertDiscountCard(accountID, cardNumber, cardName, user_key);
+                    if (ID < 0)
+                    {
+                        ret = 1; // "Карта уже привязана другим пользователем";
+                    }
+                    if (ID > 0)
+                    {
+                        ret = 2; // "Для подтверждения привязки при посещении ресторана авторизуйтесь в заказе и предъявите дисконтную карту официанту. Обратите внимание карту можно привязать только к одному профилю!";
+                    }
+                }
             }
-            return ID;
+            return ret;
         }
 
+
         //Изменение статуса (удаление) дисконтной карты в Системе
-        public Int64 UpdateDiscountCard(string phoneNumber, Int64 cardNumber, int cardStatus, string user_key, string phoneCode = "7")
+        public long? UpdateDiscountCard(string phoneNumber, long? cardNumber, int cardStatus, string user_key, string phoneCode = "7", int language = 0)
         {
-            if (CheckUserKey(user_key) != "")
+            if (!String.IsNullOrWhiteSpace(phoneNumber) && cardNumber != 0 && CheckUserKey(user_key) != "")
             {
-                return DiscountCardData.SqlUpdateDiscountCard(phoneNumber, user_key, cardNumber, cardStatus);
+                string check = CheckSession(phoneNumber); //проверка открытой сессии
+                if (check != "")
+                {
+                    int accountID = Convert.ToInt32(AccountData.SqlFindClientId(phoneNumber, phoneCode));
+                    return DiscountCardData.SqlUpdateDiscountCard(accountID, user_key, cardNumber, cardStatus);
+                }
             }
             return 0;
         }
 
+        //Редактирование названия дисконтной карты
+        public int UpdateDiscountCardName(string phoneNumber, long cardNumber, string cardName, string user_key, string phoneCode = "7", int language = 0)
+        {
+            if (!String.IsNullOrWhiteSpace(phoneNumber) && cardNumber != 0 && CheckUserKey(user_key) != "")
+            {
+                string check = CheckSession(phoneNumber); //проверка открытой сессии
+                if (check != "")
+                {
+                    int accountID = Convert.ToInt32(AccountData.SqlFindClientId(phoneNumber, phoneCode));
+                    return DiscountCardData.SqlUpdateDiscountCardName(accountID, user_key, cardNumber, cardName);
+                }
+            }
+            return 0;
+        }
+
+        //Применение/проверка дисконтной карты
+        public int CheckDiscountCard(string phoneNumber, int restaurantID, string orderNumber, string user_key, long? discountCard, string phoneCode = "7", int language = 0)
+        {
+            Helper.saveToLog(0, user_key, " CheckDiscountCard", "restaurant_id: " + restaurantID.ToString() + ", discountCard: " + discountCard.ToString(), "", 0);
+            List<Order> list = new List<Order>();
+            list = GetOrder(restaurantID, orderNumber, user_key, discountCard, phoneCode, language);
+            if (list != null)
+            {
+                foreach (var item in list)
+                {
+                    if (item.DiscountCard != null && item.DiscountCard.CardStatus == 1)
+                    {
+                        long? result_status = UpdateDiscountCard(phoneNumber, discountCard, 1, user_key, phoneCode, language);
+                        return 0; // "Скидка применена";
+                    }
+                }
+            }
+
+            return 1; // "Скидка не применилась. Повторите попытку или обратитесь к официанту";
+        }
 
         #endregion
 
@@ -491,41 +546,28 @@ namespace RestService
                 int techItem = Int32.Parse(qr.Substring(9, 3));
 
                 int restaurantID = RestaurantData.GetRestaurantID(rest);
+
                 //Заглушка
-                //techItem = 2;
+                //techItem = 695;
                 //restaurantID = 202930001; --боевой
                 //для теста 
-                // restaurantID = 730410002; //тестовый
+                //restaurantID = 730410002; //тестовый
 
+                /* При первоначальном поиске заказа дисконтной карты еще нет
                 //Получение номера привязанной дисконтной карты
                 DiscountCard card = new DiscountCard();
                 card.CardNumber = DiscountCardData.SqlGetDiscountCard(phoneNumber, user_key, restaurantID);
                 //Запрос к Интеграционному модулю
                 Helper.saveToLog(0, user_key, " IntegrationCMD.FindOrders", "restaurant_id: " + restaurantID.ToString() + ", techItem: " + techItem.ToString() + ", card_number: " + card.CardNumber.ToString(),"", 0);
+                 */
 
                 string endpointName = "";
                 string address = "";
                 endpointName = Configs.GetEndpoint(restaurantID);
-                address = Configs.GetAddress(restaurantID);
-                /*
-                switch (restaurantID)
-                {
-                    case 202930001: /*Luce
-                        endpointName = "BasicHttpBinding_IIntegrationCMD";
-                        address = "http://92.38.32.63:9090/";
-                        break;
-                    case 209631111: /*Vogue
-                        endpointName = "BasicHttpBinding_IIntegrationCMD1";
-                        address = "http://185.26.193.5:9090/";
-                        break;
-                    case 880540002: /*Хлеб и вино - Улица 1905 года
-                        endpointName = "BasicHttpBinding_IIntegrationCMD2";
-                        address = "http://95.84.146.191:9090/";
-                        break;
-                }
-                */
+
                 IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
-                IntegrationCMD.Order[] orders = cmd.FindOrders(restaurantID, techItem, card.CardNumber);
+                //IntegrationCMD.Order[] orders = cmd.FindOrders(restaurantID, techItem, card.CardNumber);
+                IntegrationCMD.Order[] orders = cmd.FindOrders(restaurantID, techItem, null);
 
                 string tableId = "";
                 if (orders != null)
@@ -536,7 +578,8 @@ namespace RestService
                         Helper.saveToLog(0, user_key, " IntegrationCMD.FindOrders", "restaurant_id: " + restaurantID.ToString() + ", techItem: " + techItem.ToString() + ", ErrorCode: " + item.ErrorCode.ToString(), "", 0);
                         if (item.ErrorCode == 43 || item.ErrorCode == 44)
                         {
-                            orders = cmd.FindOrdersFull(restaurantID, techItem, card.CardNumber);
+                            //orders = cmd.FindOrdersFull(restaurantID, techItem, card.CardNumber);
+                            orders = cmd.FindOrdersFull(restaurantID, techItem, null);
                             Helper.saveToLog(0, user_key, " IntegrationCMD.FindOrdersFull", "restaurant_id: " + restaurantID.ToString() + ", techItem: " + techItem.ToString() + ", ErrorCode: " + item.ErrorCode.ToString(), "", 0);
                             break;
                         }
@@ -589,18 +632,21 @@ namespace RestService
                             op.OrderBank = 0;
                             order.OrderPayment = op;
                         }
-                        //Скидка veep
-                        order.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID);
-                        order.MainDiscountSum = order.OrderPayment.OrderSum * order.MainDiscountProc / 100;
-                        order.OrderPayment.OrderSum = order.OrderPayment.OrderSum - order.MainDiscountSum;
+
+                        //Скидка по дисконтной карте
+                        if(item.DiscountCard != null)
+                        {
+                            DiscountCard discard = new DiscountCard();
+                            discard.CardNumber = item.DiscountCard.CardNumber;
+                            discard.CardStatus = item.DiscountCard.CardStatus;
+                            discard.LastDate = item.DiscountCard.LastDate;
+                        }
 
                         order.Message = item.Message;
                         order.ErrorCode = item.ErrorCode;
                         order.Error = item.Error;
 
                         list.Add(order);
-                        //для теста
-                        //if (order.OrderNumber == "00045C98") { order.ErrorCode = 31; }
 
                         if (order.ErrorCode == 31)
                         {
@@ -640,12 +686,16 @@ namespace RestService
                         //Запись заказа в БД
                         OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order);
 
+                        //Скидка veep
+                        foreach (var o in list)
+                        {
+                            o.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID); ;
+                            o.MainDiscountSum = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
+                            o.OrderPayment.OrderSum = o.OrderPayment.OrderSum - o.MainDiscountSum;
+                        }
 
                     }
 
-
-
-                    //OrderData.SqlInsertOrders(phoneNumber, user_key, list);
                     XMLGenerator<List<Order>> listXML = new XMLGenerator<List<Order>>(list);
                     Helper.saveToLog(0, user_key, "FindOrders", "phoneNumber=" + phoneNumber + ", qr=" + qr, "Найдены заказы: " + listXML.GetStringXML(), 0);
 
@@ -668,14 +718,17 @@ namespace RestService
         }
 
         //Получение информации о заказе по его номеру
-        public List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0)
+        public List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, long? discountCard, string phoneCode = "7", int language = 0)
         {
             string phoneNumber = CheckUserKey(user_key);
             if (phoneNumber != "")
             {
-                //Получение номера привязанной дисконтной карты
-                DiscountCard card = new DiscountCard();
-                card.CardNumber = DiscountCardData.SqlGetDiscountCard(phoneNumber, user_key, restaurantID, phoneCode);
+                //Проверка подтверждения дисконтной карты
+                if (discountCard != null)
+                {
+                    Helper.saveToLog(0, user_key, "GetOrderDiscount-пришло", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard, "", 0);
+                }
+
                 //Запрос к Интеграционному модулю
                 string endpointName = "";
                 string address = "";
@@ -683,30 +736,27 @@ namespace RestService
                 endpointName = Configs.GetEndpoint(restaurantID);
                 address = Configs.GetAddress(restaurantID);
 
-                /*
-                switch (restaurantID)
-                {
-                    case 730410002: /*test
-                        endpointName = "BasicHttpBinding_IIntegrationCMD";
-                        address = "http://95.84.168.113:9090/";
-                        break;
-                    case 202930001: /*Luce
-                        endpointName = "BasicHttpBinding_IIntegrationCMD";
-                        address = "http://92.38.32.63:9090/";
-                        break;
-                    case 209631111: /*Vogue
-                        endpointName = "BasicHttpBinding_IIntegrationCMD1";
-                        address = "http://185.26.193.5:9090/";
-                        break;
-                    case 880540002: /*Хлеб и вино - Улица 1905 года
-                        endpointName = "BasicHttpBinding_IIntegrationCMD2";
-                        address = "http://95.84.146.191:9090/";
-                        break;
-                }
-            */
-
                 IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
-                IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, card.CardNumber);
+                IntegrationCMD.Order[] orders;
+                if (discountCard != null)
+                {
+                    Helper.saveToLog(0, user_key, "GetOrderDiscount-отправлено", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard, "", 0);
+                    orders = cmd.GetOrder(restaurantID, orderNumber, discountCard);
+                }
+                else
+                {
+                    orders = cmd.GetOrder(restaurantID, orderNumber, (long?)null);
+                }
+
+                //Для теста
+                string otvet = "";
+                if (orders != null)
+                {
+                    otvet = "ok";
+                }
+                Helper.saveToLog(0, user_key, "IntegrationCMD.GetOrder-запрос", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard + ",otvet=" + otvet, "", 0);
+
+
                 if (orders != null)
                 {
                     List<Order> list = new List<Order>();
@@ -752,18 +802,167 @@ namespace RestService
                             op.OrderBank = 0;
                             order.OrderPayment = op;
                         }
-                        //Скидка veep
-                        order.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID);
-                        order.MainDiscountSum = order.OrderPayment.OrderSum * order.MainDiscountProc / 100;
-                        order.OrderPayment.OrderSum = order.OrderPayment.OrderSum - order.MainDiscountSum;
+
+                        //Скидка по дисконтной карте
+                        if (item.DiscountCard != null)
+                        {
+                            DiscountCard discount_card = new DiscountCard();
+                            discount_card.CardNumber = item.DiscountCard.CardNumber;
+                            discount_card.CardStatus = item.DiscountCard.CardStatus;
+                            order.DiscountCard = discount_card;
+                        }
 
                         order.Message = item.Message;
                         order.Error = item.Error;
                         order.ErrorCode = item.ErrorCode;
                         list.Add(order);
 
-                        //для теста
-                        //if (order.OrderNumber == "00045C98") { order.ErrorCode = 31; }
+                        Helper.saveToLog(0, user_key, "GetOrdersDiscount", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "", 1);
+
+                        //Проверка ошибки 31 - официант работает с заказом
+                        if (item.ErrorCode == 31)
+                        {
+                            order.ErrorCode = 31;
+                            //order.Error = "Официант редактирует заказ. Повторите запрос через минуту.";
+                            order.Error = Helper.GetError(31, language);
+                            Helper.saveToLog(0, user_key, "GetOrdersDiscount", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "Официант работает с заказом", 1);
+                            return list;
+                        }
+                        //Проверка оплаты заказа в БД
+                        if (OrderData.GetStatus(order.OrderNumber) == 2)
+                        {
+                            order.ErrorCode = 5;
+                            //order.Error = "Вы уже оплатили данный заказ. Для открытия нового заказа обратитесь к официанту.";
+                            order.Error = Helper.GetError(5, language);
+                            Helper.saveToLog(0, user_key, "GetOrdersDiscount", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: ", "Заказ уже оплачен", 1);
+                            return list;
+                        }
+                        //Проверка закрытия заказа на кассе
+                        if (order.OrderStatus != null)
+                        {
+                            if (order.OrderStatus.StatusID == 2)
+                            {
+                                order.ErrorCode = 6;
+                                //order.Error = "Ваш заказ закрыт. Для открытия нового заказа обратитесь к официанту.";
+                                order.Error = Helper.GetError(6, language);
+                                Helper.saveToLog(0, user_key, "GetOrdersDiscount", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID.ToString() + ", StatusID: " + order.OrderStatus.StatusID.ToString(), "Заказ закрыт", 1);
+                                return list;
+                            }
+                        }
+
+                        if (order.ErrorCode != 0)
+                        {
+                            order.ErrorCode = 100;
+                            order.Error = Helper.GetError(100, language);
+                            return list;
+                        }
+                        //Запись заказа в БД
+                        OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order, phoneCode);
+
+                        //Скидка veep
+                        foreach (var o in list)
+                        {
+                            o.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID); ;
+                            o.MainDiscountSum = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
+                            o.OrderPayment.OrderSum = o.OrderPayment.OrderSum - o.MainDiscountSum;
+                        }
+
+                    }
+                    XMLGenerator<List<Order>> listXML = new XMLGenerator<List<Order>>(list);
+                    Helper.saveToLog(0, user_key, "GetOrderDiscount - ответ", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber + ",discountCard = " + discountCard, "Найдены заказы: " + listXML.GetStringXML(), 0);
+                    return list;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            Helper.saveToLog(0, user_key, "GetOrder", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Заказ не найден.", 1);
+            return null;
+        }
+
+
+        public List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0)
+        {
+            string phoneNumber = CheckUserKey(user_key);
+            if (phoneNumber != "")
+            {
+/*
+                //GetOrder без дисконтной карты  
+                //Получение номера привязанной дисконтной карты
+                DiscountCard card = new DiscountCard();
+                card.CardNumber = DiscountCardData.SqlGetDiscountCard(phoneNumber, user_key, restaurantID, phoneCode);
+*/
+                //Запрос к Интеграционному модулю
+                string endpointName = "";
+                string address = "";
+
+                endpointName = Configs.GetEndpoint(restaurantID);
+                address = Configs.GetAddress(restaurantID);
+
+                IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
+                //IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, card.CardNumber);
+                IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, null);
+                if (orders != null)
+                {
+                    List<Order> list = new List<Order>();
+                    foreach (var item in orders)
+                    {
+                        Order order = new Order();
+                        order.OrderNumber = item.OrderNumber;
+                        order.RestaurantID = item.RestaurantID;
+                        order.TableID = item.TableID;
+                        if (item.Waiter != null)
+                        {
+                            Waiter waiter = new Waiter();
+                            waiter.ID = item.Waiter.ID;
+                            waiter.Name = item.Waiter.Name;
+                            order.Waiter = waiter;
+                        }
+                        if (item.Items != null)
+                        {
+                            List<OrderItem> list_items = new List<OrderItem>();
+                            foreach (var order_item in item.Items)
+                            {
+                                OrderItem list_item = new OrderItem();
+                                list_item.Name = order_item.Name;
+                                list_item.Qty = order_item.Qty;
+                                list_item.Price = order_item.Price;
+                                list_items.Add(list_item);
+                            }
+                            order.OrderItems = list_items;
+                        }
+                        if (item.OrderStatus != null)
+                        {
+                            OrderStatus os = new OrderStatus();
+                            os.StatusID = item.OrderStatus.StatusID;
+                            os.StatusDate = item.OrderStatus.StatusDate;
+                            order.OrderStatus = os;
+                        }
+                        if (item.OrderPayment != null)
+                        {
+                            OrderPayment op = new OrderPayment();
+                            op.OrderTotal = item.OrderPayment.OrderTotal;
+                            op.DiscountSum = item.OrderPayment.DiscountSum;
+                            op.OrderSum = item.OrderPayment.OrderSum;
+                            op.OrderBank = 0;
+                            order.OrderPayment = op;
+                        }
+
+                        //Скидка по дисконтной карте
+                        if (item.DiscountCard != null)
+                        {
+                            DiscountCard discard = new DiscountCard();
+                            discard.CardNumber = item.DiscountCard.CardNumber;
+                            discard.CardStatus = item.DiscountCard.CardStatus;
+                            discard.LastDate = item.DiscountCard.LastDate;
+                        }
+
+                        order.Message = item.Message;
+                        order.Error = item.Error;
+                        order.ErrorCode = item.ErrorCode;
+                        list.Add(order);
+
                         Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "", 1);
 
                         //Проверка ошибки 31 - официант работает с заказом
@@ -805,6 +1004,15 @@ namespace RestService
                         }
                         //Запись заказа в БД
                         OrderData.SqlInsertOrders(restaurantID, phoneNumber, user_key, order, phoneCode);
+
+
+                        //Скидка veep
+                        foreach (var o in list)
+                        {
+                            o.MainDiscountProc = RestaurantData.GetVeepDiscount(restaurantID); ;
+                            o.MainDiscountSum = o.OrderPayment.OrderSum * o.MainDiscountProc / 100;
+                            o.OrderPayment.OrderSum = o.OrderPayment.OrderSum - o.MainDiscountSum;
+                        }
                         
                     }
                     XMLGenerator<List<Order>> listXML = new XMLGenerator<List<Order>>(list);
