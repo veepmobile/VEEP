@@ -526,6 +526,7 @@ namespace RestService
         {
             if (CheckUserKey(user_key) != "")
             {
+                /*
                 //Проверка QR кода
                  if (OrderData.SqlCheckQR(qr))
                  {
@@ -540,6 +541,7 @@ namespace RestService
                  {
                      OrderData.SqlSaveQR(qr);
                  }
+                */
 
                 //Парсим QR код
                 int rest = Int32.Parse(qr.Substring(0, 6));
@@ -547,11 +549,9 @@ namespace RestService
 
                 int restaurantID = RestaurantData.GetRestaurantID(rest);
 
-                //Заглушка
-                //techItem = 695;
-                //restaurantID = 202930001; --боевой
-                //для теста 
-                //restaurantID = 730410002; //тестовый
+                //Заглушка для теста 
+                techItem = 695;
+                restaurantID = 730410002; //тестовый
 
                 /* При первоначальном поиске заказа дисконтной карты еще нет
                 //Получение номера привязанной дисконтной карты
@@ -902,7 +902,11 @@ namespace RestService
 
                 IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
                 //IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, card.CardNumber);
-                IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, null);
+                
+                long? discountCard = null;
+                //long? discountCard = 1001;
+
+                IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, discountCard);
                 if (orders != null)
                 {
                     List<Order> list = new List<Order>();
