@@ -564,6 +564,7 @@ namespace RestService
                 string endpointName = "";
                 string address = "";
                 endpointName = Configs.GetEndpoint(restaurantID);
+                address = Configs.GetAddress(restaurantID);
 
                 IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
                 //IntegrationCMD.Order[] orders = cmd.FindOrders(restaurantID, techItem, card.CardNumber);
