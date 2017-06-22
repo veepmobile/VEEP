@@ -30,7 +30,7 @@ namespace RestService
                         card.ID = (int)reader["id"];
                         card.RestaurantID = (int)reader["restaurant_id"];
                         card.CardNumber = (Int64)reader["card_number"];
-                        //card.CardName = (String)reader["card_name"];
+                        card.CardName = (String)reader["card_name"];
                         Models.Account account = new Models.Account();
                         account.ID = (int)reader["account_id"];
                         card.Account = account;

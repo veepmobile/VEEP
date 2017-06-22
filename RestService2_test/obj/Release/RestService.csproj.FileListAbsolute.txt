@@ -61,3 +61,10 @@ C:\inetpub\wwwroot\RestService2_test\bin\System.Web.Http.xml
 C:\inetpub\wwwroot\RestService2_test\bin\System.Web.Http.WebHost.xml
 C:\inetpub\wwwroot\RestService2_test\obj\Release\RestService.dll
 C:\inetpub\wwwroot\RestService2_test\obj\Release\RestService.pdb
+F:\2\Git\VEEP\RestService2_test\bin\RestService.dll.config
+F:\2\Git\VEEP\RestService2_test\bin\RestService.dll
+F:\2\Git\VEEP\RestService2_test\bin\RestService.pdb
+F:\2\Git\VEEP\RestService2_test\bin\Calabonga.Xml.Exports.dll
+F:\2\Git\VEEP\RestService2_test\obj\Release\RestService.csprojResolveAssemblyReference.cache
+F:\2\Git\VEEP\RestService2_test\obj\Release\RestService.dll
+F:\2\Git\VEEP\RestService2_test\obj\Release\RestService.pdb
