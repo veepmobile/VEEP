@@ -330,7 +330,7 @@ namespace RestService
         {
             Helper.saveToLog(0, user_key, " CheckDiscountCard", "restaurant_id: " + restaurantID.ToString() + ", discountCard: " + discountCard.ToString(), "", 0);
             List<Order> list = new List<Order>();
-            list = GetOrder(restaurantID, orderNumber, user_key, phoneCode, language, discountCard);
+            list = GetOrderDiscount(restaurantID, orderNumber, user_key, phoneCode, language, discountCard);
             if (list != null)
             {
                 foreach (var item in list)
@@ -720,7 +720,7 @@ namespace RestService
         }
 
         //Получение информации о заказе по его номеру
-        public List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0, long? discountCard = null)
+        public List<Order> GetOrderDiscount(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0, long? discountCard = null)
         {
             string phoneNumber = CheckUserKey(user_key);
             if (phoneNumber != "")
@@ -1020,7 +1020,7 @@ namespace RestService
                         
                         //Получаем заказ по номеру
                         List<Order> list = new List<Order>();
-                        list = GetOrder(restaurantID, orderNumber, user_key, phoneCode, language, null);
+                        list = GetOrderDiscount(restaurantID, orderNumber, user_key, phoneCode, language, null);
                         //Проверяем номер стола
                         if (list != null)
                         {
@@ -1104,7 +1104,7 @@ namespace RestService
                 {
                     //Получаем заказ по номеру
                     List<Order> list = new List<Order>();
-                    list = GetOrder(restaurantID, orderNumber, user_key, phoneCode, language);
+                    list = GetOrderDiscount(restaurantID, orderNumber, user_key, phoneCode, language,null);
                     //Проверяем номер стола
                     if (list != null)
                     {
@@ -1167,7 +1167,7 @@ namespace RestService
             if (phoneNumber != "")
                 {
                     //Получаем заказ по номеру
-                    list = GetOrder(restaurantID, orderNumber, user_key, phoneCode, language);
+                    list = GetOrderDiscount(restaurantID, orderNumber, user_key, phoneCode, language, discountCardNumber);
                     //Проверка суммы заказа
                     foreach (var item in list)
                     {
@@ -1305,7 +1305,7 @@ namespace RestService
             List<Order> list = new List<Order>();
             //костыль
             //Получаем заказ по номеру
-            list = GetOrder(restaurantID, orderNumber, user_key, phoneCode, language);
+            list = GetOrderDiscount(restaurantID, orderNumber, user_key, phoneCode, language,null);
             return list;
             //конец костыля
 

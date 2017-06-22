@@ -206,12 +206,13 @@ namespace RestService
         UriTemplate = "get")]
         List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0);
 
-        [OperationContract(Name = "GetOrderDiscount")]
+        //[OperationContract(Name = "GetOrderDiscount")]
+        [OperationContract]
         [WebInvoke(Method = "PUT",
         ResponseFormat = WebMessageFormat.Xml,
         RequestFormat = WebMessageFormat.Xml,
         UriTemplate = "get")]
-        List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0, long? discountCard = null);
+        List<Order> GetOrderDiscount(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0, long? discountCard = null);
 
         //Вызов официанта
         [OperationContract]
