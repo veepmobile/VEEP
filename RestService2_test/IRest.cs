@@ -199,19 +199,19 @@ namespace RestService
         List<Order> FindOrders(string phoneNumber, string qr, string user_key, string phoneCode = "7", int language = 0);
 
         //Получение информации о заказе по его номеру
-        [OperationContract]
+/*        [OperationContract]
         [WebInvoke(Method = "PUT",
         ResponseFormat = WebMessageFormat.Xml,
         RequestFormat = WebMessageFormat.Xml,
         UriTemplate = "get")]
         List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0);
-
-        [OperationContract(Name = "GetOrderDiscount")]
+*/
+        [OperationContract]
         [WebInvoke(Method = "PUT",
         ResponseFormat = WebMessageFormat.Xml,
         RequestFormat = WebMessageFormat.Xml,
         UriTemplate = "get")]
-        List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, long? discountCard = null, string phoneCode = "7", int language = 0);
+        List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0, long? discountCard = null);
 
         //Вызов официанта
         [OperationContract]

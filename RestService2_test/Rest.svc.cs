@@ -330,7 +330,7 @@ namespace RestService
         {
             Helper.saveToLog(0, user_key, " CheckDiscountCard", "restaurant_id: " + restaurantID.ToString() + ", discountCard: " + discountCard.ToString(), "", 0);
             List<Order> list = new List<Order>();
-            list = GetOrder(restaurantID, orderNumber, user_key, discountCard, phoneCode, language);
+            list = GetOrder(restaurantID, orderNumber, user_key, phoneCode, language, discountCard);
             if (list != null)
             {
                 foreach (var item in list)
@@ -550,7 +550,7 @@ namespace RestService
                 int restaurantID = RestaurantData.GetRestaurantID(rest);
 
                 //Заглушка для теста 
-                techItem = 695;
+                techItem = 274;
                 restaurantID = 730410002; //тестовый
 
                 /* При первоначальном поиске заказа дисконтной карты еще нет
@@ -564,6 +564,7 @@ namespace RestService
                 string endpointName = "";
                 string address = "";
                 endpointName = Configs.GetEndpoint(restaurantID);
+                address = Configs.GetAddress(restaurantID);
 
                 IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
                 //IntegrationCMD.Order[] orders = cmd.FindOrders(restaurantID, techItem, card.CardNumber);
@@ -640,6 +641,7 @@ namespace RestService
                             discard.CardNumber = item.DiscountCard.CardNumber;
                             discard.CardStatus = item.DiscountCard.CardStatus;
                             discard.LastDate = item.DiscountCard.LastDate;
+                            order.DiscountCard = discard;
                         }
 
                         order.Message = item.Message;
@@ -718,7 +720,8 @@ namespace RestService
         }
 
         //Получение информации о заказе по его номеру
-        public List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, long? discountCard, string phoneCode = "7", int language = 0)
+        /*
+        public List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, long? discountCard=null, string phoneCode = "7", int language = 0)
         {
             string phoneNumber = CheckUserKey(user_key);
             if (phoneNumber != "")
@@ -880,9 +883,9 @@ namespace RestService
             Helper.saveToLog(0, user_key, "GetOrder", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Заказ не найден.", 1);
             return null;
         }
+        */
 
-
-        public List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0)
+        public List<Order> GetOrder(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0, long? discountCard = null)
         {
             string phoneNumber = CheckUserKey(user_key);
             if (phoneNumber != "")
@@ -903,9 +906,9 @@ namespace RestService
                 IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
                 //IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, card.CardNumber);
                 
-                long? discountCard = null;
-                //long? discountCard = 1001;
+                //discountCard = 1001;
 
+                Helper.saveToLog(0, user_key, "GetOrders - отправлено", "restaurant_id: " + restaurantID.ToString() + ", orderNumber=" + orderNumber + ", discountCard=" + discountCard.ToString(), "", 0);
                 IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, discountCard);
                 if (orders != null)
                 {
@@ -957,11 +960,12 @@ namespace RestService
                         if (item.DiscountCard != null)
                         {
                             DiscountCard discard = new DiscountCard();
-                            discard.CardNumber = item.DiscountCard.CardNumber;
+                            discard.CardNumber = (long?)item.DiscountCard.CardNumber;
                             discard.CardStatus = item.DiscountCard.CardStatus;
                             discard.LastDate = item.DiscountCard.LastDate;
+                            order.DiscountCard = discard;
                         }
-
+//                        Helper.saveToLog(0, user_key, "GetOrders пришло", "DiscountCard.CardNumber: " + item.DiscountCard.CardNumber.ToString() + ", item.DiscountCard.CardStatus: " + item.DiscountCard.CardStatus.ToString() + ", item.DiscountCard.LastDate: " + item.DiscountCard.LastDate.ToShortDateString(), "", 0);
                         order.Message = item.Message;
                         order.Error = item.Error;
                         order.ErrorCode = item.ErrorCode;
