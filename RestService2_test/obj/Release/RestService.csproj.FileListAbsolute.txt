@@ -78,6 +78,5 @@ D:\Projects\RestaurantService\Git\VEEP\RestService2_test\bin\System.Web.Http.Web
 D:\Projects\RestaurantService\Git\VEEP\RestService2_test\bin\System.Net.Http.Formatting.xml
 D:\Projects\RestaurantService\Git\VEEP\RestService2_test\bin\System.Web.Http.xml
 D:\Projects\RestaurantService\Git\VEEP\RestService2_test\bin\System.Web.Http.WebHost.xml
-D:\Projects\RestaurantService\Git\VEEP\RestService2_test\obj\Release\RestService.csprojResolveAssemblyReference.cache
 D:\Projects\RestaurantService\Git\VEEP\RestService2_test\obj\Release\RestService.dll
 D:\Projects\RestaurantService\Git\VEEP\RestService2_test\obj\Release\RestService.pdb
