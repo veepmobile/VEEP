@@ -162,6 +162,7 @@ namespace RestService
             if (json != null)
             {
                 registerResponse response = JsonConvert.DeserializeObject<registerResponse>(json);
+                Helper.saveToLog(0, "", "RegisterBinding", "https://" + Configs.MerchantHost + "registerPreAuth.do?" + param, "Привязка карты registerPreOrder: " + json.ToString(), 0);
                 return response;
             }
 

@@ -48,5 +48,6 @@ F:\2\Git\VEEP\RestService2_03-04-2017\bin\RestService.dll.config
 F:\2\Git\VEEP\RestService2_03-04-2017\bin\RestService.dll
 F:\2\Git\VEEP\RestService2_03-04-2017\bin\RestService.pdb
 F:\2\Git\VEEP\RestService2_03-04-2017\bin\Calabonga.Xml.Exports.dll
+F:\2\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.csprojResolveAssemblyReference.cache
 F:\2\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.dll
 F:\2\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.pdb

@@ -27,7 +27,8 @@ namespace RestService.BLL
         {
             get
             {
-                return WebConfigurationManager.AppSettings["merchantHost"].ToString();
+                //return WebConfigurationManager.AppSettings["merchantHost"].ToString();
+                return WebConfigurationManager.AppSettings["merchantHost0"].ToString();
             }
         }
 
@@ -38,7 +39,7 @@ namespace RestService.BLL
         {
             get
             {
-                return WebConfigurationManager.AppSettings["merchantUser"].ToString();
+                return WebConfigurationManager.AppSettings["merchantUser0"].ToString();
             }
         }
         /// <summary>
@@ -48,7 +49,7 @@ namespace RestService.BLL
         {
             get
             {
-                return WebConfigurationManager.AppSettings["merchantPsw"].ToString();
+                return WebConfigurationManager.AppSettings["merchantPsw0"].ToString();
             }
         }
 
@@ -221,7 +222,7 @@ namespace RestService.BLL
             switch (restaurantID)
             {
                 case 730410002: /*test*/
-                    return WebConfigurationManager.AppSettings["merchantUser2"].ToString();
+                    return WebConfigurationManager.AppSettings["merchantUser0"].ToString();
                 case 202930001: /*Luce*/
                     return WebConfigurationManager.AppSettings["merchantUser2"].ToString();
                 case 209631111: /*Vogue*/
@@ -263,7 +264,7 @@ namespace RestService.BLL
             switch (mode)
             {
                 case 0: /*test*/
-                    return WebConfigurationManager.AppSettings["merchantUser2"].ToString();
+                    return WebConfigurationManager.AppSettings["merchantUser0"].ToString();
                 case 1: /*привязка карты*/
                     return WebConfigurationManager.AppSettings["merchantUser"].ToString();
                 case 2: /*Luce*/
@@ -318,7 +319,7 @@ namespace RestService.BLL
             switch (restaurantID)
             {
                 case 730410002: /*test*/
-                    return WebConfigurationManager.AppSettings["merchantPsw2"].ToString();
+                    return WebConfigurationManager.AppSettings["merchantPsw0"].ToString();
                 case 202930001: /*Luce*/
                     return WebConfigurationManager.AppSettings["merchantPsw2"].ToString();
                 case 209631111: /*Vogue*/
@@ -360,7 +361,7 @@ namespace RestService.BLL
             switch (mode)
             {
                 case 0: /*test*/
-                    return WebConfigurationManager.AppSettings["merchantPsw2"].ToString();
+                    return WebConfigurationManager.AppSettings["merchantPsw0"].ToString();
                 case 1: /*привязка карты*/
                     return WebConfigurationManager.AppSettings["merchantPsw"].ToString();
                 case 2: /*Luce*/

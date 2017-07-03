@@ -307,6 +307,7 @@ namespace RestService
                     return DiscountCardData.SqlUpdateDiscountCard(accountID, user_key, cardNumber, cardStatus);
                 }
             }
+            Helper.saveToLog(0, user_key, " UpdateDiscountCard", "phoneNumber: " + phoneNumber + ", cardNumber: " + cardNumber.ToString() + ", cardStatus: " + cardStatus.ToString(), "", 0);
             return 0;
         }
 
@@ -550,7 +551,7 @@ namespace RestService
                 int restaurantID = RestaurantData.GetRestaurantID(rest);
 
                 //Заглушка для теста 
-                techItem = 274;
+                techItem = 741;
                 restaurantID = 730410002; //тестовый
 
                 /* При первоначальном поиске заказа дисконтной карты еще нет
