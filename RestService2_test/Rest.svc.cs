@@ -339,12 +339,12 @@ namespace RestService
                     if (item.DiscountCard != null && item.DiscountCard.CardStatus == 1)
                     {
                         long? result_status = UpdateDiscountCard(phoneNumber, discountCard, 1, user_key, phoneCode, language);
-                        return 0; // "Скидка применена";
+                        return 1; // "Скидка применена";
                     }
                 }
             }
 
-            return 1; // "Скидка не применилась. Повторите попытку или обратитесь к официанту";
+            return 0; // "Скидка не применилась. Повторите попытку или обратитесь к официанту";
         }
 
         #endregion
