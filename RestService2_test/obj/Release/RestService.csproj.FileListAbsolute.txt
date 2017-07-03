@@ -67,3 +67,4 @@ F:\2\Git\VEEP\RestService2_test\bin\RestService.pdb
 F:\2\Git\VEEP\RestService2_test\bin\Calabonga.Xml.Exports.dll
 F:\2\Git\VEEP\RestService2_test\obj\Release\RestService.dll
 F:\2\Git\VEEP\RestService2_test\obj\Release\RestService.pdb
+C:\inetpub\wwwroot\RestService2_test\obj\Release\RestService.csprojResolveAssemblyReference.cache
