@@ -46,6 +46,7 @@ namespace RestService
                         }
                     }
                 }
+                Helper.saveToLog(0, user_key, "SqlFindDiscountCard", "accountID=" + accountID, "", 0);
                 return list;
             }
             catch (Exception e)
