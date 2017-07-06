@@ -167,6 +167,10 @@ namespace RestService.BLL
                     return "BasicHttpBinding_IIntegrationCMD14";
                 case 361750003: /*KWAK pub Покровка*/
                     return "BasicHttpBinding_IIntegrationCMD15";
+                case 326250001: /*КИМЧИ на Белорусской*/
+                    return "BasicHttpBinding_IIntegrationCMD16";
+                case 326250002: /*КИМЧИ на Серпуховской*/
+                    return "BasicHttpBinding_IIntegrationCMD17";
             }
             return "";
         }
@@ -211,6 +215,10 @@ namespace RestService.BLL
                     return "http://46.38.47.43:9090/";
                 case 361750003: /*KWAK pub Покровка*/
                     return "http://82.204.144.18:9090/";
+                case 326250001: /*КИМЧИ на Белорусской*/
+                    return "http://79.135.234.242:9090/";
+                case 326250002: /*КИМЧИ на Серпуховской*/
+                    return "http://81.23.8.161:9090/";
             }
             return "";
         }
@@ -254,6 +262,10 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantUser16"].ToString();
                 case 361750003: /*KWAK pub Покровка*/
                     return WebConfigurationManager.AppSettings["merchantUser17"].ToString();
+                case 326250001: /*КИМЧИ на Белорусской*/
+                    return WebConfigurationManager.AppSettings["merchantUser18"].ToString();
+                case 326250002: /*КИМЧИ на Серпуховской*/
+                    return WebConfigurationManager.AppSettings["merchantUser19"].ToString();
             }
             return "";
         }
@@ -298,6 +310,10 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantUser16"].ToString();
                 case 17: /*KWAK pub Покровка*/
                     return WebConfigurationManager.AppSettings["merchantUser17"].ToString();
+                case 18: /*КИМЧИ на Белорусской*/
+                    return WebConfigurationManager.AppSettings["merchantUser18"].ToString();
+                case 19: /*КИМЧИ на Серпуховской*/
+                    return WebConfigurationManager.AppSettings["merchantUser19"].ToString();
             }
             return "";
         }
@@ -351,6 +367,10 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantPsw16"].ToString();
                 case 361750003: /*KWAK pub Покровка*/
                     return WebConfigurationManager.AppSettings["merchantPsw17"].ToString();
+                case 326250001: /*КИМЧИ на Белорусской*/
+                    return WebConfigurationManager.AppSettings["merchantPsw18"].ToString();
+                case 326250002: /*КИМЧИ на Серпуховской*/
+                    return WebConfigurationManager.AppSettings["merchantPsw19"].ToString();
             }
             return "";
         }
@@ -395,6 +415,10 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantPsw16"].ToString();
                 case 17: /*KWAK pub Покровка*/
                     return WebConfigurationManager.AppSettings["merchantPsw17"].ToString();
+                case 18: /*КИМЧИ на Белорусской*/
+                    return WebConfigurationManager.AppSettings["merchantPsw18"].ToString();
+                case 19: /*КИМЧИ на Серпуховской*/
+                    return WebConfigurationManager.AppSettings["merchantPsw19"].ToString();
             }
             return "";
         }
@@ -438,6 +462,10 @@ namespace RestService.BLL
                     return 16;
                 case 361750003: /*KWAK pub Покровка*/
                     return 17;
+                case 326250001: /*КИМЧИ на Белорусской*/
+                    return 18;
+                case 326250002: /*КИМЧИ на Серпуховской*/
+                    return 18;
             }
             return 1;
         }
