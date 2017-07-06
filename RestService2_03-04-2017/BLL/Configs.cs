@@ -171,7 +171,7 @@ namespace RestService.BLL
                     return "BasicHttpBinding_IIntegrationCMD16";
                 case 326250002: /*КИМЧИ на Серпуховской*/
                     return "BasicHttpBinding_IIntegrationCMD17";
-                case 326250003: /*КИМЧИ на Площадь Революции*/
+                case 164060001: /*КИМЧИ на Площадь Революции*/
                     return "BasicHttpBinding_IIntegrationCMD18";
             }
             return "";
@@ -221,7 +221,7 @@ namespace RestService.BLL
                     return "http://79.135.234.242:9090/";
                 case 326250002: /*КИМЧИ на Серпуховской*/
                     return "http://81.23.8.161:9090/";
-                case 326250003: /*КИМЧИ на Площадь Революции*/
+                case 164060001: /*КИМЧИ на Площадь Революции*/
                     return "http://79.174.68.175:57006/";
             }
             return "";
@@ -270,7 +270,7 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantUser18"].ToString();
                 case 326250002: /*КИМЧИ на Серпуховской*/
                     return WebConfigurationManager.AppSettings["merchantUser19"].ToString();
-                case 326250003: /*КИМЧИ на Площади Революции*/
+                case 164060001: /*КИМЧИ на Площади Революции*/
                     return WebConfigurationManager.AppSettings["merchantUser20"].ToString();
             }
             return "";
@@ -379,7 +379,7 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantPsw18"].ToString();
                 case 326250002: /*КИМЧИ на Серпуховской*/
                     return WebConfigurationManager.AppSettings["merchantPsw19"].ToString();
-                case 326250003: /*КИМЧИ на Площади Революции*/
+                case 164060001: /*КИМЧИ на Площади Революции*/
                     return WebConfigurationManager.AppSettings["merchantPsw20"].ToString();
             }
             return "";
@@ -478,7 +478,7 @@ namespace RestService.BLL
                     return 18;
                 case 326250002: /*КИМЧИ на Серпуховской*/
                     return 19;
-                case 326250003: /*КИМЧИ на Площади Революции*/
+                case 164060001: /*КИМЧИ на Площади Революции*/
                     return 20;
             }
             return 1;

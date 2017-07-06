@@ -10,7 +10,7 @@
     <script type="text/javascript" src="../../js/jquery.url.js"></script>
     <script type="text/javascript" src="../../js/jquery.payment.js"></script>
     <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript" src="js/jquery.inputmask.bundle.js"></script>
     <link href="css/base.css" rel="stylesheet" type="text/css" />
     <script>
 
@@ -88,7 +88,7 @@
     </div>
 </div>
 <script>
-    $('#iPAN').mask("9999 9999 9999 9999");
+    $('#iPAN').$(this).inputmask({"mask": "9999 9999 9999 9999 "});
     var year = new Date().getFullYear();
     for (var i = year; i <= (year + 10); i++) {
         $('#year').append($('<option value="' + i + '">' + i + '</option>'));
