@@ -173,6 +173,10 @@ namespace RestService.BLL
                     return "BasicHttpBinding_IIntegrationCMD17";
                 case 164060001: /*КИМЧИ на Площадь Революции*/
                     return "BasicHttpBinding_IIntegrationCMD18";
+                case 233070001: /*БУЛКА на Покровке*/
+                    return "BasicHttpBinding_IIntegrationCMD19";
+                case 233070002: /*БУЛКА на Б.Грузинской*/
+                    return "BasicHttpBinding_IIntegrationCMD20";
             }
             return "";
         }
@@ -223,6 +227,10 @@ namespace RestService.BLL
                     return "http://81.23.8.161:9090/";
                 case 164060001: /*КИМЧИ на Площадь Революции*/
                     return "http://79.174.68.175:57006/";
+                case 233070001: /*БУЛКА на Покровке*/
+                    return "http://195.9.55.114:9090";
+                case 233070002: /*БУЛКА на Б.Грузинской*/
+                    return "";
             }
             return "";
         }
@@ -272,6 +280,10 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantUser19"].ToString();
                 case 164060001: /*КИМЧИ на Площади Революции*/
                     return WebConfigurationManager.AppSettings["merchantUser20"].ToString();
+                case 233070001: /*БУЛКА на Покровке*/
+                    return WebConfigurationManager.AppSettings["merchantUser21"].ToString();
+                case 233070002: /*БУЛКА на Б.Грузинской*/
+                    return WebConfigurationManager.AppSettings["merchantUser22"].ToString();
             }
             return "";
         }
@@ -322,6 +334,10 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantUser19"].ToString();
                 case 20: /*КИМЧИ на Площади Революции*/
                     return WebConfigurationManager.AppSettings["merchantUser20"].ToString();
+                case 21: /*БУЛКА на Покровке*/
+                    return WebConfigurationManager.AppSettings["merchantUser21"].ToString();
+                case 22: /*БУЛКА на Б.Грузинской*/
+                    return WebConfigurationManager.AppSettings["merchantUser22"].ToString();
             }
             return "";
         }
@@ -381,6 +397,10 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantPsw19"].ToString();
                 case 164060001: /*КИМЧИ на Площади Революции*/
                     return WebConfigurationManager.AppSettings["merchantPsw20"].ToString();
+                case 233070001: /*БУЛКА на Покровке*/
+                    return WebConfigurationManager.AppSettings["merchantPsw21"].ToString();
+                case 233070002: /*БУЛКА на Б.Грузинской*/
+                    return WebConfigurationManager.AppSettings["merchantPsw22"].ToString();
             }
             return "";
         }
@@ -431,6 +451,10 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantPsw19"].ToString();
                 case 20: /*КИМЧИ на Площади Революции*/
                     return WebConfigurationManager.AppSettings["merchantPsw20"].ToString();
+                case 21: /*БУЛКА на Покровке*/
+                    return WebConfigurationManager.AppSettings["merchantPsw21"].ToString();
+                case 22: /*БУЛКА на Б.Грузинской*/
+                    return WebConfigurationManager.AppSettings["merchantPsw22"].ToString();
             }
             return "";
         }
@@ -480,6 +504,10 @@ namespace RestService.BLL
                     return 19;
                 case 164060001: /*КИМЧИ на Площади Революции*/
                     return 20;
+                case 233070001: /*БУЛКА на Покровке*/
+                    return 21;
+                case 233070002: /*БУЛКА на Б.Грузинской*/
+                    return 22;
             }
             return 1;
         }
