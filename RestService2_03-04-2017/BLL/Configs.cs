@@ -175,7 +175,7 @@ namespace RestService.BLL
                     return "BasicHttpBinding_IIntegrationCMD18";
                 case 233070001: /*БУЛКА на Покровке*/
                     return "BasicHttpBinding_IIntegrationCMD19";
-                case 233070002: /*БУЛКА на Б.Грузинской*/
+                case 233070101: /*БУЛКА на Б.Грузинской*/
                     return "BasicHttpBinding_IIntegrationCMD20";
             }
             return "";
@@ -229,8 +229,8 @@ namespace RestService.BLL
                     return "http://79.174.68.175:57006/";
                 case 233070001: /*БУЛКА на Покровке*/
                     return "http://195.9.55.114:9090";
-                case 233070002: /*БУЛКА на Б.Грузинской*/
-                    return "";
+                case 233070101: /*БУЛКА на Б.Грузинской*/
+                    return "http://195.9.3.30:9090";
             }
             return "";
         }
@@ -282,7 +282,7 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantUser20"].ToString();
                 case 233070001: /*БУЛКА на Покровке*/
                     return WebConfigurationManager.AppSettings["merchantUser21"].ToString();
-                case 233070002: /*БУЛКА на Б.Грузинской*/
+                case 233070101: /*БУЛКА на Б.Грузинской*/
                     return WebConfigurationManager.AppSettings["merchantUser22"].ToString();
             }
             return "";
@@ -399,7 +399,7 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantPsw20"].ToString();
                 case 233070001: /*БУЛКА на Покровке*/
                     return WebConfigurationManager.AppSettings["merchantPsw21"].ToString();
-                case 233070002: /*БУЛКА на Б.Грузинской*/
+                case 233070101: /*БУЛКА на Б.Грузинской*/
                     return WebConfigurationManager.AppSettings["merchantPsw22"].ToString();
             }
             return "";
@@ -506,7 +506,7 @@ namespace RestService.BLL
                     return 20;
                 case 233070001: /*БУЛКА на Покровке*/
                     return 21;
-                case 233070002: /*БУЛКА на Б.Грузинской*/
+                case 233070101: /*БУЛКА на Б.Грузинской*/
                     return 22;
             }
             return 1;
