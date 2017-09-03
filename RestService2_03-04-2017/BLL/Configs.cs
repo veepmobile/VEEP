@@ -177,6 +177,8 @@ namespace RestService.BLL
                     return "BasicHttpBinding_IIntegrationCMD19";
                 case 233070101: /*БУЛКА на Б.Грузинской*/
                     return "BasicHttpBinding_IIntegrationCMD20";
+                case 308520005: /*STARLITE DINER на Страстном*/
+                    return "BasicHttpBinding_IIntegrationCMD21";
             }
             return "";
         }
@@ -231,6 +233,9 @@ namespace RestService.BLL
                     return "http://195.9.55.114:9090";
                 case 233070101: /*БУЛКА на Б.Грузинской*/
                     return "http://195.9.3.30:9090";
+                case 308520005: /*STARLITE DINER на Страстном*/
+                    return "http://213.184.131.242:9090";
+
             }
             return "";
         }
@@ -284,6 +289,8 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantUser21"].ToString();
                 case 233070101: /*БУЛКА на Б.Грузинской*/
                     return WebConfigurationManager.AppSettings["merchantUser22"].ToString();
+                case 308520005: /*STARLITE DINER на Страстном*/
+                    return WebConfigurationManager.AppSettings["merchantUser23"].ToString();
             }
             return "";
         }
@@ -338,6 +345,8 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantUser21"].ToString();
                 case 22: /*БУЛКА на Б.Грузинской*/
                     return WebConfigurationManager.AppSettings["merchantUser22"].ToString();
+                case 23: /*STARLITE DINER на Страстном*/
+                    return WebConfigurationManager.AppSettings["merchantUser23"].ToString();
             }
             return "";
         }
@@ -401,6 +410,8 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantPsw21"].ToString();
                 case 233070101: /*БУЛКА на Б.Грузинской*/
                     return WebConfigurationManager.AppSettings["merchantPsw22"].ToString();
+                case 308520005: /*STARLITE DINER на Страстном*/
+                    return WebConfigurationManager.AppSettings["merchantPsw23"].ToString();
             }
             return "";
         }
@@ -455,6 +466,8 @@ namespace RestService.BLL
                     return WebConfigurationManager.AppSettings["merchantPsw21"].ToString();
                 case 22: /*БУЛКА на Б.Грузинской*/
                     return WebConfigurationManager.AppSettings["merchantPsw22"].ToString();
+                case 23: /*STARLITE DINER на Страстном*/
+                    return WebConfigurationManager.AppSettings["merchantPsw23"].ToString();
             }
             return "";
         }
@@ -508,6 +521,8 @@ namespace RestService.BLL
                     return 21;
                 case 233070101: /*БУЛКА на Б.Грузинской*/
                     return 22;
+                case 308520005: /*STARLITE DINER на Страстном*/
+                    return 23;
             }
             return 1;
         }
