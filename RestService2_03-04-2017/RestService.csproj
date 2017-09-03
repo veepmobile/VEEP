@@ -190,11 +190,17 @@
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="css\base.css" />
+    <Content Include="css\style.css" />
     <Content Include="error.html" />
     <Content Include="final.html" />
     <Content Include="Global.asax" />
     <Content Include="images\circle_green.png" />
     <Content Include="images\circle_red.png" />
+    <Content Include="img\app_store.png" />
+    <Content Include="img\bg.jpg" />
+    <Content Include="img\google_play.png" />
+    <Content Include="img\veep.png" />
     <Content Include="Rest.svc" />
     <Content Include="packages.config" />
     <Content Include="fail.html" />
@@ -205,6 +211,8 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="veep_logo.png" />
     <Content Include="wx26fxn5.htm" />
+    <Content Include="css\base.less" />
+    <Content Include="css\style.less" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -284,6 +292,7 @@
     <Compile Include="BLL\Module.cs" />
     <Compile Include="BLL\Rest.cs" />
     <Compile Include="BLL\XMLGenerator.cs" />
+    <Compile Include="Controllers\AppController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
@@ -441,6 +450,7 @@
     <Content Include="Views\Reports\PrizeLoad.cshtml" />
     <Content Include="Views\Reports\PrizeOther.cshtml" />
     <Content Include="Views\Reports\PrizeOtherLoad.cshtml" />
+    <Content Include="Views\App\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Veep</title>
+<meta name="description" content="">
+<meta name="Keywords" content="" >
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Veep" />
+<meta property="og:description" content="VEEP - мобильное приложение, открывающее пользователю уникальные возможности при посещении кафе и ресторанов." />
+<meta property="og:image" content="http://veeppay.ru/app/img/veep.png" />
+<meta property="og:url" content="http://veeppay.ru/app/" />
+<link href="css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+	<script>
+	  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+	    if (/android/i.test(userAgent)) {
+	        document.location.href = "https://play.google.com/store/apps/details?id=ru.veeppay.app";
+	    }
+
+	    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+			document.location.href = "https://itunes.apple.com/ru/app/veep/id1109320099?mt=8";
+	    }
+
+	</script>
+<div class="wrap">
+	<div class="button"><img src="img/veep.png" alt="Veep"></div>
+	<a class="button" href="https://itunes.apple.com/ru/app/veep/id1109320099?mt=8"><img src="img/app_store.png" alt=""></a>
+	<a class="button" href="https://play.google.com/store/apps/details?id=ru.veeppay.app"><img src="img/google_play.png" alt=""></a>
+</div>
+</body>
+</html>
