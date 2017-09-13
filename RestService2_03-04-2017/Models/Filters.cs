@@ -15,4 +15,13 @@ namespace RestService.Models
         public int FilterRestNetworkID { get; set; }
         public int FilterRestaurantID { get; set; }
     }
+
+    public class LogFilters
+    {
+        public DateTime FilterBeginDate { get; set; }
+        public DateTime FilterEndDate { get; set; }
+        public int FilterRestaurantID { get; set; }
+        public int FilterUserID { get; set; }
+        public int FilterMethod { get; set; }
+    }
 }
