@@ -41,5 +41,9 @@ namespace RestService.Models
         public DateTime AccountLastDate { get; set; }
     }
 
+    public class ReportLog
+    {
 
+
+    }
 }

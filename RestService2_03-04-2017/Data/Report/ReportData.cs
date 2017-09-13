@@ -80,6 +80,12 @@ namespace RestService
             return list;
         }
 
+        public static List<ReportLog> GetLogReport(DateTime dfrom, DateTime dto)
+        {
+            List<ReportLog> list = new List<ReportLog>();
 
+
+            return list;
+        }
     }
 }
