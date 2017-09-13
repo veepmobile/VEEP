@@ -551,7 +551,7 @@ namespace RestService
                 int restaurantID = RestaurantData.GetRestaurantID(rest);
 
                 //Заглушка для теста 
-                techItem = 10;
+                techItem = 22;
                 restaurantID = 730410002; //тестовый
 
                 /* При первоначальном поиске заказа дисконтной карты еще нет

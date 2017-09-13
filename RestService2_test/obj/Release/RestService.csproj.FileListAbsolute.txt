@@ -79,3 +79,4 @@ D:\Projects\RestaurantService\Git\VEEP\RestService2_test\bin\System.Web.Http.xml
 D:\Projects\RestaurantService\Git\VEEP\RestService2_test\bin\System.Web.Http.WebHost.xml
 D:\Projects\RestaurantService\Git\VEEP\RestService2_test\obj\Release\RestService.dll
 D:\Projects\RestaurantService\Git\VEEP\RestService2_test\obj\Release\RestService.pdb
+F:\2\Git\VEEP\RestService2_test\obj\Release\RestService.csprojResolveAssemblyReference.cache
