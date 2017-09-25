@@ -19,6 +19,7 @@
             <th align="center" valign="middle">Скидка Veep, %</th>
             <th align="center" valign="middle">Скидка Veep, руб.</th>
             <th align="center" valign="middle">Сумма с учетом скидки, руб.</th>
+            <th align="center" valign="middle">Платеж в банк, руб.</th>
             <th align="center" valign="middle">Состав заказа</th>
             <th align="center" valign="middle">Статус заказа</th>
             <th align="center" valign="middle">Официант</th>
@@ -41,6 +42,7 @@
                     <td align="center" valign="top">@item.MainDiscountProc</td> 
                     <td align="center" valign="top">@item.MainDiscountSum</td> 
                     <td align="center" valign="top">@item.OrderPayment.OrderSum</td> 
+                    <td align="center" valign="top">@((item.OrderPayment.PaymentBank > 0) ? item.OrderPayment.PaymentBank.ToString() : "")</td> 
                     <td align="center" valign="top" style="cursor: pointer;"><img src="/images/search.png" onclick="order_details(@item.ID);" width="16" />
                     </td> 
                     <!--<td align="center" valign="top" style="cursor: pointer;"><img src="/images/search.png" onclick="order_details('items_item.ID');" width="16" />

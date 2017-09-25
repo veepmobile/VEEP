@@ -86,6 +86,7 @@ namespace RestService.Models
         public decimal TippingProcent { get; set; }     //Чаевые в процентах
         [DataMember]
         public decimal TippingSum { get; set; }     //Чаевые в рублях
+        public decimal PaymentBank { get; set; }        //Сумма платежа в банк по факту
     }
 
     public class RegistrOrder
