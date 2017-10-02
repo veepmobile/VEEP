@@ -191,7 +191,7 @@ namespace RestService.BLL
                 case 730410002: /*test*/
                     return "http://95.84.168.113:9090/";
                 case 202930001: /*Luce*/
-                    return "http://92.38.32.63:9090/";
+                    return "http://92.38.32.62:9090/";
                 case 209631111: /*Vogue*/
                     return "http://185.26.193.5:9090/";
                 case 136230001: /*Brisket*/

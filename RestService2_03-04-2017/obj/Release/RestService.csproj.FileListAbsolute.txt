@@ -52,3 +52,4 @@ F:\2\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.pdb
 D:\Projects\RestaurantService\Git\VEEP\RestService2_03-04-2017\bin\RestService.dll.config
 C:\inetpub\wwwroot\RestService2_03-04-2017\obj\Release\RestService.csprojResolveAssemblyReference.cache
 F:\2\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.csprojResolveAssemblyReference.cache
+D:\Projects\RestaurantService\Git\VEEP\RestService2_03-04-2017\obj\Release\RestService.csprojResolveAssemblyReference.cache
