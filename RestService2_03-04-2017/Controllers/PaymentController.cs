@@ -355,7 +355,7 @@ namespace RestService.Controllers
                 //Запрос к коммуникационному модулю на отправку email
                 using (var smtpClient = new SmtpClient())
                 {
-                    string sourceEmail = "nr@novatorov.com";
+                    string sourceEmail = "veep@novatorov.com";
                     string subject = "VEEP";
                     string messageText = sb.ToString(); 
                     string mail = data.clientEmail;
