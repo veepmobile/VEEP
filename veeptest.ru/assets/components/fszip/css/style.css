@@ -1,0 +1,31 @@
+#fszip {
+    padding: 20px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1);
+    background: #fff;
+    margin-top: 26px;
+    margin-right: 20px;
+}
+
+#fszip .group {
+    margin: 15px 0;
+}
+
+#fszip .js-indicator {
+    background: url(/assets/components/fszip/images/loading.gif) no-repeat left center;
+    padding: 10px 0 10px 30px;
+    display: none;
+}
+
+#fszip .js-result {
+    display: none;
+}
+
+#fszip .error {
+    color: #C70000;
+    font-weight: bold;
+}
+
+.js-disabled {
+    pointer-events: none;
+    opacity: 0.4;
+}

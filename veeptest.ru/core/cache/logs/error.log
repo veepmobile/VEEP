@@ -1,0 +1,82 @@
+[2017-09-22 16:46:34] (ERROR in xPDOConnection::connect @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/xpdo.class.php : 3116) SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+[2017-09-22 16:46:34] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/om/xpdoquery.class.php : 653) Could not construct or prepare query because it is invalid or could not connect: SELECT `modSystemSetting`.`key` AS `modSystemSetting_key`, `modSystemSetting`.`value` AS `modSystemSetting_value`, `modSystemSetting`.`xtype` AS `modSystemSetting_xtype`, `modSystemSetting`.`namespace` AS `modSystemSetting_namespace`, `modSystemSetting`.`area` AS `modSystemSetting_area`, `modSystemSetting`.`editedon` AS `modSystemSetting_editedon` FROM `modx_system_settings` AS `modSystemSetting` 
+[2017-09-22 16:46:34] (ERROR in xPDOConnection::connect @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/xpdo.class.php : 3116) SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+[2017-09-22 16:46:34] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/om/xpdoobject.class.php : 263) Error preparing statement for query: SELECT `modSystemSetting`.`key` AS `modSystemSetting_key`, `modSystemSetting`.`value` AS `modSystemSetting_value`, `modSystemSetting`.`xtype` AS `modSystemSetting_xtype`, `modSystemSetting`.`namespace` AS `modSystemSetting_namespace`, `modSystemSetting`.`area` AS `modSystemSetting_area`, `modSystemSetting`.`editedon` AS `modSystemSetting_editedon` FROM `modx_system_settings` AS `modSystemSetting`  - 
+[2017-09-22 16:46:34] (ERROR in xPDOConnection::connect @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/xpdo.class.php : 3116) SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+[2017-09-22 16:46:34] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/om/xpdoquery.class.php : 653) Could not construct or prepare query because it is invalid or could not connect: SELECT `modSystemSetting`.`key` AS `modSystemSetting_key`, `modSystemSetting`.`value` AS `modSystemSetting_value`, `modSystemSetting`.`xtype` AS `modSystemSetting_xtype`, `modSystemSetting`.`namespace` AS `modSystemSetting_namespace`, `modSystemSetting`.`area` AS `modSystemSetting_area`, `modSystemSetting`.`editedon` AS `modSystemSetting_editedon` FROM `modx_system_settings` AS `modSystemSetting` 
+[2017-09-22 16:46:34] (ERROR in xPDOConnection::connect @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/xpdo.class.php : 3116) SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+[2017-09-22 16:46:34] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/om/xpdoobject.class.php : 263) Error preparing statement for query: SELECT `modSystemSetting`.`key` AS `modSystemSetting_key`, `modSystemSetting`.`value` AS `modSystemSetting_value`, `modSystemSetting`.`xtype` AS `modSystemSetting_xtype`, `modSystemSetting`.`namespace` AS `modSystemSetting_namespace`, `modSystemSetting`.`area` AS `modSystemSetting_area`, `modSystemSetting`.`editedon` AS `modSystemSetting_editedon` FROM `modx_system_settings` AS `modSystemSetting`  - 
+[2017-09-22 16:46:34] (FATAL) Could not load core MODX configuration!
+[2017-09-22 16:46:38] (ERROR in xPDOConnection::connect @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/xpdo.class.php : 3116) SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+[2017-09-22 16:46:38] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/om/xpdoquery.class.php : 653) Could not construct or prepare query because it is invalid or could not connect: SELECT `modSystemSetting`.`key` AS `modSystemSetting_key`, `modSystemSetting`.`value` AS `modSystemSetting_value`, `modSystemSetting`.`xtype` AS `modSystemSetting_xtype`, `modSystemSetting`.`namespace` AS `modSystemSetting_namespace`, `modSystemSetting`.`area` AS `modSystemSetting_area`, `modSystemSetting`.`editedon` AS `modSystemSetting_editedon` FROM `modx_system_settings` AS `modSystemSetting` 
+[2017-09-22 16:46:38] (ERROR in xPDOConnection::connect @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/xpdo.class.php : 3116) SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+[2017-09-22 16:46:38] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/om/xpdoobject.class.php : 263) Error preparing statement for query: SELECT `modSystemSetting`.`key` AS `modSystemSetting_key`, `modSystemSetting`.`value` AS `modSystemSetting_value`, `modSystemSetting`.`xtype` AS `modSystemSetting_xtype`, `modSystemSetting`.`namespace` AS `modSystemSetting_namespace`, `modSystemSetting`.`area` AS `modSystemSetting_area`, `modSystemSetting`.`editedon` AS `modSystemSetting_editedon` FROM `modx_system_settings` AS `modSystemSetting`  - 
+[2017-09-22 16:46:38] (ERROR in xPDOConnection::connect @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/xpdo.class.php : 3116) SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+[2017-09-22 16:46:38] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/om/xpdoquery.class.php : 653) Could not construct or prepare query because it is invalid or could not connect: SELECT `modSystemSetting`.`key` AS `modSystemSetting_key`, `modSystemSetting`.`value` AS `modSystemSetting_value`, `modSystemSetting`.`xtype` AS `modSystemSetting_xtype`, `modSystemSetting`.`namespace` AS `modSystemSetting_namespace`, `modSystemSetting`.`area` AS `modSystemSetting_area`, `modSystemSetting`.`editedon` AS `modSystemSetting_editedon` FROM `modx_system_settings` AS `modSystemSetting` 
+[2017-09-22 16:46:38] (ERROR in xPDOConnection::connect @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/xpdo.class.php : 3116) SQLSTATE[HY000] [2002] Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+[2017-09-22 16:46:38] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/om/xpdoobject.class.php : 263) Error preparing statement for query: SELECT `modSystemSetting`.`key` AS `modSystemSetting_key`, `modSystemSetting`.`value` AS `modSystemSetting_value`, `modSystemSetting`.`xtype` AS `modSystemSetting_xtype`, `modSystemSetting`.`namespace` AS `modSystemSetting_namespace`, `modSystemSetting`.`area` AS `modSystemSetting_area`, `modSystemSetting`.`editedon` AS `modSystemSetting_editedon` FROM `modx_system_settings` AS `modSystemSetting`  - 
+[2017-09-22 16:46:38] (FATAL) Could not load core MODX configuration!
+[2017-09-22 16:52:57] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/model/modx/modcachemanager.class.php : 344) Error caching lexicon topic lexicon/ru/core/default
+[2017-10-04 11:16:38] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/model/modx/modcachemanager.class.php : 344) Error caching lexicon topic lexicon/ru/core/default
+[2017-10-04 11:22:15] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/model/modx/modcachemanager.class.php : 344) Error caching lexicon topic lexicon/en/core/default
+[2017-10-04 11:22:15] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/model/modx/modcachemanager.class.php : 344) Error caching lexicon topic lexicon/ru/core/default
+[2017-10-09 14:29:10] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/model/modx/modcachemanager.class.php : 344) Error caching lexicon topic lexicon/ru/core/default
+[2017-10-11 16:06:08] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/model/phpthumb/modphpthumb.class.php : 121) phpThumb was unable to generate a thumbnail for: /var/www/nikolay31/data/www/veeptest.ru/core/cache/phpthumb/veeptest.ru__src1deb5900c4252d2caccdac1c04573df5_par5ec9be3d082e600179ae51f34f149e74_dat0.png
+[2017-10-11 16:06:08] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/model/phpthumb/modphpthumb.class.php : 133) Error outputting thumbnail:
+OutputThumbnail() failed because !is_resource($this->gdimg_output) in file "phpthumb.class.php" on line 618
+[2017-10-11 16:06:12] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/model/phpthumb/modphpthumb.class.php : 121) phpThumb was unable to generate a thumbnail for: /var/www/nikolay31/data/www/veeptest.ru/core/cache/phpthumb/veeptest.ru__src4705ff11eaff303cc05c1885023abde6_par5ec9be3d082e600179ae51f34f149e74_dat0.png
+[2017-10-11 16:06:12] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/model/phpthumb/modphpthumb.class.php : 133) Error outputting thumbnail:
+OutputThumbnail() failed because !is_resource($this->gdimg_output) in file "phpthumb.class.php" on line 618
+[2017-10-11 16:06:17] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/model/phpthumb/modphpthumb.class.php : 121) phpThumb was unable to generate a thumbnail for: /var/www/nikolay31/data/www/veeptest.ru/core/cache/phpthumb/veeptest.ru__srcd20b4bb918d4a578b0cce75ce8814827_par5ec9be3d082e600179ae51f34f149e74_dat0.png
+[2017-10-11 16:06:17] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/model/phpthumb/modphpthumb.class.php : 133) Error outputting thumbnail:
+OutputThumbnail() failed because !is_resource($this->gdimg_output) in file "phpthumb.class.php" on line 618
+[2017-10-16 16:48:41] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/model/modx/modcachemanager.class.php : 344) Error caching lexicon topic lexicon/en/core/default
+[2017-10-16 16:48:41] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/model/modx/modcachemanager.class.php : 344) Error caching lexicon topic lexicon/en/core/default
+[2017-10-27 14:10:48] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/om/xpdoobject.class.php : 240) Error 42S22 executing statement: 
+Array
+(
+    [0] => 42S22
+    [1] => 1054
+    [2] => Unknown column 'c' in 'where clause'
+)
+
+[2017-10-27 14:10:48] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/om/xpdoobject.class.php : 240) Error 42S22 executing statement: 
+Array
+(
+    [0] => 42S22
+    [1] => 1054
+    [2] => Unknown column 'c' in 'where clause'
+)
+
+[2017-10-27 15:04:13] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/om/xpdoobject.class.php : 240) Error 42S22 executing statement: 
+Array
+(
+    [0] => 42S22
+    [1] => 1054
+    [2] => Unknown column 'afConfig.assetsUrl' in 'where clause'
+)
+
+[2017-10-27 15:04:13] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/om/xpdoobject.class.php : 240) Error 42S22 executing statement: 
+Array
+(
+    [0] => 42S22
+    [1] => 1054
+    [2] => Unknown column 'afConfig.assetsUrl' in 'where clause'
+)
+
+[2017-10-27 15:05:14] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/om/xpdoobject.class.php : 240) Error 42S22 executing statement: 
+Array
+(
+    [0] => 42S22
+    [1] => 1054
+    [2] => Unknown column 'afConfig.assetsUrl' in 'where clause'
+)
+
+[2017-10-27 15:05:14] (ERROR @ /var/www/nikolay31/data/www/veeptest.ru/core/xpdo/om/xpdoobject.class.php : 240) Error 42S22 executing statement: 
+Array
+(
+    [0] => 42S22
+    [1] => 1054
+    [2] => Unknown column 'afConfig.assetsUrl' in 'where clause'
+)
+

@@ -1,0 +1,20 @@
+#catsearch label {
+	display: block;
+	font-weight: bold;
+}
+
+#catsearch input, #catsearch select {
+	width: 100%;
+}
+
+#catsearch div {
+	margin-bottom: 10px;
+}
+
+#catsearch div.range {
+	margin-top: 5px;
+}
+
+#catsearch div input.input-range {
+	width: 50px;
+}
