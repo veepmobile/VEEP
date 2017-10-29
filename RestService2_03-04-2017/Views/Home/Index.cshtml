@@ -1,14 +1,494 @@
-﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+﻿
+<!DOCTYPE html>
+<html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta http-equiv="REFRESH" content="1; URL=http://veeptest.ru">
-    <title>VEEP</title>
+    <base href="http://localhost:49636/">
+    <title>Главная | VEEP</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8 " />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=1200">
+
+    <link rel="stylesheet" type="text/css" href="~/Content/veep/fonts/raleway.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/veep/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/veep/css/style.css" />
+    <link rel="stylesheet" href="~/Content/veep/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/veep/slick/slick.css" />
+    <link rel="icon" href="/favicon.png">
+    <!--[if IE]><link rel="shortcut icon" href="/favicon.ico"><![endif]-->
+    <script type="text/javascript" src="http://gc.kis.v2.scr.kaspersky-labs.com/EB9065AC-32F6-C34D-8EC7-AB4F72D1CFA3/main.js" charset="UTF-8"></script>
+    <link rel="stylesheet" crossorigin="anonymous" href="http://gc.kis.v2.scr.kaspersky-labs.com/3AFC1D27F4BA-7CE8-D43C-6F23-CA5609BE/abn/main.css" />
+    <script type="text/javascript" src="~/Content/veep/js/jquery.js"></script>
+    <script type="text/javascript" src="~/Content/veep/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Content/veep/js/jquery.nav.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.goodshare.js/3.2.3/goodshare.min.js"></script>
+
+    <script type="text/javascript" src="~/Content/veep/slick/slick.min.js"></script>
+    <script src="~/Content/veep/magnific-popup/jquery.magnific-popup.min.js"></script>
+    <link rel="stylesheet" href="~/Content/veep/magnific-popup/magnific-popup.css">
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+       /*     $('.zoom').magnificPopup({
+                type: 'image'
+            });
+            $('.zoom-gal').magnificPopup({
+                type: 'image',
+                gallery: { enabled: true }
+            });
+            $('.modal-window').magnificPopup({
+                type: 'inline'
+            });
+            $.extend(true, $.magnificPopup.defaults, { // перевод для magnific-popup
+                tClose: 'Закрыть (Esc)', // Alt text on close button
+                tLoading: 'Загрузка...', // Text that is displayed during loading. Can contain %curr% and %total% keys
+                gallery: {
+                    tPrev: 'Предыдущий', // Alt text on left arrow
+                    tNext: 'Следующий', // Alt text on right arrow
+                    tCounter: '%curr% из %total%' // Markup for "1 of 7" counter
+                },
+                image: {
+                    tError: 'Не удалось загрузить <a href="%url%">изображение</a>.' // Error message when image could not be loaded
+                },
+                ajax: {
+                    tError: 'Не удалось загрузить <a href="%url%">содержимое</a>.' // Error message when ajax request failed
+                }
+            });
+            */
+
+            var sliderWrapper = $('.slider-wrapper');
+            sliderWrapper.removeClass('loading');
+            if (sliderWrapper.data('adaptive') == '1') {
+                $(window).resize(function () {
+                    var sliderHeight = parseInt(sliderWrapper.data('height')) * $(sliderWrapper).width() / parseInt(sliderWrapper.data('width'));
+                    sliderWrapper.css('height', sliderHeight + 'px');
+                }).trigger('resize');
+            }
+
+            $('.slick-slider').show().slick({
+                autoplay: true,
+                speed: 800,
+                autoplaySpeed: 5000,
+                fade: true,
+                arrows: true,
+                dots: false,
+                adaptiveHeight: true,
+                prevArrow: '<button type="button" class="slick-prev"></button>',
+                nextArrow: '<button type="button" class="slick-next"></button>'
+            });
+
+            $('.carousel-partners').slick({
+                infinite: true,
+                slidesToShow: 6,
+                slidesToScroll: 1,
+                autoplay: true,
+                speed: 800,
+                autoplaySpeed: 3000,
+                prevArrow: '<button type="button" class="slick-prev"><i class="fa fa-angle-left"></i></button>',
+                nextArrow: '<button type="button" class="slick-next"><i class="fa fa-angle-right"></i></button>'
+            });
+
+            $('#menuToggle, .menu-close').on('click', function () {
+                $('#menuToggle').toggleClass('active');
+                $('body').toggleClass('body-push-toleft');
+                $('#theMenu').toggleClass('menu-open');
+            });
+
+            $('.full-wrapper').click(function () {
+                $('#theMenu').removeClass('menu-open');
+            });
+
+
+            $('.menu').onePageNav({
+                currentClass: 'active',
+                changeHash: false,
+                scrollSpeed: 1000,
+                scrollThreshold: 0.5,
+                filter: '',
+                easing: 'swing'
+            });
+
+
+            var headerFix = $('.header-bottom');
+            var headerTopHeight = $('.header-top').height();
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > headerTopHeight && headerFix.hasClass('not-fixed')) {
+                    headerFix.removeClass('not-fixed').addClass('header-fixed');
+                } else if ($(this).scrollTop() <= headerTopHeight && headerFix.hasClass('header-fixed')) {
+                    headerFix.removeClass('header-fixed').addClass('not-fixed');
+                }
+            });
+        });
+    </script>
+
+    <link rel="stylesheet" href="~/Content/veep/ajax-form/default.css" type="text/css" />
 </head>
-<body>
+<body id="top">
+    <script>
+        $(function () {
+            var toTopButton = $('#button-to-top');
+            var edgeValue = 100;
+            var wind = $(window);
+
+            $(window).scroll(function (e) {
+                toTopButton.toggle(wind.scrollTop() > edgeValue);
+            }).trigger('scroll');
+            toTopButton.click(function () {
+                $('html, body').animate({ scrollTop: 0 }, 300);
+            });
+        });
+    </script>
+
+    <!--<div id="button-to-top" class="btn-top-top"><i class="fa fa-chevron-up"></i></div>-->
+    <nav class="menu" id="theMenu">
+        <ul class="menu-wrap">
+            <li class="logo-menu"><a href="#top">VEEP</a></li>
+            <i class="fa fa-close icon-remove menu-close"></i>
+            <li><a href="#blok-3" class="smoothScroll">Уже доступно в ресторанах</a></li>
+            <li><a href="#blok-1" class="smoothScroll">Для чего это нужно</a></li>
+            <li><a href="#blok-2" class="smoothScroll">Как это работает</a></li>
+            <li><a href="#kontaktyi" class="smoothScroll">Контакты</a></li>
+        </ul>
+        <div id="menuToggle"><i class="fa fa-bars"></i></div>
+    </nav>
+    <div class="full-wrapper">
+        <header class="header-main">
+            <div class="header-top">
+                <div class="container">
+                    <div class="logo" role="banner">
+
+                    </div>
+                    <div class="slogan">Сервис высочайшего уровня в любом кафе и ресторане									 									</div>
+                    <div class="download-links">
+                        <a href="https://play.google.com/store/apps/details?id=ru.veeppay.app" target="_blank"><img src="~/Content/veep/images/get-it-on-google-play.svg" alt="Google play" width="200"></a>
+                        <a href="https://itunes.apple.com/ru/app/veep/id1109320099?mt=8" target="_blank"><img src="~/Content/veep/images/logoapp.svg" alt="App store" width="200"></a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="content">
+            <section class="block-item block-16" id="blok-3">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12"><h2 class="page-header">Уже доступно в ресторанах</h2></div>
+
+                        <div class="col-xs-12">
+
+
+                            <div class="carousel-partners">
+                                <div class="carousel-partners-tpl">
+                                    <div class="partner-img-block">
+                                        <a href="http://novikovgroup.ru/restaurants/brisket-bbq/ " target="_blank">
+                                            <img src="~/Content/veep/partners/brisket.png" alt="brisket">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-partners-tpl">
+                                    <div class="partner-img-block">
+                                        <a href="http://www.bulkabakery.ru/ru " target="_blank">
+                                            <img src="~/Content/veep/partners/bulka.png" alt="bulka">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-partners-tpl">
+                                    <div class="partner-img-block">
+                                        <a href="http://xlebvino.com/ " target="_blank">
+                                            <img src="~/Content/veep/partners/hleb.png" alt="hleb">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-partners-tpl">
+                                    <div class="partner-img-block">
+                                        <a href="http://kimchicafe.ru/ " target="_blank">
+                                            <img src="~/Content/veep/partners/kimchi.png" alt="kimchi">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-partners-tpl">
+                                    <div class="partner-img-block">
+                                        <a href="http://kwakpub.ru/ " target="_blank">
+                                            <img src="~/Content/veep/partners/kwak.png" alt="kwak">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-partners-tpl">
+                                    <div class="partner-img-block">
+                                        <a href="http://chacharoom.ru/ " target="_blank">
+                                            <img src="~/Content/veep/partners/logo-cha-cha.png" alt="logo-cha-cha">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-partners-tpl">
+                                    <div class="partner-img-block">
+                                        <a href="http://novikovgroup.ru/restaurants/luce/ " target="_blank">
+                                            <img src="~/Content/veep/partners/luce.png" alt="luce">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-partners-tpl">
+                                    <div class="partner-img-block">
+                                        <a href="http://www.thenoodlehouse.com/ " target="_blank">
+                                            <img src="~/Content/veep/partners/noodlehouse.png" alt="noodlehouse">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-partners-tpl">
+                                    <div class="partner-img-block">
+                                        <a href="http://novikovgroup.ru/restaurants/vogue-cafe/ " target="_blank">
+                                            <img src="~/Content/veep/partners/vogue.png" alt="vogue">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-partners-tpl">
+                                    <div class="partner-img-block">
+                                        <a href="http://novikovgroup.ru/restaurants/white-cafe/ " target="_blank">
+                                            <img src="~/Content/veep/partners/white-cafe.png" alt="white-cafe">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-partners-tpl">
+                                    <div class="partner-img-block">
+                                        <a href="http://novikovgroup.ru/restaurants/zoo-beergrill/ " target="_blank">
+                                            <img src="~/Content/veep/partners/zoo.png" alt="zoo">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-partners-tpl">
+                                    <div class="partner-img-block">
+                                        <a href="http://www.starlite.ru/ " target="_blank">
+                                            <img src="~/Content/veep/partners/starlite.png" alt="Starlite">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-partners-tpl">
+                                    <div class="partner-img-block">
+                                        <a href="http://www.chicagoprime.ru/bar.php " target="_blank">
+                                            <img src="~/Content/veep/partners/chicago.png" alt="Chicago">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="image-page"></div>
+                </div>
+            </section>
+            <section class="block-item block-14" id="blok-1">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12"><h2 class="page-header">Для чего это нужно</h2></div>
+
+                        <div class="col-xs-12">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="text-big">
+                                        <p><span>Теперь вам не нужно ждать официанта</span></p>
+                                        <ul>
+                                            <li>просмотр состава заказа </li>
+                                            <li>вызов официанта </li>
+                                            <li>применение дисконтной карты </li>
+                                            <li>оплата заказа </li>
+                                            <li>оценка сервиса </li>
+                                        </ul>
+                                        <p>
+                                            <span>Все это доступно одним нажатием с мобильным приложением VEEP</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <p class="text-center">
+                                        <img src="~/Content/veep/images/4.png" alt="Дисконтные карты" width="200">
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="image-page"></div>
+                </div>
+            </section>
+            <section class="block-item block-15" id="blok-2">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12"><h2 class="page-header">Как это работает</h2></div>
+
+                        <div class="col-xs-12">
+                            <div class="work-item-list">
+                                <div class="work-item">
+                                    <img src="~/Content/veep/images/1.png" alt="" height="395">
+                                    <p>
+                                        Скачайте бесплатное приложение VEEP
+                                    </p>
+                                </div>
+                                <div class="work-item">
+                                    <img src="~/Content/veep/images/2.png" alt="" height="395">
+                                    <p>
+                                        Для регистрации потребуется только номер телефона
+                                    </p>
+                                </div>
+                                <div class="work-item">
+                                    <img src="~/Content/veep/images/3.png" alt="" height="395">
+                                    <p>
+                                        Привяжите дисконтные и банковские карты
+                                    </p>
+                                </div>
+                                <div class="work-item">
+                                    <img src="~/Content/veep/images/4.png" alt="" height="395">
+                                    <p>
+                                        Сканируйте QR-код полученный у официанта
+                                    </p>
+                                </div>
+                                <div class="work-item">
+                                    <img src="~/Content/veep/images/5.png" alt="" height="395">
+                                    <p>
+                                        Оплатите заказ одним нажатием
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="image-page"></div>
+                </div>
+            </section>
+            <section class="block-item block-2" id="kontaktyi">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12"><h2 class="page-header">Контакты</h2></div>
+
+                        <div class="col-xs-12">
+                            <div class="contacts-all">
+                                <p class=""><span><i class="fa fa-fw fa-phone"></i> <strong></strong> <a href="tel:+79854198507">+7 (985) 419-85-07</a></span></p><p class="">
+                                    <span>
+                                        <i class="fa fa-fw fa-envelope-o"></i> <strong></strong>
+                                        <noindex>
+                                            <script type="text/javascript" language="javascript">
+                                                document.write(unescape('%3c%61%20%68%72%65%66%3d%22%6d%61%69%6c%74%6f%3a%6e%72%40%6e%6f%76%61%74%6f%72%6f%76%2e%63%6f%6d%22%20%72%65%6c%3d%22%6e%6f%66%6f%6c%6c%6f%77%22%3e%6e%72%40%6e%6f%76%61%74%6f%72%6f%76%2e%63%6f%6d%3c%2f%61%3e'));
+                                            </script>
+                                        </noindex>
+                                    </span>
+                                </p><p class=""><span><i class="fa fa-fw fa-map-marker"></i> <strong></strong> Россия, г. Москва, ул. Ленинская слобода, 19, БЦ "Омега Плаза"</span></p>
+                                <br>
+                                <div class="download-links">
+                                    <a href="https://play.google.com/store/apps/details?id=ru.veeppay.app" target="_blank"><img src="~/Content/veep/images/get-it-on-google-play.svg" alt="Google play" width="150"></a>
+                                    <a href="https://itunes.apple.com/ru/app/veep/id1109320099?mt=8" target="_blank"><img src="~/Content/veep/images/logoapp.svg" alt="App store" width="150"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="image-page"></div>
+                </div>
+            </section>
+        </main>
+        <div class="pushfooter"></div>
+    </div>
+    <footer class="footer-main">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="copyright">&copy; VEEP - 2017</span>
+                </div>
+                <div class="col-md-4">
+                    <div class="social-block">
+                        <a class="social-buttons-item goodshare" data-type="vk" title="Поделиться в вКонтакте"><i class="fa fa-vk"></i></a><a class="social-buttons-item goodshare" data-type="fb" title="Поделиться в Facebook"><i class="fa fa-facebook"></i></a><a class="social-buttons-item goodshare" data-type="tw" title="Поделиться в Твиттер"><i class="fa fa-twitter"></i></a>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="footer-links">
+                        <!--LiveInternet counter-->
+                        <script type="text/javascript">
+<!--
+document.write("<a href='//www.liveinternet.ru/click' "+
+"target=_blank><img src='//counter.yadro.ru/hit?t44.6;r"+
+escape(document.referrer)+((typeof(screen)=="undefined")?"":
+";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?
+screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
+";"+Math.random()+
+"' alt='' title='LiveInternet' "+
+"border='0' width='31' height='31'><\/a>")
+//--></script><!--/LiveInternet-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!--
+    <div id="order-form" class="mfp-hide modal-block">
+        <div class="modal-block-name">Заказать звонок</div>
+        <form class="form fos ajax_form" action="http://veeptest.ru/" method="post">
+            <input type="hidden" name="nospam:blank" value="">
+            <div class="form-group has-feedback">
+                <label for="name"> Ваше имя*:  </label>
+                <input id="name" type="text" class="form-control" name="name" value="" placeholder="Ваше имя" required>
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label for="email"> E-mail*:  </label>
+                <input id="email" type="email" class="form-control" name="email" value="" placeholder="Ваша почта">
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label for="phone"> Телефон:  </label>
+                <input id="phone" type="text" class="form-control" name="phone" value="" placeholder="Ваш телефон" required>
+                <span class="glyphicon glyphicon-phone form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label for="phone"> Время звонка:  </label>
+                <input id="time" type="text" class="form-control" name="time" value="" placeholder="Время звонка">
+                <span class="glyphicon glyphicon-time form-control-feedback"></span>
+            </div>
+
+            <p>* Поля обязательные для заполнения</p>
+            <div class="form-buttons"><input type="submit" value="Отправить" class="btn btn-defalut" /></div>
+
+            <input type="hidden" name="af_action" value="8c2d0dd90a224fd85de05bdccab014cb" />
+        </form>
+    </div>
+
+    <div id="order-form2" class="mfp-hide modal-block">
+        <div class="modal-block-name">Перезвоните мне прямо сейчас</div>
+        <form class="form fos ajax_form" action="http://veeptest.ru/" method="post">
+            <input type="hidden" name="nospam:blank" value="">
+            <div class="form-group has-feedback">
+                <label for="name"> Ваше имя*:  </label>
+                <input id="name" type="text" class="form-control" name="name" value="" placeholder="Ваше имя" required>
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label for="email"> E-mail*:  </label>
+                <input id="email" type="email" class="form-control" name="email" value="" placeholder="Ваша почта">
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label for="phone"> Телефон:  </label>
+                <input id="phone" type="text" class="form-control" name="phone" value="" placeholder="Ваш телефон" required>
+                <span class="glyphicon glyphicon-phone form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <label for="phone"> Время звонка:  </label>
+                <input id="time" type="text" class="form-control" name="time" value="" placeholder="Время звонка">
+                <span class="glyphicon glyphicon-time form-control-feedback"></span>
+            </div>
+
+            <p>* Поля обязательные для заполнения</p>
+            <div class="form-buttons"><input type="submit" value="Отправить" class="btn btn-defalut" /></div>
+
+            <input type="hidden" name="af_action" value="8c2d0dd90a224fd85de05bdccab014cb" />
+        </form>
+    </div>
 
 
 
+
+    <script type="text/javascript" src="~/Content/veep/ajax-form/default.js"></script>
+    <script type="text/javascript">AjaxForm.initialize({ "assetsUrl": "\/assets\/components\/ajaxform\/", "actionUrl": "\/assets\/components\/ajaxform\/action.php", "closeMessage": "\u0437\u0430\u043a\u0440\u044b\u0442\u044c \u0432\u0441\u0435", "formSelector": "form.ajax_form", "pageId": 1 });</script>
+    -->
 </body>
 </html>
