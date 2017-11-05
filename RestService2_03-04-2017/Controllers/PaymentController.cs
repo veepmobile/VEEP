@@ -362,7 +362,7 @@ namespace RestService.Controllers
 
                     smtpClient.Host = "integrationapi.net";
                     smtpClient.Port = 587;
-                    smtpClient.EnableSsl = false;
+                    smtpClient.EnableSsl = true;
                     smtpClient.Credentials = new NetworkCredential("novatorov", "DmE4Z7N9");
 
                     var msg = new MailMessage(sourceEmail, mail) { Sender = new MailAddress(sourceEmail), Subject = subject, Body = messageText, SubjectEncoding = System.Text.Encoding.Default, IsBodyHtml = true };
