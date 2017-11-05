@@ -10,6 +10,13 @@
     <script type="text/javascript" src="../../js/jquery.url.js"></script>
     <script type="text/javascript" src="../../js/jquery.payment.js"></script>
     <link href="css/base.css" rel="stylesheet" type="text/css" />
+    <script>
+
+        $(document).payment({
+
+        });
+
+    </script>
 </head>
 
 <body>
@@ -20,6 +27,20 @@
     <div class="main-logo">
         <img src="img/sberbank-main-logo.png" />
     </div>
+    <div class="rows hidden">
+        <div class="row hidden">
+            <div class="left txt-left caption" id="orderNumber"></div>
+        </div>
+        <hr class="hidden" />
+        <div class="row hidden">
+            <div class="left txt-left caption">Сумма к оплате</div>
+            <div class="right txt-right value" id="amount"></div>
+        </div>
+    </div>
+    <div class="info hidden" id="description"></div>
+    <div class="info hidden" id="numberCountdown"></div>
+    <div class="info hidden" id="errorBlock"></div>
+    <div class="info hidden" id="infoBlock"></div>
     <form name="PaymentForm" action="#" method="post" id="formPayment">
         <input type="hidden" id="expiry" />
         <input type="hidden" id="mdOrder" />
@@ -67,6 +88,9 @@
                 </div>
             </div>
 		</div>
+        <div class="row hidden">
+            <input name="TEXT" id="iTEXT" maxlength="90" type="text" autocomplete="off" />
+        </div>
         <label>CVV</label>
         <div class="row">
             <input name="$CVC" id="iCVC" maxlength="3" type="password" autocomplete="off" pattern="[0-9]*" inputmode="numeric"/>
