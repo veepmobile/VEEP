@@ -437,8 +437,8 @@ namespace RestService
                 string clientId = GetClientId(phoneNumber, phoneCode);
                 //Регистрация двухстадийного платежа в платежной системе
                 registerResponse response = new registerResponse();
-                string returnUrl = "http://185.26.113.204/Payment/PreOrder";
-                //string returnUrl = "http://test.veep.su/Payment/PreOrder";
+                //string returnUrl = "http://185.26.113.204/Payment/PreOrder";
+                string returnUrl = "http://test.veep.su/Payment/PreOrder";
                 response = MerchantData.registerPreOrder(Helper.getNewGUID(), 200, returnUrl, clientId, "");
                 if (response != null)
                 {

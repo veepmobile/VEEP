@@ -244,7 +244,8 @@ namespace RestService.Controllers
                 Helper.saveToLog(0, "", "PreOrder", "orderId=" + orderId,"", 0);
                 //Запрашиваем статус заказа в платежной системе
                 orderStatusResponse response = new orderStatusResponse();
-                response = MerchantData.getOrderStatus(orderId,1);
+                //response = MerchantData.getOrderStatus(orderId, 1);
+                response = MerchantData.getOrderStatus(orderId, 0);
                 if (response != null)
                 {
                     //Вставка связки в БД
