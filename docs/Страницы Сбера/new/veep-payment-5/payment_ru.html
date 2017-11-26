@@ -1,10 +1,10 @@
-﻿<?xml version="1.0"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
 <head>
     <title></title>
     <meta name="viewport" content="width=750px, user-scalable=no" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script type="text/javascript" src="../../js/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="../../js/jquery.timers-1.2.js"></script>
     <script type="text/javascript" src="../../js/jquery.url.js"></script>
@@ -18,71 +18,99 @@
 
     </script>
 </head>
-
 <body>
-<div id="indicator" class="loader" style="display:none;">
-    <img src="img/spin.gif" height="144" width="144" alt="indicator" />
-</div>
-<div class="wrap-page">
-    <div class="main-logo">
-        <img src="img/sberbank-main-logo.png" />
+    <div id="indicator" class="loader" style="display:none;">
+        <img src="img/spin.gif" height="144" width="144" alt="indicator" />
     </div>
-    <form name="PaymentForm" action="#" method="post" id="formPayment">
-        <input type="hidden" id="expiry" />
-        <input type="hidden" id="mdOrder" />
-        <input type="hidden" id="location" value="/../" />
-        <input type="hidden" id="language" value="ru" />
-        <label>Номер карты</label>
-        <div class="row">
-            <input name="$PAN" id="iPAN" type="text" autocomplete="off"  inputmode="numeric" />
+    <div class="wrap-page">
+        <div class="main-logo">
+            <img src="img/sberbank-main-logo.png" />
         </div>
-        <label>Срок действия</label>
-		<div class="rows">
+        <div class="rows hidden">
+            <div class="row hidden">
+                <div class="left txt-left caption" id="orderNumber"></div>
+            </div>
+            <hr class="hidden" />
+            <div class="row hidden">
+                <div class="left txt-left caption">Сумма к оплате</div>
+                <div class="right txt-right value" id="amount"></div>
+            </div>
+        </div>
+        <div class="info hidden" id="description"></div>
+        <div class="info hidden" id="numberCountdown"></div>
+        <div class="info hidden" id="errorBlock"></div>
+        <div class="info hidden" id="infoBlock"></div>
+        <form name="PaymentForm" action="#" method="post" id="formPayment">
+            <input type="hidden" id="expiry" />
+            <input type="hidden" id="mdOrder" />
+            <input type="hidden" id="location" value="/../" />
+            <input type="hidden" id="language" value="ru" />
+            <label>Номер карты</label>
             <div class="row">
-                <div class="abs">
-                    <select name="MM" id="month">
-                        <option value="01" selected>01</option>
-                        <option value="02">02</option>
-                        <option value="03">03</option>
-                        <option value="04">04</option>
-                        <option value="05">05</option>
-                        <option value="06">06</option>
-                        <option value="07">07</option>
-                        <option value="08">08</option>
-                        <option value="09">09</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                    </select>
+                <input name="$PAN" id="iPAN" type="text" autocomplete="off" pattern="[0-9]*" inputmode="numeric" />
+            </div>
+            <label>Срок действия</label>
+            <div class="rows">
+                <div class="row">
+                    <div class="abs">
+                        <select name="MM" id="month">
+                            <option value="01" selected=selected>01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row"><span>/</span></div>
+                <div class="row">
+                    <div class="abs">
+                        <select name="YYYY" id="year">
+                            <option value="2017" selected=selected>2017</option>
+                            <option value="2018">2018</option>
+                            <option value="2019">2019</option>
+                            <option value="2020">2020</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="row"><span>/</span></div>
-            <div class="row">
-                <div class="abs">
-                    <select name="YYYY" id="year"><option value="02">02</option></select>
-                </div>
+            <div class="row hidden">
+                <input name="TEXT" id="iTEXT" maxlength="90" type="text" autocomplete="off" value="cardholder" />
             </div>
-		</div>
-        <label>CVV</label>
-        <div class="row">
-            <input name="$CVC" id="iCVC" maxlength="3" type="password" autocomplete="off" pattern="[0-9]*" inputmode="numeric" />
+            <label>CVV</label>
+            <div class="row">
+                <input name="$CVC" id="iCVC" maxlength="3" type="password" autocomplete="off" pattern="[0-9]*" inputmode="numeric" />
+            </div>
+            <div class="submit">
+                <input value="Привязать карту" type="button" id="buttonPayment" />
+            </div>
+        </form>
+        <form id="acs" method="post" action="">
+            <input type="hidden" id="MD" name="MD" />
+            <input type="hidden" id="PaReq" name="PaReq" />
+            <input type="hidden" id="TermUrl" name="TermUrl" />
+        </form>
+        <div class="logos">
+            <p>Будет списано и сразу возвращено 2.00 рубля.</p>
+            <img src="img/visa.png" alt="Visa" />
+            <img src="img/mir.png" alt="Мир" />
+            <img src="img/sberbank.png" alt="Сбербанк" />
+            <img src="img/maestro.png" alt="Maestro" />
+            <img src="img/mastercard.png" alt="Mastercard" />
         </div>
-        <div class="submit">
-            <input value="Привязать карту" type="button" id="buttonPayment"/>
-        </div>
-    </form>
-    <form id="acs" method="post" action="">
-        <input type="hidden" id="MD" name="MD"/>
-        <input type="hidden" id="PaReq" name="PaReq"/>
-        <input type="hidden" id="TermUrl" name="TermUrl"/>
-    </form>
-    <div class="logos">
-        <img src="img/visa.png" alt="Visa" />
-        <img src="img/mir.png" alt="Мир" />
-        <img src="img/sberbank.png" alt="Сбербанк" />
-        <img src="img/maestro.png" alt="Maestro" />
-        <img src="img/mastercard.png" alt="Mastercard" />
     </div>
-</div>
 </body>
 </html>
