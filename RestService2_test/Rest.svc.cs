@@ -940,7 +940,11 @@ namespace RestService
                             discard.CardNumber = (long?)item.DiscountCard.CardNumber;
                             discard.CardStatus = item.DiscountCard.CardStatus;
                             discard.LastDate = item.DiscountCard.LastDate;
-                            order.DiscountCard = discard;
+                            order.DiscountCard = discard; 
+                            if (item.DiscountCard != null && item.DiscountCard.CardStatus == 1)
+                            {
+                                long? result_status = UpdateDiscountCard(phoneNumber, discard.CardNumber, 1, user_key, phoneCode, language);
+                            }
                         }
 
 
