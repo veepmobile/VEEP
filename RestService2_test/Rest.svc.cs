@@ -327,9 +327,10 @@ namespace RestService
         }
 
         //Применение/проверка дисконтной карты
-        public int CheckDiscountCard(string phoneNumber, int restaurantID, string orderNumber, string user_key, long? discountCard, string phoneCode = "7", int language = 0)
+        public int CheckDiscountCard(string phoneNumber, int restaurantID, string orderNumber, string user_key, long? discountCard=null, string phoneCode = "7", int language = 0)
         {
             Helper.saveToLog(0, user_key, " CheckDiscountCard - пришло", "phoneNumber: " + phoneNumber + ", restaurant_id: " + restaurantID.ToString() + ", discountCard: " + discountCard.ToString(), "", 0);
+            Helper.saveToLog(0, user_key, "CheckDiscountCard - пришло из приложения", "restaurant_id: " + restaurantID.ToString() + ", discountCard=" + discountCard.ToString(), "", 0);
             List<Order> list = new List<Order>();
             list = GetOrderDiscount(restaurantID, orderNumber, user_key, phoneCode, language, discountCard);
             if (list != null)
@@ -551,8 +552,8 @@ namespace RestService
                 int restaurantID = RestaurantData.GetRestaurantID(rest);
 
                 //Заглушка для теста 
-                techItem = 22;
-                restaurantID = 730410002; //тестовый
+                techItem = 3;
+                restaurantID = 730410001; //тестовый
 
                 /* При первоначальном поиске заказа дисконтной карты еще нет
                 //Получение номера привязанной дисконтной карты
@@ -723,6 +724,8 @@ namespace RestService
         //Получение информации о заказе по его номеру
         public List<Order> GetOrderDiscount(int restaurantID, string orderNumber, string user_key, string phoneCode = "7", int language = 0, long? discountCard = null)
         {
+            if(discountCard == 0) { discountCard = null;}
+
             string phoneNumber = CheckUserKey(user_key);
             Helper.saveToLog(0, user_key, "GetOrderDiscount - пришло из приложения", "restaurant_id: " + restaurantID.ToString() + ", orderNumber=" + orderNumber + ", discountCard=" + discountCard.ToString(), "", 0);
             if (phoneNumber != "")
