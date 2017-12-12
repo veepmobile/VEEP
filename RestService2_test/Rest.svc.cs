@@ -329,8 +329,8 @@ namespace RestService
         //Применение/проверка дисконтной карты
         public int CheckDiscountCard(string phoneNumber, int restaurantID, string orderNumber, string user_key, long? discountCard=null, string phoneCode = "7", int language = 0)
         {
-            Helper.saveToLog(0, user_key, " CheckDiscountCard - пришло", "phoneNumber: " + phoneNumber + ", restaurant_id: " + restaurantID.ToString() + ", discountCard: " + discountCard.ToString(), "", 0);
-            Helper.saveToLog(0, user_key, "CheckDiscountCard - пришло из приложения", "restaurant_id: " + restaurantID.ToString() + ", discountCard=" + discountCard.ToString(), "", 0);
+            Helper.saveToLog(0, user_key, " CheckDiscountCard - пришло из приложения", "phoneNumber: " + phoneNumber + ", restaurant_id: " + restaurantID.ToString() + ", orderNumber: " + orderNumber + ", discountCard: " + discountCard.ToString(), "", 0);
+            //Helper.saveToLog(0, user_key, "CheckDiscountCard - пришло из приложения", "restaurant_id: " + restaurantID.ToString() + ", discountCard=" + discountCard.ToString(), "", 0);
             List<Order> list = new List<Order>();
             list = GetOrderDiscount(restaurantID, orderNumber, user_key, phoneCode, language, discountCard);
             if (list != null)
@@ -727,7 +727,7 @@ namespace RestService
             if(discountCard == 0) { discountCard = null;}
 
             string phoneNumber = CheckUserKey(user_key);
-            Helper.saveToLog(0, user_key, "GetOrderDiscount - пришло из приложения", "restaurant_id: " + restaurantID.ToString() + ", orderNumber=" + orderNumber + ", discountCard=" + discountCard.ToString(), "", 0);
+            //Helper.saveToLog(0, user_key, "GetOrderDiscount - пришло из приложения", "restaurant_id: " + restaurantID.ToString() + ", orderNumber=" + orderNumber + ", discountCard=" + discountCard.ToString(), "", 0);
             if (phoneNumber != "")
             {
                 //Запрос к Интеграционному модулю
@@ -741,7 +741,7 @@ namespace RestService
                 
                 //discountCard = 1001;
 
-                Helper.saveToLog(0, user_key, "GetOrderDiscount - отправлено в модуль", "restaurant_id: " + restaurantID.ToString() + ", orderNumber=" + orderNumber + ", discountCard=" + discountCard.ToString(), "", 0);
+                Helper.saveToLog(0, user_key, "GetOrderDiscount - отправлено в модуль:", "restaurant_id: " + restaurantID.ToString() + ", orderNumber=" + orderNumber + ", discountCard=" + discountCard.ToString(), "", 0);
                 IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, discountCard);
                 if (orders != null)
                 {
@@ -804,7 +804,7 @@ namespace RestService
                         order.ErrorCode = item.ErrorCode;
                         list.Add(order);
 
-                        Helper.saveToLog(0, user_key, "GetOrderDiscount", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "", 1);
+                        //Helper.saveToLog(0, user_key, "GetOrderDiscount", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "", 1);
 
                         //Проверка ошибки 31 - официант работает с заказом
                         if (item.ErrorCode == 31)
@@ -812,7 +812,7 @@ namespace RestService
                             order.ErrorCode = 31;
                             //order.Error = "Официант редактирует заказ. Повторите запрос через минуту.";
                             order.Error = Helper.GetError(31, language);
-                            Helper.saveToLog(0, user_key, "GetOrderDiscount", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "Официант работает с заказом", 1);
+                            Helper.saveToLog(0, user_key, "GetOrderDiscount - ошибка:", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "Официант работает с заказом", 1);
                             return list;
                         }
                         //Проверка оплаты заказа в БД
@@ -821,7 +821,7 @@ namespace RestService
                             order.ErrorCode = 5;
                             //order.Error = "Вы уже оплатили данный заказ. Для открытия нового заказа обратитесь к официанту.";
                             order.Error = Helper.GetError(5, language);
-                            Helper.saveToLog(0, user_key, "GetOrderDiscount", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: ", "Заказ уже оплачен", 1);
+                            Helper.saveToLog(0, user_key, "GetOrderDiscount - ошибка:", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: ", "Заказ уже оплачен", 1);
                             return list;
                         }
                         //Проверка закрытия заказа на кассе
@@ -832,7 +832,7 @@ namespace RestService
                                 order.ErrorCode = 6;
                                 //order.Error = "Ваш заказ закрыт. Для открытия нового заказа обратитесь к официанту.";
                                 order.Error = Helper.GetError(6, language);
-                                Helper.saveToLog(0, user_key, "GetOrderDiscount", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID.ToString() + ", StatusID: " + order.OrderStatus.StatusID.ToString(), "Заказ закрыт", 1);
+                                Helper.saveToLog(0, user_key, "GetOrderDiscount - ошибка:", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID.ToString() + ", StatusID: " + order.OrderStatus.StatusID.ToString(), "Заказ закрыт", 1);
                                 return list;
                             }
                         }
@@ -857,7 +857,7 @@ namespace RestService
                         
                     }
                     XMLGenerator<List<Order>> listXML = new XMLGenerator<List<Order>>(list);
-                    Helper.saveToLog(0, user_key, "GetOrderDiscount - пришло из модуля", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Найдены заказы: " + listXML.GetStringXML(), 0);
+                    Helper.saveToLog(0, user_key, "GetOrderDiscount - пришло из модуля:", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Найдены заказы: " + listXML.GetStringXML(), 0);
                     return list;
                 }
                 else
@@ -865,7 +865,7 @@ namespace RestService
                     return null;
                 }
             }
-            Helper.saveToLog(0, user_key, "GetOrderDiscount", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Заказ не найден.", 1);
+            Helper.saveToLog(0, user_key, "GetOrderDiscount - заказ не найден:", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Заказ не найден.", 1);
             return null;
         }
 
@@ -885,7 +885,7 @@ namespace RestService
                 IntegrationCMD.IntegrationCMDClient cmd = new IntegrationCMD.IntegrationCMDClient(endpointName, address);
                 //IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, card.CardNumber);
 
-                Helper.saveToLog(0, user_key, "GetOrders - отправлено", "restaurant_id: " + restaurantID.ToString() + ", orderNumber=" + orderNumber, "", 0);
+                Helper.saveToLog(0, user_key, "GetOrders - отправлено ы модуль: ", "restaurant_id: " + restaurantID.ToString() + ", orderNumber=" + orderNumber, "", 0);
                 IntegrationCMD.Order[] orders = cmd.GetOrder(restaurantID, orderNumber, null);
                 if (orders != null)
                 {
@@ -953,7 +953,7 @@ namespace RestService
                         order.ErrorCode = item.ErrorCode;
                         list.Add(order);
 
-                        Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "", 1);
+                        //Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "", 1);
 
                         //Проверка ошибки 31 - официант работает с заказом
                         if (item.ErrorCode == 31)
@@ -961,7 +961,7 @@ namespace RestService
                             order.ErrorCode = 31;
                             //order.Error = "Официант редактирует заказ. Повторите запрос через минуту.";
                             order.Error = Helper.GetError(31, language);
-                            Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "Официант работает с заказом", 1);
+                            Helper.saveToLog(0, user_key, "GetOrders - ошибка: ", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: " + item.ErrorCode.ToString(), "Официант работает с заказом", 1);
                             return list;
                         }
                         //Проверка оплаты заказа в БД
@@ -970,7 +970,7 @@ namespace RestService
                             order.ErrorCode = 5;
                             //order.Error = "Вы уже оплатили данный заказ. Для открытия нового заказа обратитесь к официанту.";
                             order.Error = Helper.GetError(5, language);
-                            Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: ", "Заказ уже оплачен", 1);
+                            Helper.saveToLog(0, user_key, "GetOrders - ошибка: ", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID + ", ErrorCode: ", "Заказ уже оплачен", 1);
                             return list;
                         }
                         //Проверка закрытия заказа на кассе
@@ -981,7 +981,7 @@ namespace RestService
                                 order.ErrorCode = 6;
                                 //order.Error = "Ваш заказ закрыт. Для открытия нового заказа обратитесь к официанту.";
                                 order.Error = Helper.GetError(6, language);
-                                Helper.saveToLog(0, user_key, "GetOrders", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID.ToString() + ", StatusID: " + order.OrderStatus.StatusID.ToString(), "Заказ закрыт", 1);
+                                Helper.saveToLog(0, user_key, "GetOrders - ошибка: ", "restaurant_id: " + restaurantID.ToString() + ", tableID: " + order.TableID.ToString() + ", StatusID: " + order.OrderStatus.StatusID.ToString(), "Заказ закрыт", 1);
                                 return list;
                             }
                         }
@@ -1014,7 +1014,7 @@ namespace RestService
                     return null;
                 }
             }
-            Helper.saveToLog(0, user_key, "GetOrder", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Заказ не найден.", 1);
+            Helper.saveToLog(0, user_key, "GetOrder - заказ не найден: ", "restaurantID=" + restaurantID.ToString() + ", orderNumber=" + orderNumber, "Заказ не найден.", 1);
             return null;
         }
 
