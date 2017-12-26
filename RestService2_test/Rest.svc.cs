@@ -837,6 +837,8 @@ namespace RestService
                             }
                         }
 
+                        if (order.ErrorCode == 30) { order.ErrorCode = 0; order.Error = ""; }
+
                         if (order.ErrorCode != 0 && order.ErrorCode != 30)
                         {
                             order.ErrorCode = 100;
