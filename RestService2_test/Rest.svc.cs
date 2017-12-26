@@ -837,7 +837,7 @@ namespace RestService
                             }
                         }
 
-                        if (order.ErrorCode != 0)
+                        if (order.ErrorCode != 0 && order.ErrorCode != 30)
                         {
                             order.ErrorCode = 100;
                             order.Error = Helper.GetError(100, language);
