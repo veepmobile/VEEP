@@ -337,7 +337,8 @@ namespace RestService
             {
                 foreach (var item in list)
                 {
-                    if (item.DiscountCard != null && item.DiscountCard.CardStatus == 1)
+                   // if (item.DiscountCard != null && item.DiscountCard.CardStatus == 1)
+                    if (item.DiscountCard != null && item.OrderPayment.DiscountSum > 0)
                     {
                         long? result_status = UpdateDiscountCard(phoneNumber, discountCard, 1, user_key, phoneCode, language);
                         return 1; // "Скидка применена";
